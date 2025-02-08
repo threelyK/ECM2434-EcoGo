@@ -31,6 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'apps.user.apps.UserConfig',
+    'apps.cards.apps.CardsConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -111,6 +114,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Uses a custom user class that contains an FK to UserData table
+AUTH_USER_MODEL = 'user.User' 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
