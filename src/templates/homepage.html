@@ -5,18 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../staticfiles/css/navbar.css">
     <link rel="stylesheet" href="../staticfiles/css/page.css">
+    <link rel="stylesheet" href="../staticfiles/css/avatar.css">
+    <link rel="stylesheet" href="../staticfiles/css/button.css">
     <title>Home</title>
 </head>
 <body>
     <div id="myNavbar" class="navbar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        
     </div>
 
     <div id="main">
         <!-- Main Page content will go here and all content will be pushed to the side -->
-        <!-- <button onclick="openNav()">Open Navbar</button> -->
-        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+        <span style="font-size:30px;cursor:pointer;color: #FEFAE0;" onclick="openNav()">&#9776;</span>
+        <div class="avatar">
+            <img src="../staticfiles/photos/default.png" alt="avatar">
+            <p>Username</p>
+            
+        </div>
+    
+        <button class="image-button" on-click="alert('Button Clicked')"></button>
+    
     </div>
 </body>
     <script src="../staticfiles/js/navbar.js"></script>

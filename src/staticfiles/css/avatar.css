@@ -1,0 +1,36 @@
+
+
+/* Importing custom font */
+@font-face {
+    font-family: 'GameFont';
+    src: url('../atarian_font/Atarian/SF\ Atarian\ System\ Extended.ttf');
+}
+
+.avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.avatar img {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    transition: 0.3s ease; 
+}
+
+.avatar img:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.avatar p {
+    text-align: center;
+    font-family: GameFont, Arial, Helvetica, sans-serif; /*Using Arial as backup font */
+    font-size: 22px;
+    margin-top:10px;
+    color: #FEFAE0;
+}
+
