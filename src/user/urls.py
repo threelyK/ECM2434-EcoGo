@@ -2,16 +2,11 @@ from django.urls import path
 
 from . import views
 
+# These are the URLs which direct the user to each page in our website.
 urlpatterns = [
-
-    path('', views.landing, name=""),
-
-    path('register', views.register, name="register"),
-
-    path('login', views.login, name="login"),
-
-    path('home', views.homepage, name="home"),
-
-    path('user-logout', views.user_logout, name="user-logout")
-    
+    path('', views.landing, name="landing"),  # Takes the user to the initial page with login/register options
+    path('register', views.register, name="register"),  # Takes the user to the register page
+    path('login', views.login, name="login"),  # Takes the user to the login page
+    path('home', views.homepage, name="home"),  # Takes the user to the home page if they are already logged in
+    path('user-logout', views.user_logout, name="user-logout"),  # Logs the user out
 ]
