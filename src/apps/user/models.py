@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
+from apps.cards.models import Card
+
 class User(AbstractUser):
     """
     User extends django's AbstractUser
@@ -37,6 +39,52 @@ class UserData(models.Model):
         through="OwnedBadge",
     )
 
+    # ----------------------------------------------------
+
+    def add_points(self, points_to_add : int):
+        """
+        Adds points to the user, will throw execption if input is negative
+        """
+        pass
+
+    def remove_points(self, points_to_remove : int):
+        """
+        Removes point from the user, must be a positive number, throws exception if the
+        user does not have enough points
+        """
+        pass
+
+    def add_xp(self, xp_to_add : int):
+        """
+        Adds XP to a user, leveling them up if required
+        """
+        pass
+
+    def get_all_cards(self):
+        """
+        Returns a queryset containing all of the cards owned by this user
+        """
+        pass
+
+    def get_all_card_quant(self):
+        """
+        Return a queryset containing all of the cards and thier quantity
+        """
+        pass
+
+    def add_card(self, card_to_add : Card):
+        """
+        Add the passed in card to this users inventory
+        """
+        pass
+
+    def remove_card(self, card_to_remove : Card):
+        """
+        Removes 1 instance of the card_to_remove from the users inventory,
+        will throw an exception if the user does not have that card
+        """
+        pass
+
     class Meta:
         verbose_name = _("UserData")
         verbose_name_plural = _("UserDatas")
@@ -53,8 +101,8 @@ class Badge(models.Model):
         verbose_name_plural = _("Badges")
 
     def __str__(self):
-        return self.badge_name
-    
+        return str(self.badge_name)
+
 class OwnedBadge(models.Model):
     """
     OwnedBadge is a bridging table for the many-to-many 
@@ -73,12 +121,13 @@ class OwnedBadge(models.Model):
         on_delete=models.CASCADE
     )
     is_done = models.BooleanField(_("Done"), default=False)
-    
 
     class Meta:
         verbose_name = _("OwnedBadge")
         verbose_name_plural = _("OwnedBadges")
 
+        # Prevents the db from having duplicates of the same badge and user
         constraints = [
-            models.UniqueConstraint(fields=["badge", "owner"], name="Unique Owned Badge") # Prevents the db from having duplicates of the same badge and user
+            models.UniqueConstraint(fields=["badge", "owner"],
+                                     name="Unique Owned Badge") 
         ]
