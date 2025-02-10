@@ -96,11 +96,11 @@ class UserDataTest(TestCase):
         Tests that get_all_cards properly returns all the cards owned by the user
         """
 
-        card1 = Card.objects.create(card_name = "1")
-        card2 = Card.objects.create(card_name = "2")
+        card1 = Card(card_name = "1", rarity=1)
+        card2 = Card(card_name = "2", rarity=5)
 
-        OwnedCard.objects.create(card=card1, owner=self.user_data)
-        OwnedCard.objects.create(card=card2, owner=self.user_data)
+        OwnedCard(card=card1, owner=self.user_data)
+        OwnedCard(card=card2, owner=self.user_data)
 
         cards = self.user_data.get_all_cards()
 
