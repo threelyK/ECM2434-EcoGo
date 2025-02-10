@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from apps.user.models import User, UserData
+from apps.cards.models import Card, OwnedCard
 # run tests using `py manage.py test apps/user`
 
 class UserAuthenticationTest(TestCase):
@@ -88,28 +89,51 @@ class UserDataTest(TestCase):
         Tests that xp is properly added and leveling up occours when properly
         """
 
-        pass
+        #TODO - How should add_xp work, how do we level up?
 
     def test_get_all_cards(self):
         """
         Tests that get_all_cards properly returns all the cards owned by the user
         """
 
-        pass
+        card1 = Card.objects.create(card_name = "1")
+        card2 = Card.objects.create(card_name = "2")
 
-    def test_get_all_card_quant(self):
-        """
-        Tests that get_all_cards_quant properly returns a proper QuerySet
-        """
+        OwnedCard.objects.create(card=card1, owner=self.user_data)
+        OwnedCard.objects.create(card=card2, owner=self.user_data)
 
-        pass
+        cards = self.user_data.get_all_cards()
+
+        for card in cards:
+            if not (card.name == "1" or card.name == "2"):
+                self.fail()
 
     def test_add_card(self):
         """
         Tests that add_card properly adds a card to the users inventory
         """
 
-        pass
+        card = Card(card_name = "cardName")
+
+        self.user_data.add_card(card)
+
+        cards = self.user_data.cards.all()
+
+        self.assertTrue(card in cards)
+
+    def test_get_all_card_quant(self):
+        """
+        Tests that get_all_cards_quant properly returns a proper QuerySet
+        """
+
+        card = Card(card_name = "cardName")
+
+        self.user_data.add_card(card)
+        self.user_data.add_card(card)
+
+        cards_qaunt = self.user_data.get_all_card_quant()
+
+        self.assertTrue((card, 2) in cards_qaunt)
 
     def test_remove_card(self):
         """
@@ -117,4 +141,11 @@ class UserDataTest(TestCase):
         and the not-last card case
         """
 
-        pass
+        card = Card(card_name = "cardName")
+
+        self.user_data.add_card(card)
+        self.user_data.remove_card(card)
+
+        cards = self.user_data.cards.all()
+
+        self.assertFalse(card in cards)
