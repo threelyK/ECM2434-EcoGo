@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
@@ -60,13 +61,13 @@ class UserData(models.Model):
         """
         pass
 
-    def get_all_cards(self):
+    def get_all_cards(self) -> QuerySet:
         """
         Returns a queryset containing all of the cards owned by this user
         """
         pass
 
-    def get_all_card_quant(self):
+    def get_all_card_quant(self) -> QuerySet:
         """
         Return a queryset containing all of the cards and thier quantity
         """
