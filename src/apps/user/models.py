@@ -12,7 +12,7 @@ class User(AbstractUser):
     """
     user_data = models.ForeignKey(
         "UserData", 
-        verbose_name="User Data", 
+        verbose_name="User Data",
         on_delete=models.CASCADE,
         null=True,
     )
@@ -23,7 +23,7 @@ class UserData(models.Model):
     """
     owner = models.ForeignKey(
         "user.User", 
-        verbose_name=_("User Data Owner"), 
+        verbose_name=_("User Data Owner"),
         on_delete=models.CASCADE
     )
     points = models.BigIntegerField(_("Points"), default=0)
@@ -31,7 +31,7 @@ class UserData(models.Model):
     xp = models.BigIntegerField(_("Experience"), default=0)
     cards = models.ManyToManyField(
         "cards.Card", 
-        verbose_name=_("Cards"), 
+        verbose_name=_("Cards"),
         through="cards.OwnedCard",
     )
     badges = models.ManyToManyField(
@@ -67,9 +67,9 @@ class UserData(models.Model):
         """
         pass
 
-    def get_all_card_quant(self) -> QuerySet:
+    def get_all_card_quant(self) -> list[tuple[Card, int]]:
         """
-        Return a queryset containing all of the cards and thier quantity
+        Return a list of tuples containing all of the cards and thier quantites
         """
         pass
 
@@ -113,12 +113,12 @@ class OwnedBadge(models.Model):
     """
     badge = models.ForeignKey(
         "user.Badge", 
-        verbose_name=_("Badge"), 
+        verbose_name=_("Badge"),
         on_delete=models.CASCADE
     )
     owner = models.ForeignKey(
         "user.UserData", 
-        verbose_name=_("Owner"), 
+        verbose_name=_("Owner"),
         on_delete=models.CASCADE
     )
     is_done = models.BooleanField(_("Done"), default=False)
@@ -130,5 +130,5 @@ class OwnedBadge(models.Model):
         # Prevents the db from having duplicates of the same badge and user
         constraints = [
             models.UniqueConstraint(fields=["badge", "owner"],
-                                     name="Unique Owned Badge") 
+                                     name="Unique Owned Badge")
         ]
