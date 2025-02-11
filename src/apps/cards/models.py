@@ -4,12 +4,10 @@ from django.utils.translation import gettext_lazy as _
 class Card(models.Model):
     """
     Card contains all the data for a card.
-    Rarity should be a number between 1-1000.
     """
     card_name = models.TextField(_("Card Name"), unique=True)
-    image = models.TextField(_("Image URL"), default="Missing Image") # Could possibly change this to be an imageField
+    image = models.TextField(_("Image URL"), default="Missing_Image_card.jpeg") # Could possibly change this to be an imageField
     card_desc = models.TextField(_("Card Description"), blank=True)
-    rarity = models.IntegerField(_("Rarity"))
 
     class Meta:
         verbose_name = _("Card")
@@ -37,4 +35,40 @@ class OwnedCard(models.Model):
         constraints = [
             models.UniqueConstraint(fields=["card", "owner"],
                                     name="Unique Owned Card")
+        ]
+
+class Pack(models.Model):
+    """
+    Pack contains all data for a pack in the shop
+    """
+
+    pack_name = models.TextField(_("Pack Name"), unique=True)
+    cost = models.IntegerField(_("Cost"))
+    num_cards = models.IntegerField(_("# Cards in pack"))
+    cards = models.ManyToManyField(
+        "cards.Card", 
+        verbose_name=_("Cards"),
+        through="cards.PackCards",
+    )
+    image = models.TextField(_("Image URL"), default="Missing_Image_pack.jpeg") # Could possibly change this to be an imageField
+
+    class Meta:
+        verbose_name = _("Pack")
+        verbose_name_plural = _("Packs")
+
+    def __str__(self):
+        return str(self.pack_name)
+    
+class PackCards(models.Model):
+    card = models.ForeignKey("cards.Card", verbose_name=_("Card"), on_delete=models.CASCADE)
+    pack = models.ForeignKey("cards.Pack", verbose_name=_("Pack"), on_delete=models.CASCADE)
+    rarity = models.IntegerField(_("Rarity"))
+
+    class Meta:
+        verbose_name = _("PackCard")
+        verbose_name_plural = _("PackCards")
+
+        constraints = [
+            models.UniqueConstraint(fields=["card", "pack"],
+                                    name="Unique Pack Card")
         ]
