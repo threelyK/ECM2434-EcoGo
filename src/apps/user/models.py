@@ -46,20 +46,67 @@ class UserData(models.Model):
         """
         Adds points to the user, will throw execption if input is negative
         """
-        pass
+        if points_to_add >= 0:
+            self.points += points_to_add
+            self.save(update_fields="points")
+        else:
+            raise ValueError("No negative numbers allowed")
+        
 
     def remove_points(self, points_to_remove : int):
         """
         Removes point from the user, must be a positive number, throws exception if the
         user does not have enough points
         """
-        pass
+        owned_points = self.points
+        if points_to_remove > 0 and owned_points >= points_to_remove:
+            self.points -= points_to_remove
+            self.save(update_fields="points")
+        else:
+            raise ValueError("No negative numbers allowed or insufficient owned points")
+    
 
     def add_xp(self, xp_to_add : int):
         """
         Adds XP to a user, leveling them up if required
         """
+        total_xp = self.xp
+        current_level = self.level
+        if xp_to_add > 0:
+            total_xp += xp_to_add
+            level_up(self, total_xp, self.level)
+        else:
+            raise ValueError("No negative numbers")
+        
+        
         pass
+
+
+    def level_up(self, xp_after_add, level):
+        """
+        Defines specific level boundaries with the xp needed to move to the next level
+        Checks current xp and xp_to_gain and checks if its enough
+        """
+        match level:
+            case range(0,50):
+                xp_required = 100
+                if xp_after_add > xp_required:
+                    xp_carried = xp_after_add - xp_required
+                    self.level += 1
+            case range(51,100):
+                xp_required = 500
+                if xp_after_add > xp_required:
+                    xp_carried = xp_after_add - xp_required
+                    self.level += 1
+            case _:
+                xp_required = 1000
+                if xp_after_add > xp_required:
+                    xp_carried = xp_after_add - xp_required
+                    self.level += 1
+
+        self.xp = xp_carried
+        self.save(update_fields=["xp", "level"])
+
 
     def get_all_cards(self) -> QuerySet:
         """
