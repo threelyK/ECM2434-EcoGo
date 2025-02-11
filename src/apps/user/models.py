@@ -85,7 +85,7 @@ class UserData(models.Model):
         current_level = self.level
         if xp_to_add > 0:
             total_xp += xp_to_add
-            level_up(self, total_xp, self.level)
+            level_up(self, total_xp, current_level)
         else:
             raise ValueError("No negative numbers")
         
@@ -115,7 +115,11 @@ class UserData(models.Model):
                     xp_carried = xp_after_add - xp_required
                     self.level += 1
 
-        self.xp = xp_carried
+        if xp_carried > 0:
+            self.xp = xp_carried
+        else:
+            self.xp = xp_after_add
+        
         self.save(update_fields=["xp", "level"])
 
 
