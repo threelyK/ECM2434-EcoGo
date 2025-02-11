@@ -8,7 +8,7 @@ from apps.cards.models import Card
 class User(AbstractUser):
     """
     User extends django's AbstractUser
-    by adding FK 'user_data'.
+    by adding FK 'user_data' and 'user_type'.
     """
     user_data = models.ForeignKey(
         "UserData", 
@@ -16,6 +16,18 @@ class User(AbstractUser):
         on_delete=models.CASCADE,
         null=True,
     )
+
+    """
+    USER_TYPE_CHOICES = {
+        "P" : "Player",
+        "GM" : "Game master",
+        "D" : "DEBUG"
+    }
+
+    #Defaults to DEBUG, if this is seen in the database, it implies improper use
+    user_type = models.CharField(_("Type"), default="D", choices=USER_TYPE_CHOICES,
+                                 max_length=2)
+    """
 
 class UserData(models.Model):
     """
@@ -37,7 +49,6 @@ class UserData(models.Model):
     badges = models.ManyToManyField(
         "user.Badge", 
         verbose_name=_("Badges"),
-        through="OwnedBadge",
     )
 
     # ----------------------------------------------------
@@ -103,32 +114,3 @@ class Badge(models.Model):
 
     def __str__(self):
         return str(self.badge_name)
-
-class OwnedBadge(models.Model):
-    """
-    OwnedBadge is a bridging table for the many-to-many 
-    relationship between Users and Badges.
-    `is_done` is switched to True 
-    if a user has completed the badge requirements
-    """
-    badge = models.ForeignKey(
-        "user.Badge", 
-        verbose_name=_("Badge"),
-        on_delete=models.CASCADE
-    )
-    owner = models.ForeignKey(
-        "user.UserData", 
-        verbose_name=_("Owner"),
-        on_delete=models.CASCADE
-    )
-    is_done = models.BooleanField(_("Done"), default=False)
-
-    class Meta:
-        verbose_name = _("OwnedBadge")
-        verbose_name_plural = _("OwnedBadges")
-
-        # Prevents the db from having duplicates of the same badge and user
-        constraints = [
-            models.UniqueConstraint(fields=["badge", "owner"],
-                                     name="Unique Owned Badge")
-        ]
