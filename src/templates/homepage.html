@@ -3,34 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="../staticfiles/css/navbar.css">
     <link rel="stylesheet" href="../staticfiles/css/page.css">
     <link rel="stylesheet" href="../staticfiles/css/avatar.css">
-    <link rel="stylesheet" href="../staticfiles/css/button.css">
     <link rel="stylesheet" href="../staticfiles/css/centered.css">
+    <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
     <script src="../staticfiles/js/navbar.js"></script>
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="../staticfiles/bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.min.bundle.js"></script>
+    <link rel="stylesheet" href="../staticfiles/bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css">
     <title>Home</title>
 </head>
 <body>
-    <div id="myNavbar" class="navbar">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    </div>
-
-    <div id="main">
-        <!-- Main Page content will go here and all content will be pushed to the side -->
-        <span style="font-size:30px;cursor:pointer;color: #FEFAE0;" onclick="openNav()">&#9776;</span>
-        <div class="container mt-3">
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <button class="toggle-btn" type="button">
+                    <i class="lni lni-menu-hamburger-1"></i>
+                </button>
+                <div class="sidebar-logo">
+                    <a href="#">EcoGo</a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-user-4"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-agenda"></i>
+                        <span>Task</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-hand-shake"></i>
+                        <span>Friends</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" class="sidebar-link">
+                    <i class="lni lni-gear-1"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="lni lni-exit"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div class="main p-3">
             <div class="centered">
                 <div class="avatar">
-                        <img src="../staticfiles/photos/default.png" alt="avatar">
-                        <p>Username</p>
+                    <img src="../staticfiles/photos/default.png" alt="avatar">
+                    <p>Username</p>
                 </div>
-                <button type="button" class="btn btn-primary active">Scan QR Code</button>
+                <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif;">Scan QR Code</button>
+                <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif;" disabled>Trading</button>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
+<script src="../staticfiles/js/navbar.js"></script>
 </html>
+
+
+    
