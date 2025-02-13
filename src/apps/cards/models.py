@@ -14,8 +14,22 @@ class Card(models.Model):
         verbose_name = _("Card")
         verbose_name_plural = _("Cards")
 
+
     def __str__(self):
         return str(self.card_name)
+    
+    
+    def create_card(self, card_name):
+        """
+        Creates a card, without an image. Throws an error if card name already exists
+        """
+        pass
+
+    def add_image(self):
+        """
+        Changes an existing card's image field to another url
+        """
+        pass
 
 
 class OwnedCard(models.Model):
@@ -37,20 +51,6 @@ class OwnedCard(models.Model):
             models.UniqueConstraint(fields=["card", "owner"],
                                     name="Unique Owned Card")
         ]
-
-    
-    def create_card(self, card_name):
-        """
-        Creates a card, without an image. Throws an error if card name already exists
-        """
-        pass
-
-    def add_image(self):
-        """
-        Changes an existing card's image field to another url
-        """
-        pass
-
 
 class Pack(models.Model):
     """
