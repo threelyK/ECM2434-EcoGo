@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
 
 class Card(models.Model):
@@ -37,6 +38,20 @@ class OwnedCard(models.Model):
                                     name="Unique Owned Card")
         ]
 
+    
+    def create_card(self, card_name):
+        """
+        Creates a card, without an image. Throws an error if card name already exists
+        """
+        pass
+
+    def add_image(self):
+        """
+        Changes an existing card's image field to another url
+        """
+        pass
+
+
 class Pack(models.Model):
     """
     Pack contains all data for a pack in the shop
@@ -72,3 +87,33 @@ class PackCards(models.Model):
             models.UniqueConstraint(fields=["card", "pack"],
                                     name="Unique Pack Card")
         ]
+
+    def get_all_cards(self) -> QuerySet:
+        """
+        Returns a queryset of all the cards in the pack
+        """
+        pass
+
+    def get_all_cards_rar(self) -> list[tuple[Card, int]]:
+        """
+        Returns a list of all cards in the form of: (card, rarity)
+        """
+
+    def add_to_pack(self):
+        """
+        Adds a card to a pack, but does not call .save().
+        Queues changes to validate rarity.
+        """
+        pass
+
+    def validate_pack(self):
+        """
+        Returns true if pack contains 1000 worth of rarity
+        """
+        pass
+
+    def save_pack(self):
+        """
+        Checks if pack is valid and saves pack to database
+        """
+        pass
