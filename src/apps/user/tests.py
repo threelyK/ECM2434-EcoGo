@@ -53,99 +53,128 @@ class UserDataTest(TestCase):
         Run before each test to setup a user to work with
         """
 
-        self.user = User.objects.create_user("123", password="123")
-        self.user_data = UserData(self.user.username)
+        user = User.objects.create_user("123", password="123")
+        userData = UserData.objects.create(owner=user)
 
     def test_add_points(self):
         """
         Tests that the add_points method properly adds points and throws an exception when 
         input is negative
         """
-        self.user_data.add_points(50)
+        tUserData = UserData.objects.get(id=1)
+        tUserData.add_points(50)
 
-        self.assertEqual(500, self.user_data.points)
-        self.assertRaises(Exception("Use remove_points to subtract points"),
-                          self.user_data.add_points, -100)
+        self.assertEqual(50, tUserData.points)
+        self.assertRaises(Exception, tUserData.add_points, -100)
 
     def test_remove_points(self):
         """
         Tests that the remove_points method properly removes points and throws an exception
         when there are no points to remove or when the input is negative
         """
+        tUserData = UserData.objects.get(id=1)
+        tUserData.points = 500
 
-        self.user_data.points = 500
-        self.user_data.remove_points(200)
+        tUserData.remove_points(200)
 
-        self.assertEqual(self.user_data.points, 300)
-        self.assertRaises(Exception("Use a positive number to remove points"),
-                          self.user_data.remove_points, -100)
-        self.assertRaises(Exception("Not enough points"), self.user_data.remove_points(350))
+        self.assertEqual(tUserData.points, 300)
+        self.assertRaises(Exception, tUserData.remove_points, -100)
+        self.assertRaises(Exception, tUserData.remove_points, 350)
 
-        self.user_data.remove_points(300)
-        self.assertEqual(self.user_data.points, 0)
+        tUserData.remove_points(300)
+        self.assertEqual(tUserData.points, 0)
 
     def test_add_xp(self):
         """
         Tests that xp is properly added and leveling up occours when properly
         """
+        tUserData = UserData.objects.get(id=1)
+        tUserData.add_xp(100) # Currently 100xp is needed to level up
 
-        #TODO - How should add_xp work, how do we level up?
+        self.assertEqual(tUserData.level, 1)
+        self.assertEqual(tUserData.xp, 0)
+        self.assertRaises(Exception, tUserData.add_xp, -100)
 
     def test_get_all_cards(self):
         """
         Tests that get_all_cards properly returns all the cards owned by the user
         """
+        tUserData = UserData.objects.get(id=1)
 
-        card1 = Card(card_name = "1", rarity=1)
-        card2 = Card(card_name = "2", rarity=5)
+        card1 = Card.objects.create(card_name = "1")
+        card2 = Card.objects.create(card_name = "2")
 
-        OwnedCard(card=card1, owner=self.user_data)
-        OwnedCard(card=card2, owner=self.user_data)
+        OwnedCard.objects.create(card=card1, owner=tUserData)
+        OwnedCard.objects.create(card=card2, owner=tUserData)
 
-        cards = self.user_data.get_all_cards()
-
+        cards = tUserData.get_all_cards()
+        
         for card in cards:
-            if not (card.name == "1" or card.name == "2"):
+            if not (card.card_name == "1" or card.card_name == "2"):
                 self.fail()
 
     def test_add_card(self):
         """
         Tests that add_card properly adds a card to the users inventory
         """
+        tUserData = UserData.objects.get(id=1)
+        card = Card.objects.create(card_name = "cardName")
 
-        card = Card(card_name = "cardName")
-
-        self.user_data.add_card(card)
-
-        cards = self.user_data.cards.all()
+        tUserData.add_card(card)
+        cards = tUserData.get_all_cards()
 
         self.assertTrue(card in cards)
+
+        # Tests to see if quantity increments
+        tUserData.add_card(card)
+        self.assertEqual(OwnedCard.objects.get(card=card).quantity, 2)
+
+
+    def test_add_cards(self):
+        """
+        Tests that add_cards properly adds an amount of the same card to the users inventory
+        """
+        tUserData = UserData.objects.get(id=1)
+        card = Card.objects.create(card_name = "cardName")
+
+        tUserData.add_card(card, 5)
+        self.assertEqual(OwnedCard.objects.get(card=card).quantity, 5)
+
+        tUserData.add_card(card, 5)
+        self.assertEqual(OwnedCard.objects.get(card=card).quantity, 10)
+
 
     def test_get_all_card_quant(self):
         """
         Tests that get_all_cards_quant properly returns a proper QuerySet
         """
+        tUserData = UserData.objects.get(id=1)
+        card = Card.objects.create(card_name = "card0")
+        card1 = Card.objects.create(card_name = "card1")
 
-        card = Card(card_name = "cardName")
+        tUserData.add_card(card)
+        tUserData.add_card(card1, 2)
 
-        self.user_data.add_card(card)
-        self.user_data.add_card(card)
+        cards_qaunt = tUserData.get_all_card_quant()
 
-        cards_qaunt = self.user_data.get_all_card_quant()
+        self.assertListEqual([cards_qaunt[0][1], cards_qaunt[1][1]], [1,2])
 
-        self.assertTrue((card, 2) in cards_qaunt)
 
     def test_remove_card(self):
         """
         Tests that remove card properly removes cards, in both the last card case
         and the not-last card case
         """
+        tUserData = UserData.objects.get(id=1)
+        card = Card.objects.create(card_name = "cardName")
 
-        card = Card(card_name = "cardName")
+        tUserData.add_card(card)
+        tUserData.remove_card(card)
 
-        self.user_data.add_card(card)
-        self.user_data.remove_card(card)
-
-        cards = self.user_data.cards.all()
-
+        cards = tUserData.cards.all()
         self.assertFalse(card in cards)
+
+        tUserData.add_card(card, 3)
+        tUserData.remove_card(card, 2)
+
+        self.assertEqual(OwnedCard.objects.get(card=card, owner=tUserData).quantity, 1)
