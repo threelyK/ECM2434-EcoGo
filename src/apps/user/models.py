@@ -130,7 +130,7 @@ class UserData(models.Model):   # Maybe needs a related_name in the cards attrib
         player_cards = OwnedCard.objects.filter(owner=self)
         card_list = []
         for card in player_cards:
-            card_list.append((card, card.quantity))
+            card_list.append((card.card, card.quantity))
         return card_list
 
     """ 

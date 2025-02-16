@@ -63,37 +63,25 @@ class Pack(models.Model):
     image = models.URLField(_("Image URL"), 
                             default="https://plus.unsplash.com/premium_photo-1675438998042-8159173ccd82?q=80&w=999&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
 
-    class Meta:
-        verbose_name = _("Pack")
-        verbose_name_plural = _("Packs")
+    # -------------------------------------------------------------------
 
-    def __str__(self):
-        return str(self.pack_name)
     
-class PackCards(models.Model):
-    card = models.ForeignKey("cards.Card", verbose_name=_("Card"), on_delete=models.CASCADE)
-    pack = models.ForeignKey("cards.Pack", verbose_name=_("Pack"), on_delete=models.CASCADE)
-    rarity = models.IntegerField(_("Rarity"))
-
-    class Meta:
-        verbose_name = _("PackCard")
-        verbose_name_plural = _("PackCards")
-
-        constraints = [
-            models.UniqueConstraint(fields=["card", "pack"],
-                                    name="Unique Pack Card")
-        ]
-
     def get_all_cards(self) -> QuerySet:
         """
         Returns a queryset of all the cards in the pack
         """
-        pass
+        return self.cards.all()
 
     def get_all_cards_rar(self) -> list[tuple[Card, int]]:
         """
         Returns a list of all cards in the form of: (card, rarity)
         """
+
+        player_cards = PackCards.objects.filter(pack=self)
+        card_list = []
+        for card in player_cards:
+            card_list.append((card.card, card.rarity))
+        return card_list
 
     def add_to_pack(self):
         """
@@ -113,3 +101,26 @@ class PackCards(models.Model):
         Checks if pack is valid and saves pack to database
         """
         pass
+
+    class Meta:
+        verbose_name = _("Pack")
+        verbose_name_plural = _("Packs")
+
+    def __str__(self):
+        return str(self.pack_name)
+    
+class PackCards(models.Model):
+    card = models.ForeignKey("cards.Card", verbose_name=_("Card"), on_delete=models.CASCADE)
+    pack = models.ForeignKey("cards.Pack", verbose_name=_("Pack"), on_delete=models.CASCADE)
+    rarity = models.IntegerField(_("Rarity"))
+
+    def __str__(self):
+        return str(self.pack.pack_name)+ " - " + str(self.card.card_name)
+    class Meta:
+        verbose_name = _("PackCard")
+        verbose_name_plural = _("PackCards")
+
+        constraints = [
+            models.UniqueConstraint(fields=["card", "pack"],
+                                    name="Unique Pack Card")
+        ]
