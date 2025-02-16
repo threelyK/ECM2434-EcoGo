@@ -52,6 +52,22 @@ class OwnedCard(models.Model):
         pass
 
 
+class PackCards(models.Model):
+    card = models.ForeignKey("cards.Card", verbose_name=_("Card"), on_delete=models.CASCADE)
+    pack = models.ForeignKey("cards.Pack", verbose_name=_("Pack"), on_delete=models.CASCADE)
+    rarity = models.IntegerField(_("Rarity"))
+
+    def __str__(self):
+        return str(self.pack.pack_name)+ " - " + str(self.card.card_name)
+    class Meta:
+        verbose_name = _("PackCard")
+        verbose_name_plural = _("PackCards")
+
+        constraints = [
+            models.UniqueConstraint(fields=["card", "pack"],
+                                    name="Unique Pack Card")
+        ]
+
 class Pack(models.Model):
     """
     Pack contains all data for a pack in the shop
@@ -66,6 +82,11 @@ class Pack(models.Model):
         through="cards.PackCards",
     )
     image = models.TextField(_("Image URL"), default="Missing_Image_pack.jpeg") # Could possibly change this to be an imageField
+    
+    #This exists to allow for an instance attribute not related to the database
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.cards_to_add = []
 
     # -------------------------------------------------------------------
 
@@ -87,24 +108,39 @@ class Pack(models.Model):
             card_list.append((card.card, card.rarity))
         return card_list
 
-    def add_to_pack(self):
+    def add_to_pack(self, card_to_add : Card, rarity : int):
         """
         Adds a card to a pack, but does not call .save().
         Queues changes to validate rarity.
         """
-        pass
+        
+        self.cards_to_add.append(PackCards(pack=self, card=card_to_add, rarity=rarity))
 
     def validate_pack(self):
         """
         Returns true if pack contains 1000 worth of rarity
         """
-        pass
+        
+        counter = 0
+        for pack_cards in self.cards_to_add:
+            counter = counter + pack_cards.rarity
+
+        if counter == 1000 and len(self.cards_to_add) == self.num_cards:
+            return True
+        else:
+            return False 
 
     def save_pack(self):
         """
         Checks if pack is valid and saves pack to database
         """
-        pass
+        
+        if not self.validate_pack:
+            raise Exception("Invalid pack configuration")
+
+        self.save()
+        for pack_cards in self.cards_to_add:
+            pack_cards.save()
 
     class Meta:
         verbose_name = _("Pack")
@@ -112,19 +148,3 @@ class Pack(models.Model):
 
     def __str__(self):
         return str(self.pack_name)
-    
-class PackCards(models.Model):
-    card = models.ForeignKey("cards.Card", verbose_name=_("Card"), on_delete=models.CASCADE)
-    pack = models.ForeignKey("cards.Pack", verbose_name=_("Pack"), on_delete=models.CASCADE)
-    rarity = models.IntegerField(_("Rarity"))
-
-    def __str__(self):
-        return str(self.pack.pack_name)+ " - " + str(self.card.card_name)
-    class Meta:
-        verbose_name = _("PackCard")
-        verbose_name_plural = _("PackCards")
-
-        constraints = [
-            models.UniqueConstraint(fields=["card", "pack"],
-                                    name="Unique Pack Card")
-        ]
