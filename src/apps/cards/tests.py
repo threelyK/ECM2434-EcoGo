@@ -53,3 +53,51 @@ class PackTest(TestCase):
         self.assertTrue((Card1, 15) in all_cards)
         self.assertTrue((Card2, 25) in all_cards)
         self.assertTrue((Card3, 35) in all_cards)
+
+    def test_add_to_pack(self):
+        """
+        Tests that add_to_pack properly adds a card to the internals of a pack
+        """
+
+        pack = Pack(pack_name = "pack", cost=5, num_cards = 20)
+        Card1 = Card(card_name = "18")
+        Card2 = Card(card_name = "123")
+
+        pack.add_to_pack(Card1, 15)
+        pack.add_to_pack(Card2, 20)
+
+        if not pack.cards_to_add[0].card == Card1:
+            self.fail()
+
+        if not pack.cards_to_add[1].card == Card2:
+            self.fail()
+
+    def test_validate_pack(self):
+        """
+        Tests that validate pack properly validates the pack
+        """
+
+        #Tests that number of cards not adding up fails
+        pack = Pack(pack_name = "pack", cost=5, num_cards = 20)
+        Card1 = Card(card_name = "18")
+        Card2 = Card(card_name = "123")
+
+        pack.add_to_pack(Card1, 500)
+        pack.add_to_pack(Card2, 500)
+
+        self.assertFalse(pack.validate_pack())
+
+        #Tests that probabilty not adding up fails
+        pack2 = Pack(pack_name = "pack2", cost=5, num_cards = 2)
+        pack2.add_to_pack(Card1, 250)
+        pack2.add_to_pack(Card2, 500)
+
+        self.assertFalse(pack2.validate_pack())
+
+        #Tests that valid passes
+
+        pack3 = Pack(pack_name = "pack3", cost=5, num_cards = 2)
+        pack3.add_to_pack(Card1, 500)
+        pack3.add_to_pack(Card2, 500)
+
+        self.assertTrue(pack3.validate_pack())
