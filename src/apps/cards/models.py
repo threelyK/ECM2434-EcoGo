@@ -67,37 +67,25 @@ class Pack(models.Model):
     )
     image = models.TextField(_("Image URL"), default="Missing_Image_pack.jpeg") # Could possibly change this to be an imageField
 
-    class Meta:
-        verbose_name = _("Pack")
-        verbose_name_plural = _("Packs")
+    # -------------------------------------------------------------------
 
-    def __str__(self):
-        return str(self.pack_name)
     
-class PackCards(models.Model):
-    card = models.ForeignKey("cards.Card", verbose_name=_("Card"), on_delete=models.CASCADE)
-    pack = models.ForeignKey("cards.Pack", verbose_name=_("Pack"), on_delete=models.CASCADE)
-    rarity = models.IntegerField(_("Rarity"))
-
-    class Meta:
-        verbose_name = _("PackCard")
-        verbose_name_plural = _("PackCards")
-
-        constraints = [
-            models.UniqueConstraint(fields=["card", "pack"],
-                                    name="Unique Pack Card")
-        ]
-
     def get_all_cards(self) -> QuerySet:
         """
         Returns a queryset of all the cards in the pack
         """
-        pass
+        return self.cards.all()
 
     def get_all_cards_rar(self) -> list[tuple[Card, int]]:
         """
         Returns a list of all cards in the form of: (card, rarity)
         """
+
+        player_cards = PackCards.objects.filter(pack=self)
+        card_list = []
+        for card in player_cards:
+            card_list.append((card.card, card.rarity))
+        return card_list
 
     def add_to_pack(self):
         """
@@ -117,3 +105,26 @@ class PackCards(models.Model):
         Checks if pack is valid and saves pack to database
         """
         pass
+
+    class Meta:
+        verbose_name = _("Pack")
+        verbose_name_plural = _("Packs")
+
+    def __str__(self):
+        return str(self.pack_name)
+    
+class PackCards(models.Model):
+    card = models.ForeignKey("cards.Card", verbose_name=_("Card"), on_delete=models.CASCADE)
+    pack = models.ForeignKey("cards.Pack", verbose_name=_("Pack"), on_delete=models.CASCADE)
+    rarity = models.IntegerField(_("Rarity"))
+
+    def __str__(self):
+        return str(self.pack.pack_name)+ " - " + str(self.card.card_name)
+    class Meta:
+        verbose_name = _("PackCard")
+        verbose_name_plural = _("PackCards")
+
+        constraints = [
+            models.UniqueConstraint(fields=["card", "pack"],
+                                    name="Unique Pack Card")
+        ]
