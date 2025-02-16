@@ -1,10 +1,3 @@
-from django.shortcuts import render, redirect
-
-from .forms import CreateUserForm, LoginForm
-
-from django.contrib.auth.decorators import login_required
-
-
 # - Authentication models/functions - #
 
 from django.contrib.auth.models import auth
@@ -13,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from .forms import CreateUserForm, LoginForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import auth
+from django.contrib.auth import get_user_model # not being used rn
 from django.contrib.auth import authenticate, login, logout
 
 
@@ -35,6 +28,8 @@ def register(request):
 
             # redirects the user to the login page after successful registration
             return redirect("login")
+        else:
+            print(form.errors)
 
     # passes the form to the template context to display it on the page
     context = {'registerform': form}
@@ -43,7 +38,7 @@ def register(request):
     return render(request, 'user/register.html', context=context)
 
 
-def login(request):
+def user_login(request):
     form = LoginForm()
 
     # checks if the request method is POST, indicating the user is trying to log in
@@ -60,7 +55,7 @@ def login(request):
 
             if user is not None:
                 # logs the user in
-                auth.login(request, user)
+                login(request, user)
 
                 # redirects the user to the homepage after a successful login
                 return redirect("home")
@@ -81,7 +76,7 @@ def homepage(request):
 
 def user_logout(request):
 
-    auth.logout(request)
+    logout(request)
 
     # redirects the user to the home page if they log out
     return redirect("home")
