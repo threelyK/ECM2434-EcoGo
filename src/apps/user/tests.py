@@ -13,7 +13,7 @@ class UserAuthenticationTest(TestCase):
         Setting up a test user for authentication tests, with a valid username and password.
         This method is called before every test to ensure the user is set up correctly.
         """
-        self.user = User.objects.create_user(username='testuser1738!!', password='testpass1738!!')
+        self.user = get_user_model().objects.create_user(username='testuser1738!!', password='testpass1738!!')
 
     def test_login_valid_user(self):
         """
