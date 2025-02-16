@@ -15,6 +15,7 @@ class User(AbstractUser):
         verbose_name="User Data",
         on_delete=models.CASCADE,
         null=True,
+        blank=True
     )
 
     """
@@ -50,7 +51,11 @@ class UserData(models.Model):   # Maybe needs a related_name in the cards attrib
     badges = models.ManyToManyField(
         "user.Badge", 
         verbose_name=_("Badges"),
+        blank=True
     )
+
+    def __str__(self):
+        return str(self.owner.username)
 
     # ----------------------------------------------------
 
