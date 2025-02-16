@@ -7,7 +7,8 @@ class Card(models.Model):
     Card contains all the data for a card.
     """
     card_name = models.TextField(_("Card Name"), unique=True)
-    image = models.TextField(_("Image URL"), default="Missing_Image_card.jpeg") # Could possibly change this to be an imageField
+    image = models.URLField(_("Image URL"), 
+                            default="https://images.unsplash.com/photo-1610629651605-0b181ad69aab?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
     card_desc = models.TextField(_("Card Description"), blank=True)
 
     class Meta:
@@ -18,12 +19,6 @@ class Card(models.Model):
     def __str__(self):
         return str(self.card_name)
     
-    
-    def create_card(self, card_name):
-        """
-        Creates a card, without an image. Throws an error if card name already exists
-        """
-        pass
 
     def add_image(self):
         """
@@ -65,7 +60,8 @@ class Pack(models.Model):
         verbose_name=_("Cards"),
         through="cards.PackCards",
     )
-    image = models.TextField(_("Image URL"), default="Missing_Image_pack.jpeg") # Could possibly change this to be an imageField
+    image = models.URLField(_("Image URL"), 
+                            default="https://plus.unsplash.com/premium_photo-1675438998042-8159173ccd82?q=80&w=999&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
 
     class Meta:
         verbose_name = _("Pack")
