@@ -80,9 +80,9 @@ class UserData(models.Model):   # Maybe needs a related_name in the cards attrib
             self.points -= points_to_remove
             self.save(update_fields=["points"])
         elif owned_points < points_to_remove:
-            raise ValueError("Invalid number: No negatives.")
-        else:
             raise ValueError("Invalid number: Insufficient points.")
+        else:
+            raise ValueError("Invalid number: No negatives.")
 
 
     def level_up(self, xp_after_gain : int):
@@ -90,22 +90,28 @@ class UserData(models.Model):   # Maybe needs a related_name in the cards attrib
             Defines specific level boundaries with the xp needed to move to the next level
             Checks current xp and xp_to_gain and checks if its enough
             """
-            xp_carried = 0
 
-            if 0 <= self.level <= 50:
+            current_level = self.level
+            if 0 <= current_level <= 50:
                 xp_required = 100
-            elif 51 <= self.level <= 100:
+            elif 51 <= current_level <= 100:
                 xp_required = 500
-            elif self.level > 100:
+            elif current_level > 100:
                 xp_required = 1000
 
-            if xp_after_gain >= xp_required:
-                    xp_carried = xp_after_gain - xp_required
-                    self.level += 1
-            else:
-                xp_carried = xp_after_gain
+            while xp_after_gain >= xp_required:
+                current_level += 1
 
-            self.xp = xp_carried
+                if 0 <= current_level <= 50:
+                    xp_after_gain -= 100
+                elif 51 <= current_level <= 100:
+                    xp_after_gain -= 500
+                elif current_level > 100:
+                    xp_after_gain -= 1000
+            
+
+            self.xp = xp_after_gain
+            self.level = current_level
             self.save(update_fields=["xp", "level"])
 
 
@@ -127,7 +133,7 @@ class UserData(models.Model):   # Maybe needs a related_name in the cards attrib
         return self.cards.all()
 
 
-    def get_all_card_quant(self) -> list[tuple[Card, int]]:
+    def get_all_cards_quant(self) -> list[tuple[Card, int]]:
         """
         Return a list of tuples containing all of the cards and thier quantites
         """
@@ -138,17 +144,6 @@ class UserData(models.Model):   # Maybe needs a related_name in the cards attrib
             card_list.append((card.card, card.quantity))
         return card_list
 
-    """ 
-    def add_card(self, card_to_add : Card):
-        player_cards = self.get_all_cards()
-        if not card_to_add in player_cards:
-            OwnedCard.objects.create(card=card_to_add, owner=self)
-        else:
-            target_card = OwnedCard.objects.get(card=card_to_add)
-            new_quant = target_card.quantity + 1
-            target_card.quantity = new_quant
-            target_card.save(update_fields=["quantity"])
-    """
 
     def add_card(self, card_to_add : Card, quantity : int = 1):
         """
@@ -159,10 +154,10 @@ class UserData(models.Model):   # Maybe needs a related_name in the cards attrib
             raise ValueError("Invalid number: No negatives or zero. Maybe try remove_card.")
         
         player_cards = self.get_all_cards()
-        if not card_to_add in player_cards:
+        if card_to_add not in player_cards:
             OwnedCard.objects.create(card=card_to_add, owner=self, quantity=quantity)
         else:
-            target_card = OwnedCard.objects.get(card=card_to_add)
+            target_card = OwnedCard.objects.get(card=card_to_add, owner=self)
             new_quant = target_card.quantity + quantity
             target_card.quantity = new_quant
             target_card.save(update_fields=["quantity"])
