@@ -47,19 +47,6 @@ class OwnedCard(models.Model):
                                     name="Unique Owned Card")
         ]
 
-    
-    def create_card(self, card_name):
-        """
-        Creates a card, without an image. Throws an error if card name already exists
-        """
-        pass
-
-    def add_image(self):
-        """
-        Changes an existing card's image field to another url
-        """
-        pass
-
 
 class PackCards(models.Model):
     card = models.ForeignKey("cards.Card", verbose_name=_("Card"), on_delete=models.CASCADE)
