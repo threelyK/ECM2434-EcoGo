@@ -55,6 +55,17 @@ class UserDataTest(TestCase):
         self.assertEqual(tUserData.xp, 0)
         self.assertRaises(Exception, tUserData.add_xp, -100)
 
+    def test_levelup_twice(self):
+        """
+        Tests with sufficient xp user is able to levelup more than once
+        - E.g. if a both level 1 and 2 require 100xp each and the player gets 200xp
+        then they will level up to level 2
+        """
+        tUserData = UserData.objects.get(id=1)
+        tUserData.add_xp(200) # Default 100xp is needed to level up to next level
+
+        self.assertEqual(tUserData.level, 2)
+
     def test_get_all_cards(self):
         """
         Tests that get_all_cards properly returns all the cards owned by the user
@@ -115,7 +126,7 @@ class UserDataTest(TestCase):
         tUserData.add_card(card)
         tUserData.add_card(card1, 2)
 
-        cards_qaunt = tUserData.get_all_card_quant()
+        cards_qaunt = tUserData.get_all_cards_quant()
 
         self.assertListEqual([cards_qaunt[0][1], cards_qaunt[1][1]], [1,2])
 
