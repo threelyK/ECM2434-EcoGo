@@ -2,15 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
 </head>
 <body>
-    <h1>Welcome to login!</h1>
-    <form method = "POST" autocomplete="off">
+    <h1>Welcome to Login!</h1>
+    
+    <form method="POST" autocomplete="off">
         {% csrf_token %}
 
-        {{loginform.as_p}}
+        
+        {{ loginform.as_p }}
 
         <input type="submit" value="Login">
+    </form>
 </body>
 </html>
