@@ -1,6 +1,27 @@
 from django.test import TestCase
 from apps.cards.models import Card, Pack, PackCards
 
+class CardTest(TestCase):
+    """
+    Tests the functionality of the Card model and its ORM/API methods
+    """
+
+    def setUp(self):
+        testCard = Card.objects.create(card_name="card0")
+    
+    def test_change_image(self):
+        """
+        Tests to see if Card is able to change the image to an existing file
+        in images/card_images/
+        """
+        testCard = Card.objects.get(card_name="card0")
+
+        testCard.image = "test"
+        testCard.change_image("Missing_Texture.png")
+        self.assertEqual(testCard.image, ".\images\card_images\Missing_Texture.png")
+
+        self.assertRaises(FileNotFoundError, testCard.change_image, "NotA.png")
+
 class PackTest(TestCase):
     """
     Tests the functionality of the Pack model and its ORM/API methods
