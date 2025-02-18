@@ -1,14 +1,15 @@
 from django.db import models
 from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import validate_slug
+from pathlib import Path
 
 class Card(models.Model):
     """
     Card contains all the data for a card.
     """
     card_name = models.TextField(_("Card Name"), unique=True)
-    image = models.URLField(_("Image URL"), 
-                            default="https://images.unsplash.com/photo-1610629651605-0b181ad69aab?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
+    image = models.ImageField(_("Image File Path"), upload_to="./images/card_images/", default="./images/card_images/Missing_Texture.png")
     card_desc = models.TextField(_("Card Description"), blank=True)
 
     class Meta:
@@ -20,11 +21,21 @@ class Card(models.Model):
         return str(self.card_name)
     
 
-    def add_image(self):
+    def change_image(self, new_image_file_name : str):
         """
-        Changes an existing card's image field to another url
+        Changes an existing card's image field to point to an existing image path
         """
-        pass
+        # current_directory = /images/card_images/
+        current_directory = Path(__file__).parent.resolve()
+        image_path = current_directory / "images" / "card_images" / new_image_file_name
+
+        if Path.exists(image_path):
+            relative_path = Path.relative_to(image_path, current_directory)
+            self.image = f".\{relative_path}"
+            self.save(update_fields=["image"])
+        else:
+            raise FileNotFoundError("Invalid File Path: File doesn't exist")
+
 
 
 class OwnedCard(models.Model):
