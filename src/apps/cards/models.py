@@ -9,7 +9,9 @@ class Card(models.Model):
     Card contains all the data for a card.
     """
     card_name = models.TextField(_("Card Name"), unique=True)
-    image = models.ImageField(_("Image File Path"), upload_to="./images/card_images/", default="./images/card_images/Missing_Texture.png")
+    image = models.ImageField(_("Image File Path"), 
+                              upload_to="./images/card_images/", 
+                              default="./images/card_images/Missing_Texture.png")
     card_desc = models.TextField(_("Card Description"), blank=True)
 
     class Meta:
