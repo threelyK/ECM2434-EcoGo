@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="../../../../staticfiles/css/navbar.css">
-    <link rel="stylesheet" href="../../../../staticfiles/css/page.css">
-    <link rel="stylesheet" href="../../../../staticfiles/css/avatar.css">
-    <link rel="stylesheet" href="../../../../staticfiles/css/centered.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static '/css/page.css' %}">
+    <link rel="stylesheet" href="{% static '/css/avatar.css' %}">
+    <link rel="stylesheet" href="{% static '/css/centered.css' %}">
     <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
-    <script src="../staticfiles/js/navbar.js"></script>
+    <script src="{% static '/js/navbar.js' %}"></script>
     <!-- Bootstrap -->
-    <script src="../staticfiles/bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.min.bundle.js"></script>
-    <link rel="stylesheet" href="../staticfiles/bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css">
+    <script src="{% static '/bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.min.bundle.js' %}"></script>
+    <link rel="stylesheet" href="{% static '/bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' }%">
     <title>Home</title>
 </head>
 <body>
@@ -51,7 +52,7 @@
                     <i class="lni lni-gear-1"></i>
                     <span>Settings</span>
                 </a>
-                <a href="#" class="sidebar-link">
+                <a href="{% url 'landing' %}" class="sidebar-link">
                     <i class="lni lni-exit"></i>
                     <span>Logout</span>
                 </a>
@@ -60,7 +61,7 @@
         <div class="main p-3">
             <div class="centered">
                 <div class="avatar">
-                    <img src="../staticfiles/photos/default.png" alt="avatar">
+                    <img src="{% static '/photos/default.png' %}" alt="avatar}">
                     <p>Username</p>
                 </div>
                 <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif;">Scan QR Code</button>
@@ -69,7 +70,7 @@
         </div>
     </div>
 </body>
-<script src="../staticfiles/js/navbar.js"></script>
+<script src="{% static '/js/navbar.js' %}"></script>
 </html>
 
 
