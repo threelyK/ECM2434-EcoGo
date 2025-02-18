@@ -1,13 +1,12 @@
 # - Authentication models/functions - #
 
 from django.contrib.auth.models import auth
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
 
 from django.shortcuts import render, redirect
-from .forms import CreateUserForm, LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model # not being used rn
-from django.contrib.auth import authenticate, login, logout
+from .forms import LoginForm, CreateUserForm
 
 
 def landing(request):
@@ -25,9 +24,9 @@ def register(request):
         # checks if the form data is valid (including password1 and password2 to match)
         if form.is_valid():
             form.save()
-
             # redirects the user to the login page after successful registration
             return redirect("login")
+        
         else:
             print(form.errors)
 
@@ -55,10 +54,10 @@ def user_login(request):
 
             if user is not None:
                 # logs the user in
-                login(request, user)
+                auth.login(request, user)
 
                 # redirects the user to the homepage after a successful login
-                return redirect("home")
+                return redirect("homepage")
             else:
                 # the authentication failed
                 pass
@@ -71,12 +70,13 @@ def user_login(request):
 
 @login_required(login_url='login') # Enforces the rule that users need to be logged in to access the home page
 def homepage(request):
-    # redners the homepage but only if the user is logged in
+    # renders the homepage but only if the user is logged in
     return render(request, 'user/homepage.html')
+
 
 def user_logout(request):
 
-    logout(request)
+    auth.logout(request)
 
     # redirects the user to the home page if they log out
-    return redirect("home")
+    return redirect("homepage")

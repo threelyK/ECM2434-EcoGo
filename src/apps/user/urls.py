@@ -7,6 +7,6 @@ urlpatterns = [
     path('', views.landing, name="landing"),  # Takes the user to the initial page with login/register options
     path('register', views.register, name="register"),  # Takes the user to the register page
     path('login', views.user_login, name="login"),  # Takes the user to the login page
-    path('home', views.homepage, name="home"),  # Takes the user to the home page if they are already logged in
+    path('homepage', views.homepage, name="homepage"),  # Takes the user to the home page if they are already logged in
     path('user-logout', views.user_logout, name="user-logout"),  # Logs the user out
 ]
