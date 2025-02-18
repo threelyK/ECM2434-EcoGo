@@ -1,11 +1,13 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.test import TestCase
+from django.urls import reverse
 
 
 class UserAuthenticationTest(TestCase):
     """
     Test cases for user authentication.
-    These tests include verifications for a valid login, invalid login, and accessing protected views such as the home page.
+    These tests include verifications for a valid login, invalid login, and accessing protected views such as the home page. 
     """
 
     def setUp(self):
@@ -38,5 +40,15 @@ class UserAuthenticationTest(TestCase):
         """
         response = self.client.post('/home', {'username': 'testuser1738!!', 'password': 'testpass1738!!'}, follow=False)
         self.assertEqual(response.status_code, 302)  # The user is successfully redirected to another page (the login page).
+
+
+    def test_landing_page_loads(self):
+        """
+        This simply tests whether the landing page loads correctly by returning a 200 status code.
+        """
+        response = self.client.get(reverse('landing'))
+
+        # Check if the HTTP status code is 200 (OK)
+        self.assertEqual(response.status_code, 200)
 
 
