@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from apps.user.models import User, UserData
+from apps.user.models import UserData
 from apps.cards.models import Card, OwnedCard
 # run tests using `py manage.py test apps/user`
 
@@ -53,7 +53,7 @@ class UserDataTest(TestCase):
         Run before each test to setup a user to work with
         """
 
-        user = User.objects.create_user("123", password="123")
+        user = get_user_model().objects.create_user("123", password="123")
         userData = UserData.objects.create(owner=user)
 
     def test_add_points(self):
