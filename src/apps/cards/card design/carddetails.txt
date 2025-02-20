@@ -1,0 +1,36 @@
+
+Renewable:
+
+Name: VORTEX-9: Wind-Powered Engine
+Description: Wind energy is one of the cheapest and fastest-growing renewable energy sources, with modern turbines converting up to 50% of wind’s kinetic energy into electricity.
+
+Name: HELIO-6: Powered by Pure Light
+Description: Solar panels can still generate electricity on cloudy days—they don’t need direct sunlight to work! While they produce the most energy in full sun, they can still capture diffused sunlight and operate at 10-25% efficiency on overcast days.
+
+Name: Hydronis: Surging Spirit of the Dam
+Description: Hydropower is the oldest form of mechanical renewable energy! People have been using water to generate power for over 2,000 years, dating back to ancient Greece, where water wheels were used to grind grain into flour!
+
+Name: Thermagon: Core of Geothermal Might
+Description: Geothermal energy is virtually limitless! The heat from the Earth's core is constantly replenished, meaning we could theoretically harness geothermal power for billions of years without running out!
+
+Name: Furnisprout: Burning with Organic Might
+Description: Biomass energy can reduce waste! By converting organic waste like agricultural leftovers, food scraps, and wood chips into energy, biomass helps reduce landfill waste and cuts down on methane emissions, which are harmful to the environment.
+
+Non-renewable:
+
+Name: Coal-imp: Scuttler of the Coal mines
+Description: Coal mining devastates ecosystems, releasing toxic pollutants into the air and water. It contributes to climate change, destroys habitats, and leaves behind polluted land and waterways, creating environmental damage that lasts for generations.
+
+Name: Crudespawn: Tide of the polluted depths
+Description: Oil drilling causes massive environmental damage, leading to oil spills, habitat destruction, and water contamination. It also releases methane and carbon dioxide, major contributors to climate change and air pollution, harming both ecosystems and human health.
+
+Name: Methanoth: Wraith of the Poisoned Air
+Desription: Natural gas extraction can cause environmental damage through methane leaks, which are much more potent than carbon dioxide in trapping heat and contributing to climate change. Methane emissions from drilling and transportation can seep into the atmosphere, intensifying the global warming crisis.
+
+Name: REACT-O-TRON: Heart of the Reactor
+Description: Nuclear power plants produce zero carbon emissions while generating electricity! Unlike coal or gas plants, they don’t release greenhouse gases, making them one of the cleanest energy sources in terms of air pollution.
+
+Miscellaneous:
+
+Name: Livewire: Pulse of the endless grid
+Description: The power grid is one of the largest machines on Earth! It’s a huge, interconnected network spanning millions of miles of power lines, delivering electricity to billions of people in real time. Despite its size, it operates within a delicate balance—too much or too little power can cause blackouts.
