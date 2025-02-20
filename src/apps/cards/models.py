@@ -122,7 +122,8 @@ class Pack(models.Model):
         verbose_name=_("Cards"),
         through="cards.PackCards",
     )
-    image = models.TextField(_("Image URL"), default="Missing_Image_pack.jpeg") # Could possibly change this to be an imageField
+    image = models.URLField(_("Image URL"), 
+                            default="https://plus.unsplash.com/premium_photo-1675438998042-8159173ccd82?q=80&w=999&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
     
     #This exists to allow for an instance attribute not related to the database
     def __init__(self, *args, **kwargs):
