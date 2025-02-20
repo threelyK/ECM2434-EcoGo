@@ -13,21 +13,31 @@
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
 </head>
 <body>
-    <div class="register-container">
-        <h1>Create an account!</h1>
-        <form>
-            <label>Username:</label>
-            <input type="text" placeholder="Username" required>
-            <label>E-Mail:</label>
-            <input type="email" placeholder="Must contain a valid email." required>
-            <label>Password:</label>
-            <input type="password" placeholder="Must contain more than 8 characters." required>
-            <label></label>
-            <input type="password" placeholder="Confirm Password" required>
-            <button type="submit">Register</button> 
-        </form>
+    <div class="centered">
+        <div class="register-container shadow-lg">
+            <h1>Create an account!</h1>
+            <form>
+                <div>
+                    <label>Username</label>
+                    <input type="text" placeholder="Username" required><br>
+                </div>
+                <div>
+                    <label>E-Mail</label>
+                    <input type="email" placeholder="Must contain a valid email" required><br>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" id=password placeholder="Must contain more than 8 characters" minlength="8" required><br>
+                </div>
+                <div>
+                    <label>Confirm Password</label>
+                    <input type="password" id="confirm_password" placeholder="Confirm Password" required><br>
+                </div>
+                <button type="submit" class="btn btn-outline-success">Register</button> 
+            </form>
+        </div>
     </div>
-    
-    <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
 </body>
+<script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/confirm_password.js'}"></script>
 </html>
