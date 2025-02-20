@@ -8,6 +8,17 @@ class CardTest(TestCase):
 
     def setUp(self):
         testCard = Card.objects.create(card_name="card0")
+
+    def test_create_card(self):
+        """
+        Tests to see if Cards can be made w/ and w/o an image
+        """
+        uno_card = Card.create_card(name="uno")
+        grunty_card = Card.create_card(name="Grunty", card_image="Test.jpg")
+        self.assertRaises(FileNotFoundError, Card.create_card, name='dos', card_image='Missing')
+        self.assertEqual(uno_card.image, ".\\images\\card_images\\Missing_Texture.png")
+        self.assertEqual(grunty_card.image, ".\\images\\card_images\\Test.jpg")
+
     
     def test_change_image(self):
         """
@@ -18,7 +29,7 @@ class CardTest(TestCase):
 
         testCard.image = "test"
         testCard.change_image("Missing_Texture.png")
-        self.assertEqual(testCard.image, ".\images\card_images\Missing_Texture.png")
+        self.assertEqual(testCard.image, ".\\images\\card_images\\Missing_Texture.png")
 
         self.assertRaises(FileNotFoundError, testCard.change_image, "NotA.png")
 
