@@ -3,10 +3,11 @@
     background-color: white;
     padding: 10px;
     border: 1px solid #28502E;
-    height: 50%;
+    height: 70%;
     width: 40%;
     border-radius: 25px;
-    margin-top: 50px; 
+    margin-top: 50px;
+    margin-bottom: 50px; 
 }
 
 .register-container h1 {

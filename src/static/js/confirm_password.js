@@ -10,5 +10,5 @@ function validatePassword(){
     }
 }
 
-password.onchange = validatePassword;
-confirm_password.onkeyup = validatePassword;
+password.addEventListener("input", validatePassword);
+confirm_password.addEventListener("input", validatePassword);
