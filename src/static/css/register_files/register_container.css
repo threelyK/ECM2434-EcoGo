@@ -1,0 +1,27 @@
+.register_container {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.register_container h1 {
+    font-size: 20pt;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #749c28;
+}
+
+input[type=text], input[type=password], input[type=email] {
+    width: 50%;
+    margin-bottom: 15px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #749c28;
+}

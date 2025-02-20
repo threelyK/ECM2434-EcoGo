@@ -2,15 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Register</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/css/page.css' %}">
+    <link rel="stylesheet" href="{% static '/css/centered.css' %}">
+    <link rel="stylesheet" href="{% static '/css/register_files/register_container.css' %}">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
 </head>
 <body>
-    <h1>Welcome to Registration!</h1>
-    <form method = "POST" autocomplete="off">
-        {% csrf_token %}
-
-        {{registerform.as_p}}
-
-        <input type="submit" value="Register">
+    <div class="register-container">
+        <h1>Create an account!</h1>
+        <form>
+            <label>Username:</label>
+            <input type="text" placeholder="Username" required>
+            <label>E-Mail:</label>
+            <input type="email" placeholder="Must contain a valid email." required>
+            <label>Password:</label>
+            <input type="password" placeholder="Must contain more than 8 characters." required>
+            <label></label>
+            <input type="password" placeholder="Confirm Password" required>
+            <button type="submit">Register</button> 
+        </form>
+    </div>
+    
+    <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
