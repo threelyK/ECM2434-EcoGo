@@ -1,8 +1,12 @@
 from django.db import models
 from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
-from django.core.validators import validate_slug
 from pathlib import Path
+
+current_directory=Path(__file__).parent
+card_images_directory=current_directory / 'images' / 'card_images'
+# 'images\card_images\' Note: doesn't come with ./ at the beginning
+relative_path_to_card_images=card_images_directory.relative_to(current_directory)
 
 class Card(models.Model):
     """
@@ -10,9 +14,9 @@ class Card(models.Model):
     """
     card_name = models.TextField(_("Card Name"), unique=True)
     image = models.ImageField(_("Image File Path"), 
-                              upload_to="./images/card_images/", 
-                              default="./images/card_images/Missing_Texture.png")
-    card_desc = models.TextField(_("Card Description"), blank=True)
+                              upload_to=f".\\{str(relative_path_to_card_images)}", 
+                              default=f".\\{str(relative_path_to_card_images)}\\Missing_Texture.png")
+    card_desc = models.TextField(_("Card Description"), blank=True, null=True)
 
     class Meta:
         verbose_name = _("Card")
@@ -21,22 +25,50 @@ class Card(models.Model):
 
     def __str__(self):
         return str(self.card_name)
-    
 
-    def change_image(self, new_image_file_name : str):
+    @staticmethod
+    def create_card(name: str, desc=None, card_image=None):
+        """
+        Creates a Card object with a given name. Optional description an image
+        """
+        if card_image:
+            fileExists, relative_image_path = Card.validate_image_exists(card_image)
+            if fileExists:
+                new_card = Card.objects.create(card_name=name, card_desc=desc, image=f".\\{relative_image_path}")
+            else:
+                raise FileNotFoundError(f"Invalid File Path: File doesn't exist. Recieved:{card_images_directory/card_image}")
+        else:
+            new_card = Card.objects.create(card_name=name, card_desc=desc)
+        return new_card
+    
+    @staticmethod
+    def validate_image_exists(image_file : str) -> tuple[bool, str]:
+        """
+        Checks whether the image file exists in the card_images directory
+        
+        Returns: Tuple of boolean and relative image path if the image file exists in dir "./images/card_images/"
+        """
+        image_path = card_images_directory / image_file
+
+        if image_path.exists():
+            relative_path = image_path.relative_to(current_directory)
+            return (True, str(relative_path))
+        else:
+            return (False, None)
+            
+
+    def change_image(self, new_image : str):
         """
         Changes an existing card's image field to point to an existing image path
         """
-        # current_directory = /images/card_images/
-        current_directory = Path(__file__).parent.resolve()
-        image_path = current_directory / "images" / "card_images" / new_image_file_name
-
-        if Path.exists(image_path):
-            relative_path = Path.relative_to(image_path, current_directory)
-            self.image = f".\{relative_path}"
+        image_exists, relative_path = self.validate_image_exists(new_image)
+        if image_exists:
+            self.image = f".\\{relative_path}"
             self.save(update_fields=["image"])
         else:
-            raise FileNotFoundError("Invalid File Path: File doesn't exist")
+            raise FileNotFoundError(f"Invalid File Path: File doesn't exist. Recieved:{card_images_directory/new_image}")
+
+        
 
 
 
