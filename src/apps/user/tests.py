@@ -1,11 +1,13 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.test import TestCase
+from django.urls import reverse
 
 
 class UserAuthenticationTest(TestCase):
     """
     Test cases for user authentication.
-    These tests include verifications for a valid login, invalid login, and accessing protected views such as the home page.
+    These tests include verifications for a valid login, invalid login, and accessing protected views such as the home page. 
     """
 
     def setUp(self):
@@ -38,5 +40,49 @@ class UserAuthenticationTest(TestCase):
         """
         response = self.client.post('/home', {'username': 'testuser1738!!', 'password': 'testpass1738!!'}, follow=False)
         self.assertEqual(response.status_code, 302)  # The user is successfully redirected to another page (the login page).
+
+    def test_login_incorrect_password(self):
+        """
+        This test simulates a login request with the correct username but incorrect password.
+        We do NOT expect a 200 response code as the password is incorrect.
+        """
+        response = self.client.post('/login', {'username': 'testuser1738!!', 'password': 'wrongpass'}, follow=True)
+        self.assertNotEqual(response.status_code, 200)  # Ensure the login was not successful.
+    
+    def test_logout(self):
+        """
+        This test simulates a user logging out.
+        We expect a 302 redirect response which indicates that the logout was successful and the user is redirected to the login page.
+        """
+        self.client.login(username='testuser1738!!', password='testpass1738!!')
+        response = self.client.get('/logout', follow=True)
+        self.assertEqual(response.status_code, 302)  # The user is successfully redirected to the login page after logout.
+    
+    
+    def test_register_user(self):
+        """
+        This test simulates a user registration request with valid data.
+        We expect a 302 redirect response which indicates that the registration was successful and the user is redirected to the login page.
+        """
+        response = self.client.post('/register', {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password1': 'newpassword123',
+            'password2': 'newpassword123'
+        }, follow=True)
+        self.assertEqual(response.status_code, 302)  # The user is successfully redirected to the login page after registration.
+        self.assertTrue(get_user_model().objects.filter(username='newuser').exists())  # Check if the new user was created.
+
+        
+
+
+    def test_landing_page_loads(self):
+        """
+        This simply tests whether the landing page loads correctly by returning a 200 status code.
+        """
+        response = self.client.get(reverse('landing'))
+
+        # Check if the HTTP status code is 200 (OK)
+        self.assertEqual(response.status_code, 200)
 
 
