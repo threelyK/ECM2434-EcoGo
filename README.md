@@ -22,3 +22,5 @@ All dependencies needed are a part of the settings.py file which is located in s
 There are two ways to test our project's functionalities. Using the unit tests written, and by performing manual tests.
 
 Regarding the login system, all unit tests are within the src/apps/user, located in tests.py. You can run these tests using the command `python manage.py test apps/user` while being in the project directory. This should run the tests through your terminal. Secondly, you can test the system by runnning the server and performing manual tests to ensure that login, register operations work as intended. 
+
+Regarding the database, all unit tests are also included within the tests.py file in each app. You would run these using `python manage.py test apps/user`, however replacing user with the app that you would want to test. The database unit tests have been written in a different class than other unit tests (e.g. login tests). 
