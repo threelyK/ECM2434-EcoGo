@@ -36,3 +36,9 @@ form div {
     align-items: center;
     justify-content: center;
 }
+
+.logo {
+    width: 20%;
+    height: auto;
+}
+
