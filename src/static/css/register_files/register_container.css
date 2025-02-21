@@ -22,7 +22,7 @@ label {
     margin-bottom: 2px;
 }
 
-input[type=text], input[type=password], input[type=email] {
+input[type=text], input[type=password], input[type=email], input[type=checkbox] {
     width: 50%;
     padding: 10px;
     box-sizing: border-box;
@@ -32,7 +32,7 @@ input[type=text], input[type=password], input[type=email] {
     text-align: center;
 }
 
-button[type=submit] {
+button[type=submit], button[id=privacy_button] {
     margin-top: 20px;
 }
 
