@@ -12,7 +12,7 @@ from django.conf import settings
 class Website(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(unique=True, editable=False)
-    url = models.URLField(max_length=200, default='http://127.0.0.1:8000/')
+    url = models.URLField(max_length=200, default='http://127.0.0.1:8000/', editable=False)
     qr_code = models.ImageField(upload_to='qr_codes', blank=True)
     
     def __str__(self):
@@ -24,11 +24,13 @@ class Website(models.Model):
         return reverse('website_detail', args=[self.id])  
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        if not self.slug:
+            self.slug = slugify(self.name)  # Ensures spaces become hyphens
 
-        self.url = f"http://127.0.0.1:8000/{self.name}"  # Name matches the path (e.g., 'login' -> http://127.0.0.1:8000/login)
+        domain = settings.SITE_DOMAIN if hasattr(settings, "SITE_DOMAIN") else "http://127.0.0.1:8000"
+        self.url = f"{domain}/qrgenerator/{self.slug}/"
 
-        # Generate QR Code
+        # Creats QR CPde
         qr = qrcode.make(self.url)
         buffer = BytesIO()
         qr.save(buffer, format="PNG")
@@ -37,19 +39,18 @@ class Website(models.Model):
 
         super().save(*args, **kwargs)
 
+    ## my failure of attempt to create a QR code for templates automatically 
     @staticmethod
     def get_user_urls():
-        """ Fetch all valid URL patterns from user.urls """
         user_urls = []
         resolver = get_resolver()
         for pattern in resolver.reverse_dict.keys():
             if isinstance(pattern, str) and pattern not in ["admin", "qrgenerator"]:  
                 user_urls.append(pattern)  
         return user_urls
-    
+    ## failure for adding to Websites Templated QRCodes
     @classmethod
     def create_from_templates(cls):
-        """ Auto-create Website entries from templates in apps/user/templates/ """
         templates_path = os.path.join(settings.BASE_DIR, "apps/user/templates/")
         if os.path.exists(templates_path):
             for file in os.listdir(templates_path):

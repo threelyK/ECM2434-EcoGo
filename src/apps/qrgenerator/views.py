@@ -9,3 +9,4 @@ def qr_code_list(request):
 def website_detail(request, slug):
     website = get_object_or_404(Website, slug=slug)
     return render(request, 'qrgenerator/website_detail.html', {'website': website})
+

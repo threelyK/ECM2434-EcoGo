@@ -9,11 +9,6 @@
 <body>
     <h1>{{ website.name }}</h1>
     <p>URL: <a href="{{ website.url }}">{{ website.url }}</a></p>
-
-    {% if website.qr_code %}
-        <img src="{{ website.qr_code.url }}" alt="QR Code">
-    {% else %}
-        <p>No QR Code available.</p>
-    {% endif %}
+    <img src="{{ website.qr_code.url }}" alt="QR Code for {{ website.name }}">
 </body>
 </html>
