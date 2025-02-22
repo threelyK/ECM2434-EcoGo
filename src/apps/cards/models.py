@@ -17,6 +17,7 @@ class Card(models.Model):
                               upload_to=f".\\{str(relative_path_to_card_images)}", 
                               default=f".\\{str(relative_path_to_card_images)}\\Missing_Texture.png")
     card_desc = models.TextField(_("Card Description"), blank=True, null=True)
+    value = models.IntegerField(_("Card Value"), default=0)
 
     class Meta:
         verbose_name = _("Card")
