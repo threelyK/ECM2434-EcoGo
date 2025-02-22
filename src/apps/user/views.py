@@ -7,8 +7,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model # not being used rn
 from .forms import LoginForm, CreateUserForm
-
-
+from django.http import Http404
 
 def landing(request):
     # renders the landing page where users can choose to log in or register
@@ -80,5 +79,52 @@ def user_logout(request):
     auth.logout(request)
 
     # redirects the user to the home page if they log out
-    return redirect("landing")
+    return redirect("homepage")
 
+@login_required(login_url="login")
+def inventory(request):
+    """
+    Endpoint for "user/inventory/index", serves inventory page throwing error if 
+    user has invalid internal state
+    """
+
+    if request.method == "GET":
+        return "Hello World"
+    else:
+        return Http404()
+
+@login_required(login_url="login")
+def sell_card(request):
+    """
+    Endpoint for "user/inventory/sellCard": removes a card from a users inventory, adds the cards value to
+    the users points and serves and updated template with the changes reflected.
+    """
+
+    if request.method == "POST":
+        return "Hello World"
+    else:
+        return Http404()
+
+@login_required(login_url="login")
+def inventory(request):
+    """
+    Endpoint for "user/inventory/index", serves inventory page throwing error if 
+    user has invalid internal state
+    """
+
+    if request.method == "GET":
+        return "Hello World"
+    else:
+        return Http404()
+
+@login_required(login_url="login")
+def sell_card(request):
+    """
+    Endpoint for "user/inventory/sellCard": removes a card from a users inventory, adds the cards value to
+    the users points and serves and updated template with the changes reflected.
+    """
+
+    if request.method == "POST":
+        return "Hello World"
+    else:
+        return Http404()
