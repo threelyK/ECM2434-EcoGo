@@ -1,6 +1,11 @@
 from django.test import TestCase
 from apps.cards.models import Card, Pack, PackCards
 
+class CardsViewsTest(TestCase):
+
+    def setUp(self):
+        pass
+
 class CardTest(TestCase):
     """
     Tests the functionality of the Card model and its ORM/API methods
