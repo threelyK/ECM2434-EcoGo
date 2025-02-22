@@ -5,9 +5,9 @@ from django.contrib.auth import authenticate
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model # not being used rn
 from .forms import LoginForm, CreateUserForm
-from django.http import Http404
 
 def landing(request):
     # renders the landing page where users can choose to log in or register
@@ -84,12 +84,12 @@ def user_logout(request):
 @login_required(login_url="login")
 def inventory(request):
     """
-    Endpoint for "user/inventory/index", serves inventory page throwing error if 
+    Endpoint for "user/inventory", serves inventory page throwing error if 
     user has invalid internal state
     """
 
     if request.method == "GET":
-        return "Hello World"
+        return HttpResponse("Hello World")
     else:
         return Http404()
 
@@ -101,7 +101,7 @@ def sell_card(request):
     """
 
     if request.method == "POST":
-        return "Hello World"
+        return HttpResponse("Hello World")
     else:
         return Http404()
 
