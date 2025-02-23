@@ -37,6 +37,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'apps.user.apps.UserConfig',
     'apps.cards.apps.CardsConfig',
+    'apps.qrgenerator.apps.QrgeneratorConfig',
 
     'django.contrib.admin',
     'django.contrib.contenttypes', # Make sure this is above django.contrib.auth
@@ -44,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.qrgenerator',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +62,9 @@ ROOT_URLCONF = 'ecoGo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / "apps/user/templates",  #user template path
+            BASE_DIR / "apps/qrgenerator/templates",], # qrgenerator template path
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -11,8 +11,8 @@ from django.conf import settings
 ## This stuff is used for creating a Website and saving a specific QRCode for specific templated and create Websites
 class Website(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    slug = models.SlugField(unique=True, editable=False)
-    url = models.URLField(max_length=200, default='http://127.0.0.1:8000/', editable=False)
+    slug = models.SlugField(unique=True, blank=True, editable=False)
+    url = models.URLField(max_length=200, blank=True, default='http://127.0.0.1:8000/', editable=False)
     qr_code = models.ImageField(upload_to='qr_codes', blank=True)
     
     def __str__(self):
@@ -27,15 +27,17 @@ class Website(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)  # Ensures spaces become hyphens
 
-        domain = settings.SITE_DOMAIN if hasattr(settings, "SITE_DOMAIN") else "http://127.0.0.1:8000"
+        domain = settings.SITE_DOMAIN if hasattr(settings, "SITE_DOMAIN") else "http://127.0.0.1:8000" #site domain if we have one but nope.
         self.url = f"{domain}/qrgenerator/{self.slug}/"
 
-        # Creats QR CPde
+        # Creates QR Code
         qr = qrcode.make(self.url)
         buffer = BytesIO()
         qr.save(buffer, format="PNG")
         fname = f'qr_code-{self.slug}.png'
         self.qr_code.save(fname, File(buffer), save=False)
+
+        buffer.close()
 
         super().save(*args, **kwargs)
 
