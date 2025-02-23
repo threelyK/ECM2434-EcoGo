@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Codes</title>
+</head>
+<body>
+    <h1>List of QR Codes</h1>
+    <ul>
+        {% for website in websites %}
+            <li>
+                <a href="{{ website.url }}">{{ website.name }}</a>
+                <br>
+                {% if website.qr_code %}
+                    <img src="{{ website.qr_code.url }}" alt="QR Code for {{ website.name }}">
+                {% else %}
+                    <p>No QR Code available</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

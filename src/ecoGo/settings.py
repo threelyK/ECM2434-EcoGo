@@ -16,7 +16,10 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+# Media file auto route
+import os
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -34,6 +37,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'apps.user.apps.UserConfig',
     'apps.cards.apps.CardsConfig',
+    'apps.qrgenerator.apps.QrgeneratorConfig',
 
     'django.contrib.admin',
     'django.contrib.contenttypes', # Make sure this is above django.contrib.auth
@@ -58,7 +62,9 @@ ROOT_URLCONF = 'ecoGo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / "apps/user/templates",  #user template path
+            BASE_DIR / "apps/qrgenerator/templates",], # qrgenerator template path
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
