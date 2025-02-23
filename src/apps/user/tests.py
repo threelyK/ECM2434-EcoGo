@@ -66,8 +66,17 @@ class UserDataTest(TestCase):
         Run before each test to setup a user to work with
         """
 
-        user = User.objects.create_user("123", password="123")
-        UserData.objects.create(owner=user)
+        User.objects.create_user(username="123", password="123")
+
+    def test_user_data_autocreated(self):
+        """
+        Tests that creating a new user also creates an accompanying
+        UserData with that user as the owner
+        """
+        tUser = User.objects.get(username="123")
+        tUserData = UserData.objects.get(owner=tUser)
+
+        self.assertIsInstance(tUserData, UserData)
 
     def test_add_points(self):
         """
