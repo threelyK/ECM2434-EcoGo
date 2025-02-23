@@ -18,6 +18,16 @@ class User(AbstractUser):
         blank=True
     )
 
+    def save(self, **kwargs):
+        """
+        Overrides save method in order to create a new UserData 
+        with new a User
+        """
+        created = not self.pk
+        super().save(**kwargs)
+        if created:
+            UserData.objects.create(owner=self)
+
     """
     USER_TYPE_CHOICES = {
         "P" : "Player",
