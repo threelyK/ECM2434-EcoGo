@@ -6,34 +6,44 @@ from apps.user.models import UserData
 from apps.cards.models import Card
 
 
-if len(Card.objects.all()) < 2:
+if not Card.objects.get(card_name="Vortex-9"):
     Card.create_card(name="Vortex-9", 
-                                desc="""Wind energy is one of the cheapest and fastest-growing renewable energy sources, 
-                                with modern turbines converting up to 50% of wind’s kinetic energy into electricity""",
-                                card_image="VORTEX-9.png"
-                                )
-                                
+                 card_image="VORTEX-9.png", 
+                 card_desc="""Wind energy is one of the cheapest and fastest-growing renewable energy sources, 
+                 with modern turbines converting up to 50% of wind’s kinetic energy into electricity""")
+
+if not Card.objects.get(card_name="Hydronis"):                        
     Card.create_card(name="Hydronis", 
-                                desc="""Hydropower is the oldest form of mechanical renewable energy! 
-                                People have been using water to generate power for over 2,000 years, 
-                                dating back to ancient Greece, where water wheels were used to grind grain into flour!""",
-                                card_image="Hydronis.webp"
-                                )
+                 card_image="Hydronis.webp", 
+                 desc="""Hydropower is the oldest form of mechanical renewable energy! 
+                 People have been using water to generate power for over 2,000 years, 
+                 dating back to ancient Greece, where water wheels were used to grind grain into flour!""")
+
+if not Card.objects.get(card_name="Hydronis"): 
+    Card.create_card(name="Crudespawn", 
+                    card_image="Crudespawn.png", 
+                    desc="""Oil drilling causes massive environmental damage, leading to oil spills, 
+                    habitat destruction, and water contamination. It also releases methane and carbon dioxide, 
+                    major contributors to climate change and air pollution, harming both ecosystems and human health.""")
 
 cards_instance = {
-    "vor": Card.objects.get(card_name="Vortex-9"),
-    "hyd": Card.objects.get(card_name="Hydronis"),
+    # Contains Card and frame number 0 = Blue, 1 = Black, Change frame to be included in card model
+    "vor": (Card.objects.get(card_name="Vortex-9"), 0), 
+    "hyd": (Card.objects.get(card_name="Hydronis"), 0),
+    "cru": (Card.objects.get(card_name="Crudespawn"), 1)
 }
 
 card_scan_UUIDs = {
     "vortex_UUIDs": ['4012cf77-7b46-4c2c-90f0-a1b821a123ea'],
     "hydronis_UUIDs": ['24d79f65-4a8e-4f77-8bf4-b2447cf7ebcf'],
+    "crudespawn_UUIDs": ['bc9519d9-0adc-43d7-8912-13611c80fd38']
 }
 
 # A new entry will be created for new QR code with the repective index number
 card_scan_UUID_visitors = {
     "vortex0_visitor_IDs": [],
     "hydronis0_visitor_IDs": [],
+    "crudespawn0_visitor_IDs": [],
 }
 
 
@@ -51,10 +61,10 @@ def card_scan(request, url_UUID):
     
     current_user = request.user
     current_UD = UserData.objects.get(owner=current_user)
-    
+
     # Initialise card values for given URL
     if url_UUID in card_scan_UUIDs.get("vortex_UUIDs"):
-        card = cards_instance.get("vor")
+        card, frame = cards_instance.get("vor")
         
         # Find prev_visitor_IDs list for this URL
         visitors_index = card_scan_UUIDs.get("vortex_UUIDs").index(url_UUID)
@@ -62,14 +72,27 @@ def card_scan(request, url_UUID):
 
 
     elif url_UUID in card_scan_UUIDs.get("hydronis_UUIDs"):
-        card = cards_instance.get("hyd")
+        card, frame = cards_instance.get("hyd")
 
-        # Find prev_visitor_IDs list for this URL
         visitors_index = card_scan_UUIDs.get("hydronis_UUIDs").index(url_UUID)
         prev_visitor_IDs = card_scan_UUID_visitors.get(f"hydronis{visitors_index}_visitor_IDs")
+
+    elif url_UUID in card_scan_UUIDs.get("crudespawn_UUIDs"):
+        card, frame = cards_instance.get("cru")
+
+        visitors_index = card_scan_UUIDs.get("crudespawn_UUIDs").index(url_UUID)
+        prev_visitor_IDs = card_scan_UUID_visitors.get(f"crudespawn{visitors_index}_visitor_IDs")
+
     else:
         # return 404 invalid UUID was given
         render(ERROR_404_TEMPLATE_NAME)
+
+    match frame:
+        case 0:
+            frame = "/images/card_frames/frame0_renewable.png"
+        case 1:
+            frame = "/images/card_frames/frame1_non_renewable.png"
+    
 
     card_name = card.card_name
     card_image = card.image
@@ -78,8 +101,9 @@ def card_scan(request, url_UUID):
 
     view_context = {
         "card_name": card_name,
-        "card_image": card_image,
+        "card_image": "/images/card_images/"+str(card_image),
         "card_desc": card_desc,
+        "card_frame": frame,
         "first_visit": True,
     }
     
