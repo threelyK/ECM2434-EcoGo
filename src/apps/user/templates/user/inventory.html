@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+</head>
+<body>
+    {% if cards %}
+        <ul>
+        {% for card in cards %}
+            <li>
+                <div>
+                    <h3>name: {{ card.card_name }}</h3>
+                    <p>desc: {{card.card_desc}}</p>
+                    <p>value: {{card.value}}</p>
+                    <p>quant: {{card.quant}}</p>
+                    <img src= "{% static 'photos/cards/Renewable_Energy_Card_Template.png' %}" alt="card background" style="width:200px;height: 200px;">
+                    <img src= "{% static card.image_path %}" alt="card image" style="width:200px;height: 200px;">
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p> error, no cards </p>
+    {% endif %}
+</body>
+</html>
