@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from pathlib import Path
 
 current_directory=Path(__file__).parent
-card_images_directory=current_directory / 'images' / 'card_images'
+card_images_directory=current_directory / 'photos' / 'cards'
 # 'images\card_images\' Note: doesn't come with ./ at the beginning
 relative_path_to_card_images=card_images_directory.relative_to(current_directory)
 
