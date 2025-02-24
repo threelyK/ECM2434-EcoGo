@@ -24,15 +24,7 @@
             </div>
             <form method="POST" action="{% url 'login' %}">
                 {% csrf_token %}
-                {{ loginform.as_p }}
-                <div>
-                    <label>Username</label>
-                    <input type="text" placeholder="Username"><br>
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" placeholder="Password"><br>
-                </div>
+                {{ loginform.as_div }}
                 <button type="submit" class="btn btn-outline-success">Login</button>
             </form>
             <div id="footer">
