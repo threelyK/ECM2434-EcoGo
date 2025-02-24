@@ -141,7 +141,6 @@ STATIC_ROOT = BASE_DIR / "static"
 STATICFILES_DIRS = [
     # Paths to your static files folders
     
-    BASE_DIR / "ecoGo/static",
     BASE_DIR / "apps/cards/static",
 ]
 
