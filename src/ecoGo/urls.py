@@ -24,7 +24,7 @@ urlpatterns = [
     path('', include('apps.user.urls')),
 
     path('qrgenerator/', include('apps.qrgenerator.urls')),
-]
+] 
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
