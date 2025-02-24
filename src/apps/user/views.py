@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model # not being used rn
 from .forms import LoginForm, CreateUserForm
 
 
+
 def landing(request):
     # renders the landing page where users can choose to log in or register
     return render(request, 'user/landingpage.html')
@@ -80,3 +81,6 @@ def user_logout(request):
 
     # redirects the user to the home page if they log out
     return redirect("landing")
+
+def user_inventory(request):
+    return render(request, 'user/inventory.html')
