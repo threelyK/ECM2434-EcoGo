@@ -88,7 +88,6 @@ def inventory(request):
     Endpoint for "user/inventory", serves inventory page throwing error if 
     user has invalid internal state
     """
-
     if request.method == "GET":
         user_data = request.user.user_data
         cards_quant = user_data.get_all_cards_quant()

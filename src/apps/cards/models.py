@@ -3,10 +3,10 @@ from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
 from pathlib import Path
 
-current_directory=Path(__file__).parent
-card_images_directory=current_directory / 'static' / 'images' / 'card_images'
+# current_directory=Path(__file__).parent
+# card_images_directory=current_directory / 'photos' / 'cards'
 # 'images\card_images\' Note: doesn't come with ./ at the beginning
-relative_path_to_card_images=card_images_directory.relative_to(current_directory)
+# relative_path_to_card_images=card_images_directory.relative_to(current_directory)
 
 class Card(models.Model):
     """
@@ -33,9 +33,9 @@ class Card(models.Model):
         if card_image:
             fileExists, relative_image_path = Card.validate_image_exists(card_image)
             if fileExists:
-                new_card = Card.objects.create(card_name=name, card_desc=desc, image=f".\\{relative_image_path}")
+                new_card = Card.objects.create(card_name=name, card_desc=desc, image=relative_image_path)
             else:
-                raise FileNotFoundError(f"Invalid File Path: File doesn't exist. Recieved:{card_images_directory/card_image}")
+                raise FileNotFoundError(f"Invalid File Path: File doesn't exist.")
         else:
             new_card = Card.objects.create(card_name=name, card_desc=desc)
         return new_card
@@ -47,10 +47,12 @@ class Card(models.Model):
         
         Returns: Tuple of boolean and relative image path if the image file exists in dir "./images/card_images/"
         """
-        image_path = card_images_directory / image_file
+        BASE_DIR = Path(__file__).resolve().parent.parent.parent
+        image_path = BASE_DIR / "static/images/cards" / image_file
+        path_wo_static = BASE_DIR / "static" / "images"
 
         if image_path.exists():
-            relative_path = image_path.relative_to(current_directory)
+            relative_path = image_path.relative_to(path_wo_static)
             return (True, str(relative_path))
         else:
             return (False, None)
@@ -62,10 +64,10 @@ class Card(models.Model):
         """
         image_exists, relative_path = self.validate_image_exists(new_image)
         if image_exists:
-            self.image = f".\\{relative_path}"
+            self.image = relative_path
             self.save(update_fields=["image"])
         else:
-            raise FileNotFoundError(f"Invalid File Path: File doesn't exist. Recieved:{card_images_directory/new_image}")
+            raise FileNotFoundError(f"Invalid File Path: File doesn't exist")
 
 
 class OwnedCard(models.Model):
