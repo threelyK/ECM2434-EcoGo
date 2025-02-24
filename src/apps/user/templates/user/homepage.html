@@ -9,11 +9,10 @@
     <link rel="stylesheet" href="{% static '/css/page.css' %}">
     <link rel="stylesheet" href="{% static '/css/avatar.css' %}">
     <link rel="stylesheet" href="{% static '/css/centered.css' %}">
+    <link rel="stylesheet" href="{% static '/css/footer.css' %}">
     <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
-    <script src="{% static '/js/navbar.js' %}"></script>
     <!-- Bootstrap -->
-    <script src="{% static '/bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.min.bundle.js' %}"></script>
-    <link rel="stylesheet" href="{% static '/bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' }%">
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
     <title>Home</title>
 </head>
 <body>
@@ -65,10 +64,13 @@
                     <p>Username</p>
                 </div>
                 <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif;">Scan QR Code</button>
-                <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif;" disabled>Trading</button>
+                <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" disabled>Trading</button>
+                <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" disabled>Inventory</button>
             </div>
         </div>
     </div>
+    <script src="{% static '/bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.min.bundle.js' %}"></script>
+    <script src="{% static '/js/navbar.js' %}"></script>
 </body>
 </html>
 
