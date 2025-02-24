@@ -14,9 +14,3 @@ except:
     Card.objects.create(card_name="Crudespawn", image="/images/card_images/Crudespawn.png", card_desc="")
 
 
-cards_instance = {
-    # Contains Card and frame number 0 = Blue, 1 = Black, Change frame to be included in card model
-    "vor": (Card.objects.get(card_name="Vortex-9"), 0), 
-    "hyd": (Card.objects.get(card_name="Hydronis"), 0),
-    "cru": (Card.objects.get(card_name="Crudespawn"), 1)
-}
