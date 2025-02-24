@@ -82,5 +82,46 @@ def user_logout(request):
     # redirects the user to the home page if they log out
     return redirect("landing")
 
-def user_inventory(request):
-    return render(request, 'user/inventory.html')
+@login_required(login_url="login")
+def inventory(request):
+    """
+    Endpoint for "user/inventory", serves inventory page throwing error if 
+    user has invalid internal state
+    """
+    if request.method == "GET":
+        user_data = request.user.user_data
+        cards_quant = user_data.get_all_cards_quant()
+        cards = []
+        for card in cards_quant:
+            cards.append({
+                "card_name": card[0].card_name,
+                "value": card[0].value,
+                "quant": card[1],
+                "card_desc": card[0].card_desc,
+                "image_path": card[0].image
+            })
+
+            print(card[0].image)
+
+        #data to send to template
+        con = {
+            "cards": cards,
+            "points": user_data.points,
+            "username": request.user.username,
+            "level": user_data.level,
+            "xp": user_data.xp
+        }
+
+        return render(request, "user/inventory.html", context=con)
+    
+@login_required(login_url="login")
+def sell_card(request):
+    """
+    Endpoint for "user/inventory/sellCard": removes a card from a users inventory, adds the cards value to
+    the users points and serves and updated template with the changes reflected.
+    """
+
+    if request.method == "POST":
+        return HttpResponse("Hello World")
+    else:
+        return Http404()
