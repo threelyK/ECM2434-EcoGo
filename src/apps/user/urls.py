@@ -9,5 +9,4 @@ urlpatterns = [
     path('login', views.user_login, name="login"),  # Takes the user to the login page
     path('homepage', views.homepage, name="homepage"),  # Takes the user to the home page if they are already logged in
     path('logout', views.user_logout, name="logout"),  # Logs the user out
-    path('user-inventory', views.user_inventory, name="user-inventory"),  # Takes the user to their inventory
 ]
