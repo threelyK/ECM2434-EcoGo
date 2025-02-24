@@ -1,23 +1,29 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
+from django.views.defaults import ERROR_404_TEMPLATE_NAME
 from django.contrib.auth.decorators import login_required
 from apps.user.models import UserData
 from apps.cards.models import Card
 
+
 if len(Card.objects.all()) < 2:
-    vortex_card = Card.create_card(name="Vortex-9", 
+    Card.create_card(name="Vortex-9", 
                                 desc="""Wind energy is one of the cheapest and fastest-growing renewable energy sources, 
                                 with modern turbines converting up to 50% of wind’s kinetic energy into electricity""",
                                 card_image="VORTEX-9.png"
                                 )
                                 
-    hydronis_card = Card.create_card(name="Hydronis", 
+    Card.create_card(name="Hydronis", 
                                 desc="""Hydropower is the oldest form of mechanical renewable energy! 
                                 People have been using water to generate power for over 2,000 years, 
                                 dating back to ancient Greece, where water wheels were used to grind grain into flour!""",
                                 card_image="Hydronis.webp"
                                 )
 
+cards_instance = {
+    "vor": Card.objects.get(card_name="Vortex-9"),
+    "hyd": Card.objects.get(card_name="Hydronis"),
+}
 
 card_scan_UUIDs = {
     "vortex_UUIDs": ['4012cf77-7b46-4c2c-90f0-a1b821a123ea'],
@@ -31,22 +37,24 @@ card_scan_UUID_visitors = {
 }
 
 
+# .===========.
+# |  METHODS  |
+# '==========='
+
 @require_http_methods(["GET"])
 @login_required
 def card_scan(request, url_UUID):
     """
     Add specific card related to URL UUID into visitor's inventory
     """
+    url_UUID = str(url_UUID)
     
     current_user = request.user
     current_UD = UserData.objects.get(owner=current_user)
     
     # Initialise card values for given URL
     if url_UUID in card_scan_UUIDs.get("vortex_UUIDs"):
-        card = vortex_card
-        card_name = vortex_card.card_name
-        card_image = vortex_card.image
-        card_desc = vortex_card.card_desc
+        card = cards_instance.get("vor")
         
         # Find prev_visitor_IDs list for this URL
         visitors_index = card_scan_UUIDs.get("vortex_UUIDs").index(url_UUID)
@@ -54,22 +62,25 @@ def card_scan(request, url_UUID):
 
 
     elif url_UUID in card_scan_UUIDs.get("hydronis_UUIDs"):
-        card = hydronis_card
-        card_name = hydronis_card.card_name
-        card_image = hydronis_card.image
-        card_desc = hydronis_card.card_desc
+        card = cards_instance.get("hyd")
 
         # Find prev_visitor_IDs list for this URL
         visitors_index = card_scan_UUIDs.get("hydronis_UUIDs").index(url_UUID)
         prev_visitor_IDs = card_scan_UUID_visitors.get(f"hydronis{visitors_index}_visitor_IDs")
     else:
         # return 404 invalid UUID was given
-        render()
+        render(ERROR_404_TEMPLATE_NAME)
+
+    card_name = card.card_name
+    card_image = card.image
+    card_desc = card.card_desc
+    
 
     view_context = {
         "card_name": card_name,
         "card_image": card_image,
         "card_desc": card_desc,
+        "first_visit": True,
     }
     
     userID = current_user.id
@@ -79,9 +90,10 @@ def card_scan(request, url_UUID):
         current_UD.add_card(card)
     else:
         # Display card with an overlay or alert saying: "Already redeemed"
-        return render()
+        view_context.update({"first_visit": False})
     
-
+    # TODO: Should switch card.images to MEDIA instead of STATIC for 
+    # files which can be uploaded by users
     return render(request, 
                   context=view_context, 
                   template_name="cards/display_card.html"
