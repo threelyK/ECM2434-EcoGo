@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model # not being used rn
 from .forms import LoginForm, CreateUserForm
+from .models import User, UserData
 
 def landing(request):
     # renders the landing page where users can choose to log in or register
@@ -89,7 +90,18 @@ def inventory(request):
     """
 
     if request.method == "GET":
-        return HttpResponse("Hello World")
+        cards_quant = request.user.user_data.get_all_cards_quant()
+        cards = []
+        for card in cards_quant:
+            cards.append({
+                "card_name": card[0].card_name
+            })
+
+        con = {
+            "cards": cards
+        }
+
+        return render(request, "user/inventory.html", context=con)
     else:
         return Http404()
 

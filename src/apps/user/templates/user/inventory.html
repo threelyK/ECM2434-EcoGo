@@ -6,6 +6,18 @@
     <title>Document</title>
 </head>
 <body>
-    
+    {% if cards %}
+        <ul>
+        {% for card in cards %}
+            <li>
+                <div>
+                    <h3>{{ card.card_name }}</h3>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p> error, no cards </p>
+    {% endif %}
 </body>
 </html>
