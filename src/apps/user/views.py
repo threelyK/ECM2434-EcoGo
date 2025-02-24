@@ -82,5 +82,3 @@ def user_logout(request):
     # redirects the user to the home page if they log out
     return redirect("landing")
 
-def user_inventory(request):
-    return render(request, 'user/inventory.html')

@@ -24,6 +24,8 @@ urlpatterns = [
     path('', include('apps.user.urls')),
 
     path('qrgenerator/', include('apps.qrgenerator.urls')),
+
+
 ]
 
 if settings.DEBUG:
