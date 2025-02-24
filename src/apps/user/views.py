@@ -90,15 +90,27 @@ def inventory(request):
     """
 
     if request.method == "GET":
-        cards_quant = request.user.user_data.get_all_cards_quant()
+        user_data = request.user.user_data
+        cards_quant = user_data.get_all_cards_quant()
         cards = []
         for card in cards_quant:
             cards.append({
-                "card_name": card[0].card_name
+                "card_name": card[0].card_name,
+                "value": card[0].value,
+                "quant": card[1],
+                "card_desc": card[0].card_desc,
+                "image_path": card[0].image
             })
 
+            print(card[0].image)
+
+        #data to send to template
         con = {
-            "cards": cards
+            "cards": cards,
+            "points": user_data.points,
+            "username": request.user.username,
+            "level": user_data.level,
+            "xp": user_data.xp
         }
 
         return render(request, "user/inventory.html", context=con)
