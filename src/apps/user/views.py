@@ -72,7 +72,10 @@ def user_login(request):
 @login_required(login_url='login') # Enforces the rule that users need to be logged in to access the home page
 def homepage(request):
     # renders the homepage but only if the user is logged in
-    return render(request, 'user/homepage.html')
+    user_context = {
+        "user": request.user
+    }
+    return render(request, 'user/homepage.html', context=user_context)
 
 
 def user_logout(request):
