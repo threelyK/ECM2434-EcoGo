@@ -14,7 +14,7 @@
     <!-- Bootstrap -->
     <script src="{% static '/bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.min.bundle.js' %}"></script>
     <link rel="stylesheet" href="{% static '/bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' }%">
-    <title>Home</title>
+    <title> Inventory</title>
 </head>
 <body>
     <div class="wrapper">
@@ -29,23 +29,21 @@
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="lni lni-user-4"></i>
-                        <span>Profile</span>
+                    <a href="#" class="sidebar-link" onclick="window.location.href='homepage';">
+                        <i class="lni lni-home"></i>
+                        <span>Home</span>
                     </a>
                 </li>
+                <!--
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="lni lni-agenda"></i>
-                        <span>Task</span>
+                    <a href="#" class="sidebar-link" onclick="window.location.href='{% url 'shop' %}'">
+                        <i class="lni lni-cart"></i>
+                        <span>Shop</span>
+                
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="lni lni-hand-shake"></i>
-                        <span>Friends</span>
-                    </a>
-                </li>
+                -->
+                <!-- Add other sidebar items here -->
             </ul>
             <div class="sidebar-footer">
                 <a href="#" class="sidebar-link">
@@ -59,18 +57,27 @@
             </div>
         </aside>
         <div class="main p-3">
-            <div class="centered">
-                <div class="avatar">
-                    <img src="{% static '/photos/default.png' %}" alt="avatar">
-                    <p>Username</p>
+            <header>
+                <h1>Inventory</h1>
+            </header>
+                <button type="button" class="btn btn-primary" id="homeButton">Home</button>
+            <!-- <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'shop' %}'">Shop</button> -->
+            <main>
+                <div id="filters">
+                    <select id="sort-options" class="form-select">
+                        <option value="name">Sort by Name</option>
+                        <!-- OTHER OPTIONS HERE -->
+                    </select>
                 </div>
-                <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif;">Scan QR Code</button>
-                <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif;" disabled>Trading</button>
-            </div>
+                <div id="inventory-grid">
+                    <!-- Cards dynamically inserted here -->
+                </div>
+            </main>
         </div>
     </div>
+    <!-- Bootstrap JS -->
+    <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
+    <script src="{% static 'js/inventory.js' %}"></script>
 </body>
 </html>
-
-
-    

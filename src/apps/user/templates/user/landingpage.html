@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/page.css' %}">
-    <link rel="stylesheet" href="{% static 'css/avatar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/centered.css' %}">
+    <link rel="stylesheet" href="{% static '/css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static '/css/page.css' %}">
+    <link rel="stylesheet" href="{% static '/css/centered.css' %}">
+    <link rel="stylesheet" href="{% static '/css/landing_files/logo.css' %}">
+    <link rel="stylesheet" href="{% static '/css/landing_files/text-box.css' %}">
     <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
-    <script src="{% static 'js/navbar.js' %}"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <link rel="stylesheet" href="{% static '/css/footer.css' %}">
+    <link rel="icon" href="data:,">
     <!-- Bootstrap -->
     <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
@@ -23,42 +26,68 @@
                 <button class="toggle-btn" type="button">
                     <i class="lni lni-menu-hamburger-1"></i>
                 </button>
-                <div class="sidebar-logo">
-                    <a href="#">EcoGo</a>
-                </div>
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link" onclick="window.location.href='register';">
-                        <i class="lni lni-user-4"></i>
+                        <i class="lni lni-user-multiple-4"></i>
                         <span>Register</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link" onclick="window.location.href='login';">
-                        <i class="lni lni-key-1"></i>
+                        <i class="lni lni-user-4"></i>
                         <span>Login</span>
                     </a>
                 </li>
             </ul>
-            <div class="sidebar-footer">
-                <a href="#" class="sidebar-link">
-                    <i class="lni lni-gear-1"></i>
-                    <span>Settings</span>
-                </a>
-            </div>
         </aside>
         <div class="main p-3">
             <div class="centered">
-                <div class="avatar">
-                    <img src="{% static 'photos/default.png' %}" alt="avatar">
-                    <p>Welcome to EcoGo</p>
+                <div class="logo">
+                    <img src="{% static '/photos/ecogo_logo.png' %}">
                 </div>
-                <button type="button" class="btn btn-success btn-lg mb-3" style="font-family: GameFont, Arial, Helvetica, sans-serif;" onclick="window.location.href='login';">Login</button>
-                <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif;" onclick="window.location.href='register';">Register</button>
+            </div>
+            <div class="w3-container w3-center w3-animate-left">
+                <div class="text-box">
+                    <h1>What is EcoGo?</h1>
+                    <p>A Web-application developement project created by our small dev team called "Breadscrums".</p>
+                </div>
+            </div>
+            <div class="w3-container w3-center w3-animate-right">
+                <div class="text-box" style="float: right; clear: left;">
+                    <h1>What is our Goal?</h1>
+                    <p>The goal of our project, is to educate our users about sustainability concepts, as well as persuade them to take action about these pressing issues. Our project is built to do this through gamification. 
+                    </p>
+                </div>
+            </div>
+            <div class="w3-container w3-center w3-animate-left">
+                <div class="text-box">
+                    <h1>What we are doing?</h1>
+                    <p>We are creating a card game through this web application, in which we are gamifying each card to educate the user about certain topics related to sustainability.</p>
+                </div>
+            </div>
+            <div class="w3-container w3-center w3-animate-right">
+                <div class="text-box" style="float: right; clear: left;">
+                    <h1>Current state of development?</h1>
+                    <p>This is currently the prototype version so many features are still in the process to be implemented, thank you for reading.</p>
+                </div>
+            </div>
+            <div class="w3-container w3-center w3-animate-bottom">
+                <div class="centered">
+                    <button type="button" class="btn btn-success btn-lg mb-3" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 40px; height: 100px; width: 500px; font-size: 40px;" onclick="window.location.href='login';">Login</button>
+                    <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; height: 100px; width: 500px; font-size: 40px;" onclick="window.location.href='register';">Register</button>
+                    <div id="footer">
+                        <p>
+                            Created by Breadscrums.
+                        </p>
+                        <img src="{% static '/photos/breddie.png' %}" alt="Logo">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <script src="{% static 'js/navbar.js' %}"></script>
+    <script src="{% static 'js/typewriter.js' %}"></script>
 </body>
-<script src="{% static 'js/navbar.js' %}"></script>
 </html>

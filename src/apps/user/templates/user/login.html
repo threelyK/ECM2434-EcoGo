@@ -22,15 +22,9 @@
             <div class="logo">
                 <img src="{% static '/photos/ecogo_logo.png' %}" alt="Logo">
             </div>
-            <form>
-                <div>
-                    <label>Username</label>
-                    <input type="text" placeholder="Username" required><br>
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" placeholder="Password" required><br>
-                </div>
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                {{ loginform.as_div }}
                 <button type="submit" class="btn btn-outline-success">Login</button>
             </form>
             <div id="footer">
