@@ -46,6 +46,12 @@ h1 {
     min-width: 260px;
 }
 
+#sidebar img {
+    width: 260px;
+    min-width: 260px;
+}
+
+
 .toggle-btn {
     background-color: transparent;
     cursor: pointer;
@@ -102,6 +108,7 @@ a.sidebar-link:hover {
 .sidebar-item {
     position: relative;
 }
+
 
 #sidebar:not(.expand) .sidebar-item .sidebar-dropdown {
     position: absolute;

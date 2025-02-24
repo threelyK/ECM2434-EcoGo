@@ -80,3 +80,4 @@ def user_logout(request):
 
     # redirects the user to the home page if they log out
     return redirect("landing")
+
