@@ -5,26 +5,45 @@ from django.contrib.auth.decorators import login_required
 from apps.user.models import UserData
 from apps.cards.models import Card
 
+try:
+    if not Card.objects.get(card_name="Vortex-9"):
+        Card.create_card(name="Vortex-9", 
+                 card_image="VORTEX-9.png", 
+                 desc="""Wind energy is one of the cheapest and fastest-growing renewable energy sources, 
+                 with modern turbines converting up to 50% of wind’s kinetic energy into electricity""")
 
-if not Card.objects.get(card_name="Vortex-9"):
+    if not Card.objects.get(card_name="Hydronis"):                        
+        Card.create_card(name="Hydronis", 
+                    card_image="Hydronis.webp", 
+                    desc="""Hydropower is the oldest form of mechanical renewable energy! 
+                    People have been using water to generate power for over 2,000 years, 
+                    dating back to ancient Greece, where water wheels were used to grind grain into flour!""")
+
+    if not Card.objects.get(card_name="Hydronis"): 
+        Card.create_card(name="Crudespawn", 
+                        card_image="Crudespawn.png", 
+                        desc="""Oil drilling causes massive environmental damage, leading to oil spills, 
+                        habitat destruction, and water contamination. It also releases methane and carbon dioxide, 
+                        major contributors to climate change and air pollution, harming both ecosystems and human health.""")
+except:
     Card.create_card(name="Vortex-9", 
                  card_image="VORTEX-9.png", 
                  desc="""Wind energy is one of the cheapest and fastest-growing renewable energy sources, 
                  with modern turbines converting up to 50% of wind’s kinetic energy into electricity""")
 
-if not Card.objects.get(card_name="Hydronis"):                        
     Card.create_card(name="Hydronis", 
-                 card_image="Hydronis.webp", 
-                 desc="""Hydropower is the oldest form of mechanical renewable energy! 
-                 People have been using water to generate power for over 2,000 years, 
-                 dating back to ancient Greece, where water wheels were used to grind grain into flour!""")
+                    card_image="Hydronis.webp", 
+                    desc="""Hydropower is the oldest form of mechanical renewable energy! 
+                    People have been using water to generate power for over 2,000 years, 
+                    dating back to ancient Greece, where water wheels were used to grind grain into flour!""")
 
-if not Card.objects.get(card_name="Hydronis"): 
     Card.create_card(name="Crudespawn", 
-                    card_image="Crudespawn.png", 
-                    desc="""Oil drilling causes massive environmental damage, leading to oil spills, 
-                    habitat destruction, and water contamination. It also releases methane and carbon dioxide, 
-                    major contributors to climate change and air pollution, harming both ecosystems and human health.""")
+                        card_image="Crudespawn.png", 
+                        desc="""Oil drilling causes massive environmental damage, leading to oil spills, 
+                        habitat destruction, and water contamination. It also releases methane and carbon dioxide, 
+                        major contributors to climate change and air pollution, harming both ecosystems and human health.""")
+
+
 
 cards_instance = {
     # Contains Card and frame number 0 = Blue, 1 = Black, Change frame to be included in card model
