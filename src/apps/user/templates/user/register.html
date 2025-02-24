@@ -23,23 +23,9 @@
             <div class="logo">
                 <img src="{% static '/photos/ecogo_logo.png' %}" alt="Logo">
             </div>
-            <form>
-                <div>
-                    <label>Username</label>
-                    <input type="text" placeholder="Username" required><br>
-                </div>
-                <div>
-                    <label>E-Mail</label>
-                    <input type="email" placeholder="Must contain a valid email" required><br>
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" id="password" placeholder="Must contain more than 8 characters" minlength="8" required><br>
-                </div>
-                <div>
-                    <label>Confirm Password</label>
-                    <input type="password" id="confirm_password" placeholder="Confirm Password" required><br>
-                </div>
+            <form method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                {{ registerform.as_div }}
                 <div>
                     <label for="privacy"> I have read and agree to the Privacy Policy.</label>
                     <input type="checkbox" id="privacy" name="privacy" required>
