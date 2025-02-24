@@ -13,8 +13,22 @@
 </head>
 <body>
     <div class="px-4 py-5 my-5 text-center">
+        {%if first_visit %}
         <h1 class="display-5 fw-bold text-body-emphasis">{{card_name}}</h1>
-        <img class="d-block mx-auto mb-4" src="{% static card_image %}" alt="{{card_name}}" width="500" height="700">
+        <img class="d-block mx-auto mb-4" src="{% static card_image %}" alt="{{card_name}}" width="480" height="480">
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">{{card_desc}}</p>
+        </div>
+        {% else %}
+            <h1 class="display-5 fw-bold text-body-emphasis">{{card_name}}</h1>
+            <img class="d-block mx-auto mb-4" src="{% static card_image %}" alt="{{card_name}}" width="480" height="480">
+            <div class="col-lg-6 mx-auto">
+                <p class="lead mb-4">{{card_desc}}</p>
+            </div>
+            <div class="col-lg-6 mx-auto" style="--bs-danger-bg-subtle z-index: 1">
+                <p class="lead mb-4">You have already claimed:</p>
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>

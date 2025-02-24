@@ -142,7 +142,7 @@ STATICFILES_DIRS = [
     # Paths to your static files folders
     
     BASE_DIR / "ecoGo/static",
-    BASE_DIR / "apps" / "cards" / "images",
+    BASE_DIR / "apps/cards/static",
 ]
 
 # Default primary key field type
