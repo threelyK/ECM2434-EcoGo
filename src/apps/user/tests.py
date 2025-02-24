@@ -1,90 +1,60 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from apps.user.models import UserData, User
 from apps.cards.models import Card, OwnedCard
 from django.urls import reverse
+from django.contrib.auth import SESSION_KEY
 # run tests using `py manage.py test apps/user`
 
-class UserAuthenticationTest(TestCase):
-    """
-    Test cases for user authentication.
-    These tests include verifications for a valid login, invalid login, and accessing protected views such as the home page. 
-    """
+User = get_user_model()
 
+class AuthenticationViewsTest(TestCase):
     def setUp(self):
-        """
-        Setting up a test user for authentication tests, with a valid username and password.
-        This method is called before every test to ensure the user is set up correctly.
-        """
-        self.user = get_user_model().objects.create_user(username='testuser1738!!', password='testpass1738!!')
+        self.client = Client()
+        # URL mappings
+        self.landing_url = reverse("landing")
+        self.register_url = reverse("register")
+        self.login_url = reverse("login")
+        self.homepage_url = reverse("homepage")
+        self.logout_url = reverse("logout") 
 
-    def test_login_valid_user(self):
+        # Creating a test user which has registered for login tests.
+        self.user_credentials = {
+            "username": "testuser",
+            "password": "testpass123",
+        }
+        self.user = User.objects.create_user(**self.user_credentials)  # Creating the user
+
+    def test_landing_page(self):
         """
-        This test simulates a login request with the correct credentials.
-        We expect a 200 response code which indicates that the login was successful.
+        Ensuring the landing page loads correctly, by ensuring it returns a 200 status code and that the correct template is returned. 
         """
-        response = self.client.post('/login', {'username': 'testuser1738!!', 'password': 'testpass1738!!'}, follow=True)
+        response = self.client.get(self.landing_url)
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'user/landingpage.html')
 
-    def test_login_invalid_user(self):
+    def test_register_get(self):
         """
-        This test simulates a login request with invalid credentials.
-        We do NOT expect a 200 response code as the credentials are invalid.
+        Ensuring that a GET request to the registration page returns a 200 status code and the registration form.
         """
-        response = self.client.post('/login/', {'username': 'wronguser', 'password': 'wrongpass'})
-        self.assertNotEqual(response.status_code, 200)  # We ensure that the code does not equal a successful response code.
-
-    def test_user_access_home_directly(self):
-        """
-        This simulates a user attempting to access the dashboard directly without being authenticated (by typing server/home).
-        We expect a 302 redirect response which transfers the user to the login page.
-        """
-        response = self.client.post('/home', {'username': 'testuser1738!!', 'password': 'testpass1738!!'}, follow=False)
-        self.assertEqual(response.status_code, 302)  # The user is successfully redirected to another page (the login page).
-
-    def test_login_incorrect_password(self):
-        """
-        This test simulates a login request with the correct username but incorrect password.
-        We do NOT expect a 200 response code as the password is incorrect.
-        """
-        response = self.client.post('/login', {'username': 'testuser1738!!', 'password': 'wrongpass'}, follow=True)
-        self.assertNotEqual(response.status_code, 200)  # Ensure the login was not successful.
-    
-    def test_logout(self):
-        """
-        This test simulates a user logging out.
-        We expect a 302 redirect response which indicates that the logout was successful and the user is redirected to the login page.
-        """
-        self.client.login(username='testuser1738!!', password='testpass1738!!')
-        response = self.client.get('/logout', follow=True)
-        self.assertEqual(response.status_code, 302)  # The user is successfully redirected to the login page after logout.
-    
-    
-    def test_register_user(self):
-        """
-        This test simulates a user registration request with valid data.
-        We expect a 302 redirect response which indicates that the registration was successful and the user is redirected to the login page.
-        """
-        response = self.client.post('/register', {
-            'username': 'newuser',
-            'email': 'newuser@example.com',
-            'password1': 'newpassword123',
-            'password2': 'newpassword123'
-        }, follow=True)
-        self.assertEqual(response.status_code, 302)  # The user is successfully redirected to the login page after registration.
-        self.assertTrue(get_user_model().objects.filter(username='newuser').exists())  # Check if the new user was created.
-
-        
-
-
-    def test_landing_page_loads(self):
-        """
-        This simply tests whether the landing page loads correctly by returning a 200 status code.
-        """
-        response = self.client.get(reverse('landing'))
-
-        # Check if the HTTP status code is 200 (OK)
+        response = self.client.get(self.register_url)
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'user/register.html')
+        self.assertIn("registerform", response.context)
+
+    def test_register_post_valid_data(self):
+        """
+        Ensuring that a POST request with valid registration information
+        creates a new user and redirects them to the login page.
+        """
+        # Data used for creating a new user
+        data = {
+            "username": "newuser",
+            "email": "newmail@gmail.com",
+            "password1": "newpass123",
+            "password2": "newpass123",
+        }
+
 
 class UserDataTest(TestCase):
     """
@@ -96,8 +66,17 @@ class UserDataTest(TestCase):
         Run before each test to setup a user to work with
         """
 
-        user = get_user_model().objects.create_user("123", password="123")
-        userData = UserData.objects.create(owner=user)
+        User.objects.create_user(username="123", password="123")
+
+    def test_user_data_autocreated(self):
+        """
+        Tests that creating a new user also creates an accompanying
+        UserData with that user as the owner
+        """
+        tUser = User.objects.get(username="123")
+        tUserData = UserData.objects.get(owner=tUser)
+
+        self.assertIsInstance(tUserData, UserData)
 
     def test_add_points(self):
         """

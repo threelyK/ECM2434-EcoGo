@@ -80,7 +80,7 @@ def user_logout(request):
     auth.logout(request)
 
     # redirects the user to the home page if they log out
-    return redirect("homepage")
+    return redirect("landing")
 
 @login_required(login_url="login")
 def inventory(request):
