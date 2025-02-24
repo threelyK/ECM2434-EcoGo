@@ -5,30 +5,7 @@ from django.contrib.auth.decorators import login_required
 from apps.user.models import UserData
 from apps.cards.models import Card
 
-try:
-    if not Card.objects.get(card_name="Vortex-9"):
-        Card.objects.create(card_name="Vortex-9", image="images/card_images/Vortex-9.png", card_desc="")
 
-    if not Card.objects.get(card_name="Hydronis"):                        
-        Card.objects.create(card_name="Hydronis", image="images/card_images/Hydronis.webp", card_desc="")
-
-    if not Card.objects.get(card_name="Crudespawn"):                        
-        Card.objects.create(card_name="Crudespawn", image="images/card_images/Crudespawn.", card_desc="")
-except:
-    Card.objects.create(card_name="Vortex-9", image="images/card_images/Vortex-9.png", card_desc="")
-                        
-    Card.objects.create(card_name="Hydronis", image="images/card_images/Hydronis.webp", card_desc="")
-                        
-    Card.objects.create(card_name="Crudespawn", image="images/card_images/Crudespawn.", card_desc="")
-
-
-
-cards_instance = {
-    # Contains Card and frame number 0 = Blue, 1 = Black, Change frame to be included in card model
-    "vor": (Card.objects.get(card_name="Vortex-9"), 0), 
-    "hyd": (Card.objects.get(card_name="Hydronis"), 0),
-    "cru": (Card.objects.get(card_name="Crudespawn"), 1)
-}
 
 card_scan_UUIDs = {
     "vortex_UUIDs": ['4012cf77-7b46-4c2c-90f0-a1b821a123ea'],
@@ -41,6 +18,11 @@ card_scan_UUID_visitors = {
     "vortex0_visitor_IDs": [],
     "hydronis0_visitor_IDs": [],
     "crudespawn0_visitor_IDs": [],
+}
+
+cards_instance = {
+    # Contains Card and frame number 0 = Blue, 1 = Black, Change frame to be included in card model
+    "vor": (Card.objects.get(card_name="Vortex-9"), 0), 
 }
 
 
