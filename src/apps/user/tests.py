@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
-from apps.user.models import UserData
+from apps.user.models import UserData, User
 from apps.cards.models import Card, OwnedCard
 from django.urls import reverse
 from django.contrib.auth import SESSION_KEY
@@ -265,3 +265,44 @@ class UserDataTest(TestCase):
         tUserData.remove_card(card, 2)
 
         self.assertEqual(OwnedCard.objects.get(card=card, owner=tUserData).quantity, 1)
+
+class UserInventoryTest(TestCase):
+    """
+    Tests the functionality of the UserInventory related functions
+    """
+
+    def setUp(self):
+        """
+        Sets up a user for testing, run before each test by test system
+        """
+        self.user = get_user_model().objects.create_user(username='123', password='123456789')
+
+    def test_user_inventory_index_template(self):
+        """
+        Tests the "user/inventory" endpoint, specifically that it properly serves the template if a user is logged in
+        """
+
+        self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=False)
+        response = self.client.get("/user/inventory")
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_inventory_index_redirect(self):
+        """
+        Tests that the "user/inventory" endpoint correctly redirects to the login page when a non authenticated user attempts access
+        """
+
+        response = self.client.get("/user/inventory", follow=False)
+        self.assertEqual(response.status_code, 302)
+
+    #def test_user_inventory_index_no_init(self):
+        """
+        Tests that a 404 error is appropriatly thrown if the user has not been properly initalised
+        """
+
+        """ self.user = get_user_model().objects.create_user(username='1234', password='12345678900')
+
+        self.client.post('/login', {'username': '1234', 'password': '12345678900'})
+        response = self.client.get("/user/inventory")
+
+        self.assertEqual(response.status_code, 404) """

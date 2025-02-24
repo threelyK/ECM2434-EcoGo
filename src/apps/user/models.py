@@ -26,7 +26,9 @@ class User(AbstractUser):
         created = not self.pk
         super().save(**kwargs)
         if created:
-            UserData.objects.create(owner=self)
+            user_data = UserData.objects.create(owner=self)
+            self.user_data = user_data
+            self.save(update_fields=["user_data"])
 
     """
     USER_TYPE_CHOICES = {
