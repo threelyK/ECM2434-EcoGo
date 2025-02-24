@@ -23,7 +23,8 @@
             <div class="logo">
                 <img src="{% static '/photos/ecogo_logo.png' %}" alt="Logo">
             </div>
-            <form>
+            <form method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
                 <div>
                     <label>Username</label>
                     <input type="text" placeholder="Username" required><br>
