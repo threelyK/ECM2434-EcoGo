@@ -13,9 +13,7 @@ class Card(models.Model):
     Card contains all the data for a card.
     """
     card_name = models.TextField(_("Card Name"), unique=True)
-    image = models.ImageField(_("Image File Path"), 
-                              upload_to=f".\\{str(relative_path_to_card_images)}", 
-                              default=f".\\{str(relative_path_to_card_images)}\\Missing_Texture.png")
+    image = models.TextField(_("Image Url"), default="./photos/cards/missing.png")
     card_desc = models.TextField(_("Card Description"), blank=True, null=True)
     value = models.IntegerField(_("Card Value"), default=0)
 
@@ -68,9 +66,6 @@ class Card(models.Model):
             self.save(update_fields=["image"])
         else:
             raise FileNotFoundError(f"Invalid File Path: File doesn't exist. Recieved:{card_images_directory/new_image}")
-
-        
-
 
 
 class OwnedCard(models.Model):
