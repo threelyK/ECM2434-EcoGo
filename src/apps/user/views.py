@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model # not being used rn
 from .forms import LoginForm, CreateUserForm
 
 
+
 def landing(request):
     # renders the landing page where users can choose to log in or register
     return render(request, 'user/landingpage.html')
