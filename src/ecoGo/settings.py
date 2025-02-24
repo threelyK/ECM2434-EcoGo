@@ -17,7 +17,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Media file auto route
-import os
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Quick-start development settings - unsuitable for production

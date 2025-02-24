@@ -1,14 +1,70 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+<style>p {font-size: 30px;}</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Codes</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/page.css' %}">
+    <link rel="stylesheet" href="{% static 'css/avatar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/centered.css' %}">
+    <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
+    <script src="{% static 'js/navbar.js' %}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
 </head>
 <body>
-    <h1>List of QR Codes</h1>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <button class="toggle-btn" type="button">
+                    <i class="lni lni-menu-hamburger-1"></i>
+                </button>
+                <div class="sidebar-logo">
+                    <a href="#">EcoGo</a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link" onclick="window.location.href='register';">
+                        <i class="lni lni-user-4"></i>
+                        <span>Register</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link" onclick="window.location.href='login';">
+                        <i class="lni lni-key-1"></i>
+                        <span>Login</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" class="sidebar-link">
+                    <i class="lni lni-gear-1"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </aside>
+    
     <ul>
+        <h1>List of QR Codes</h1>
+        <p>FrontPage</p>
+        <img src={% static 'qr_code_main_page\FrontPage.PNG' %} alt="Trulli}">
+        <br><br>
+        <p>Homepage</p>
+        <img src={% static 'qr_code_main_page/Homepage.PNG' %} alt="Trulli">
+        <br><br>
+        <p>Login</p>
+        <img src={% static 'qr_code_main_page/Login.PNG' %} alt="Trulli">
+        <br><br>
+        <p>Register</p>
+        <img src={% static 'qr_code_main_page/Register.PNG' %} alt="Trulli">
+        <br><br>
+        <p>Automatic pages</p>
         {% for website in websites %}
             <li>
                 <a href="{{ website.url }}">{{ website.name }}</a>

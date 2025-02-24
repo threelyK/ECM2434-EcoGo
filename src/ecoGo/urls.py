@@ -24,9 +24,13 @@ urlpatterns = [
     path('', include('apps.user.urls')),
 
     path('qrgenerator/', include('apps.qrgenerator.urls')),
+<<<<<<< HEAD
+] 
+=======
 
 
 ]
+>>>>>>> 5e0a5659b2d61399b29eacaf001aeaaf3fff86d0
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
