@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{% static '/css/landing_files/text-box.css' %}">
     <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <link rel="stylesheet" href="{% static '/css/footer.css' %}">
     <link rel="icon" href="data:,">
     <!-- Bootstrap -->
     <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
@@ -50,31 +51,38 @@
             <div class="w3-container w3-center w3-animate-left">
                 <div class="text-box">
                     <h1>What is EcoGo?</h1>
-                    <p>Lorem ipsum</p>
+                    <p>A Web-application developement project created by our small dev team called "Breadscrums".</p>
                 </div>
             </div>
             <div class="w3-container w3-center w3-animate-right">
                 <div class="text-box" style="float: right; clear: left;">
                     <h1>What is our Goal?</h1>
-                    <p>Lorem ipsum</p>
+                    <p>The goal of our project, is to educate our users about sustainability concepts, as well as persuade them to take action about these pressing issues. Our project is built to do this through gamification. 
+                    </p>
                 </div>
             </div>
             <div class="w3-container w3-center w3-animate-left">
                 <div class="text-box">
-                    <h1>What is EcoGo?</h1>
-                    <p>Lorem ipsum</p>
+                    <h1>What we are doing?</h1>
+                    <p>We are creating a card game through this web application, in which we are gamifying each card to educate the user about certain topics related to sustainability.</p>
                 </div>
             </div>
             <div class="w3-container w3-center w3-animate-right">
                 <div class="text-box" style="float: right; clear: left;">
-                    <h1>What is EcoGo?</h1>
-                    <p>Lorem ipsum</p>
+                    <h1>Current state of development?</h1>
+                    <p>This is currently the prototype version so many features are still in the process to be implemented, thank you for reading.</p>
                 </div>
             </div>
             <div class="w3-container w3-center w3-animate-bottom">
                 <div class="centered">
-                    <button type="button" class="btn btn-success btn-lg mb-3" style="font-family: GameFont, Arial, Helvetica, sans-serif;" onclick="window.location.href='login';">Login</button>
-                    <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif;" onclick="window.location.href='register';">Register</button>
+                    <button type="button" class="btn btn-success btn-lg mb-3" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 40px; height: 100px; width: 500px; font-size: 40px;" onclick="window.location.href='login';">Login</button>
+                    <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; height: 100px; width: 500px; font-size: 40px;" onclick="window.location.href='register';">Register</button>
+                    <div id="footer">
+                        <p>
+                            Created by Breadscrums.
+                        </p>
+                        <img src="{% static '/photos/breddie.png' %}" alt="Logo">
+                    </div>
                 </div>
             </div>
         </div>
