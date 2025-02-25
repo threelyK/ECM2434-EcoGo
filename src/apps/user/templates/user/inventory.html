@@ -7,33 +7,78 @@
     {% load static %}
     <link rel="stylesheet" href="{% static '/css/page.css' %}">
     <link rel="stylesheet" href="{% static '/css/centered.css' %}">
-    <link rel="stylesheet" href="{% static '/css/inventory_files/inventory-container.css' %}">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
     <link rel="stylesheet" href="{% static '/css/footer.css' %}">
+    <link rel="stylesheet" href="{% static '/css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static '/css/inventory_files/inventory_container.css' %}">
+    <link rel="stylesheet" href="{% static '/css/inventory_files/inventory_grid.css' %}">
+    <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
     <link rel="icon" href="data:,">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
     <title>Document</title>
 </head>
 <body>
-    <div class="inventory-container">
-        {% if cards %}
-            <ul>
-            {% for card in cards %}
-                <li>
-                    <h3>name: {{ card.card_name }}</h3>
-                    <p>desc: {{card.card_desc}}</p>
-                    <p>value: {{card.value}}</p>
-                    <p>quant: {{card.quant}}</p>
-                    <img src= "{% static 'images/card_frames/frame0_renewable.png' %}" alt="card background" style="width:200px;height: 200px;">
-                    <img src= "{% static card.image_path %}" alt="card image" style="width:200px;height: 200px;">
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <button class="toggle-btn" type="button">
+                    <i class="lni lni-menu-hamburger-1"></i>
+                </button>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="{% url 'homepage' %}" class="sidebar-link">
+                        <i class="lni lni-user-4"></i>
+                        <span>Homepage</span>
+                    </a>
                 </li>
-            {% endfor %}
             </ul>
-        {% else %}
-            <p> error, no cards </p>
-        {% endif %}
+            <div class="sidebar-footer">
+                <a href="#" class="sidebar-link">
+                    <i class="lni lni-gear-1"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="{% url 'landing' %}" class="sidebar-link">
+                    <i class="lni lni-exit"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div class="main p-3">
+            {% if cards %}
+                <ul class="cards">
+                {% for card in cards %}
+                    <div class="card_container">
+                        <div class="card_background">
+                            <div class="card_frame">
+                                <div class=frame_header>
+                                    <h1 class="name" style="font-family: GameFont, Arial, Helvetica, sans-serif;">{{ card.card_name }}</h1>
+                                </div>
+                               <img src= "{% static card.image_path %}" alt="card image" class="frame_art">
+            
+                                <div class="frame_type_line">
+                                    <h1 class="type" style="font-family: GameFont, Arial, Helvetica, sans-serif;">Legendary Creature</h1>
+                                </div>
+                                <div class="frame_text_box">
+                                    <p class="description ftb_inner_margin">{{ card.card_desc }}</p>
+                                </div>
+                                <div class="frame_bottom_info">
+                                    <div class="centered">
+                                        <p> Created by Breadscrums. </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <h1>No cards</h1>
+            {% endif %}
+        </div>
     </div>
     <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
 </body>
 </html>
