@@ -1,8 +1,10 @@
 
 .card_container {
     border: 2px solid white;
-    width: 400px;
-    height: 600px;
+    width: 80vw;
+    max-width: 400px;
+    height: 80vh;
+    max-height: 600px;
     margin: 0 auto;
     margin-top: 56px;
     border-radius: 25px;
@@ -13,7 +15,8 @@
 
 .card_background {
     z-index: 0;
-    height: 500px;
+    height: calc(80vh - 100px);
+    max-height: 500px;
     margin: 20px 20px 0 20px;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
