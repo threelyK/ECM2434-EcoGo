@@ -1,119 +1,113 @@
-
-.card_container {
-    border: 2px solid white;
-    width: 80vw;
-    max-width: 400px;
-    height: 80vh;
-    max-height: 600px;
-    margin: 0 auto;
-    margin-top: 56px;
-    border-radius: 25px;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+:root {
+    --card-border-color: #000;
+    --card-border-thickness: 14px;
+    --card-border-radius: 10px;
+    --bars-background: #debca7;
+    --inner-borders-color: #bd4129;
+    --inner-borders-thickness: 3px;
+}
+  
+* {
     box-sizing: border-box;
-    box-shadow: -8px 9px 16px -3px gray;
-    background: #171738;
 }
-
-.card_background {
-    z-index: 0;
-    height: calc(80vh - 100px);
-    max-height: 500px;
-    margin: 20px 20px 0 20px;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    border-bottom-left-radius: 8%;
-    border-bottom-right-radius: 8%;
-    background-color: #B8D0EB;
+  
+body {
+    margin: 0;
+    padding: 0;
+    background: #222;
+    min-height: 100vh;
 }
-
-.card_frame {
-    z-index: 1;
-    position: relative;
-    height: 116%;
-    max-width: 97%;
-    left: 1%;
-    top: 0.5%;
-    left: 1.2%;
+  
+.card {
+    position: absolute;
+    flex: 1 1 calc(25% - 16px);
+    width: 300px;
+    height: 418px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: inset 0 0 0 var(--card-border-thickness) var(--card-border-color);
+    border-radius: var(--card-border-radius);
+    padding: var(--card-border-thickness);
+}
+  
+.bar {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bars-background);
+    margin: 7px;
+    margin-bottom: 0;
+    padding: 1px 4px;
+    box-shadow: 0 0 0 var(--inner-borders-thickness) var(--inner-borders-color);
+    border-radius: 3px / 10px;
 }
-
-.frame_art {
-    height: 50%;
-    margin: 0 10px;
+  
+.bar-top {
+    margin-top: 10px;
 }
-
-/* Borders */
-
-.frame_header, .frame_type_line {
-    border-bottom: 4px solid #a9a9a9;
-    border-left: 2px solid #a9a9a9;
-    border-top: 1px solid #fff;
-    border-right: 2px solid #fff;
+  
+.card-title {
+    padding-top: 5px;
+    letter-spacing: 1px;
 }
-
-.frame_header, .frame_art, .frame_type_line {
-    box-shadow: 0 0 0 2px #171738, 0 0 0 5px #1768AC, -3px 3px 2px 5px #171738;
-    margin-bottom: 7px;
+  
+.casting-cost {
+    display: flex;
+    gap: 2px;
 }
-
-.frame_text_box {
-    box-shadow: 0 0 0 5px #1768AC, -3px 3px 2px 5px #171314;
-}
-
-/* Overflow */
-.frame_header, .frame_type_line, .frame_text_box {
+  
+.card-image {
+    position: relative;
+    margin: 0 12px;
+    margin-top: var(--inner-borders-thickness);
+    margin-bottom: calc(-1 * var(--inner-borders-thickness) - 1px);
+    height: 188px;
+    box-shadow: 0 0 0 var(--inner-borders-thickness) var(--inner-borders-color);
     overflow: hidden;
 }
 
-.frame_header, .frame_type_line {
-    background: linear-gradient( 0deg, rgba(201, 216, 201, .3), rgba(201, 216, 209, .3) ), url(https://img.freepik.com/free-photo/grunge-vintage-old-paper-background_1373-431.jpg?t=st=1740455505~exp=1740459105~hmac=4bc4f36e986aaed29f2e2e7d9ff675013b8fbb4359d0b61087f68d131f6d3a0a&w=996); 
-    display: flex;
-    margin-top: 10px;
-    margin-left: 8px;
-    margin-right: 5px;
-    padding: 8px 0;
-    display: flex;
-    justify-content: center;
-    border-radius: 18px/40px;
+.card-image img {
+    min-width: 100%;
+    min-height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    
 }
 
-.name, .type {
-    font-size: 1.3em;
-    margin-top: 5px;
-    margin-left: 10px;
-    align-self: baseline;
-    font-weight: 600;
+.bar-mid {
+    margin-bottom: var(--inner-borders-thickness);
 }
 
-.frame_type_line {
-    margin-top: 0;
-}
-
-.frame_text_box {
-    margin: 0 10px;
-    background: #d3ded6;
-    background-image: url(https://img.freepik.com/free-photo/grunge-vintage-old-paper-background_1373-431.jpg?t=st=1740455505~exp=1740459105~hmac=4bc4f36e986aaed29f2e2e7d9ff675013b8fbb4359d0b61087f68d131f6d3a0a&w=996);
+.card-text {
     display: flex;
     flex-direction: column;
-    justify-content: space-around; 
-    padding: 0px 6px;
-    box-sizing: border-box;
-    font-size: 16px;
+    justify-content: space-around;
+    padding: 10px;
+    margin: 0 12px;
+    height: 115px;
+    box-shadow: 0 0 0 var(--inner-borders-thickness) var(--inner-borders-color);
+    background-color: var(--bars-background);
 }
-
-p {
-    margin-bottom: 5px;
+  
+.card-ability {
+    font-size: 13px;
+    line-height: 1;
 }
-
-.ftb_inner_margin {
-    margin: 5px 1px;
+  
+.card-quote {
+    font-style: italic;
+    font-size: 12px;
+    line-height: 1;
 }
-
-.frame_bottom_info {
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    margin: 5px 15px 0 15px; 
+  
+.footer {
+    margin-top: 7px;
+    margin-left: 10px;
+}
+  
+.author {
+    font-weight: bold;
+    font-size: 10px;
 }
