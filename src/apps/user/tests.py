@@ -280,9 +280,13 @@ class UserInventoryTest(TestCase):
         self.user = get_user_model().objects.create_user(username='123', password='123456789')
         self.card = Card(card_name="coal-imp", value=10)
         self.card.save()
+        self.card = Card(card_name="coal-imp", value=10)
+        self.card.save()
 
     def test_user_inventory_index_template(self):
         """
+        Tests the "user/inventory" endpoint, specifically that it properly serves the 
+        template if a user is logged in
         Tests the "user/inventory" endpoint, specifically that it properly serves the 
         template if a user is logged in
         """
@@ -350,7 +354,6 @@ class UserInventoryTest(TestCase):
 
         user_cards = self.user.user_data.get_all_cards_quant()
         self.assertEqual(user_cards[0], (self.card, 1))
-
 
 
 
