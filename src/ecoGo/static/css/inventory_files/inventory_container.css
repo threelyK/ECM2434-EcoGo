@@ -7,6 +7,11 @@
     --inner-borders-thickness: 3px;
 }
   
+@font-face {
+    font-family: 'GameFont';
+    src: url('../atarian_font/Atarian/SF\ Atarian\ System\ Extended.ttf');
+}
+
 * {
     box-sizing: border-box;
 }
@@ -16,6 +21,11 @@ body {
     padding: 0;
     background: #222;
     min-height: 100vh;
+}
+
+.inventory_header {
+    color: white;
+    font-family: GameFont, Arial, Helvetica, sans-serif;
 }
   
 .card {
