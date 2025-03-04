@@ -7,9 +7,9 @@ from apps.cards.models import Card
 
 def get_cards_instance():
     if not Card.objects.exists():
-        Card.objects.create(card_name="Vortex-9", image="/images/card_images/Vortex-9.png", card_desc="")
-        Card.objects.create(card_name="Hydronis", image="/images/card_images/Hydronis.webp", card_desc="")
-        Card.objects.create(card_name="Crudespawn", image="/images/card_images/Crudespawn.png", card_desc="")
+        Card.objects.create(card_name="Vortex-9", image="/images/card_images/Vortex-9.jpg", card_desc="Wind energy is one of the cheapest and fastest-growing renewable energy sources, with modern turbines converting up to 50% of wind’s kinetic energy into electricity.")
+        Card.objects.create(card_name="Hydronis", image="/images/card_images/Hydronis.webp", card_desc="Hydropower is the oldest form of mechanical renewable energy! People have been using water to generate power for over 2,000 years, dating back to ancient Greece, where water wheels were used to grind grain into flour!")
+        Card.objects.create(card_name="Crudespawn", image="/images/card_images/Crudespawn.jpg", card_desc="Oil drilling causes massive environmental damage, leading to oil spills, habitat destruction, and water contamination. It also releases methane and carbon dioxide, major contributors to climate change and air pollution, harming both ecosystems and human health.")
 
     return ({# Contains Card and frame number 0 = Blue, 1 = Black, Change frame to be included in card model
     "vor": (Card.objects.get(card_name="Vortex-9"), 0), 
@@ -72,9 +72,9 @@ def card_scan(request, url_UUID):
 
     match frame:
         case 0:
-            frame = "/images/card_frames/frame0_renewable.png"
+            frame = "/images/card_frames/frame0_renewable.jpg"
         case 1:
-            frame = "/images/card_frames/frame1_non_renewable.png"
+            frame = "/images/card_frames/frame1_non_renewable.jpg"
     
 
     card_name = card.card_name
