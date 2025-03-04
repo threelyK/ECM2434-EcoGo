@@ -117,6 +117,9 @@ def inventory(request):
 
         return render(request, "user/inventory.html", context=con)
     
+    else:
+        return Http404()
+    
 @login_required(login_url="login")
 def sell_card(request):
     """
