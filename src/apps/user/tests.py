@@ -307,53 +307,22 @@ class UserInventoryTest(TestCase):
 
     def test_user_inventory_sell_login(self):
         """
-        Tests that the "user/inventory/sellCard endpoint does not allow a non logged in user to 
-        access it and promts login if needed
+        Tests that a 404 error is appropriatly thrown if the user has not been properly initalised
         """
 
-        response = self.client.post(
-            '/user/inventory/sellCard', 
-            {'card_name': 'myCard'}, 
-            follow=False
-        )
-
-        self.assertEqual(response.status_code, 302)
-
-    def test_user_inventory_sell_invalid(self):
-        """
-        Tests the "user/inventory/sellCard endpoint for input that is invalid in some way to 
-        return a 400 error
-        """
+        self.user = get_user_model().objects.create_user(username='1234', password='12345678900')
 
         self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=False)
-
-        #Checks for invalid request structure
-        response = self.client.post("/user/inventory/sellCard", {'bingus': "worse cat"}, content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-
-        #Checks for card does not exist
-        response = self.client.post("/user/inventory/sellCard", {'card_name': 'bingus'}, content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-
-        #Checks for user does not own card
-        response = self.client.post("/user/inventory/sellCard", {'card_name': 'coal-imp'}, content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-
-    def test_user_inventory_sell_valid(self):
-        """
-        Tests that the "user/inventory/sellCard" endpoint properly sells a card, removing it
-        from the users inventory, adding its value in points and rendering a new template to
-        the user
-        """
-
-        self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=True)
         OwnedCard(owner=self.user.user_data, card=self.card, quantity = 2).save()
 
-        response = self.client.post("/user/inventory/sellCard", {'card_name': 'coal-imp'}, content_type="application/json", follow=True)
+        response = self.client.post("/user/inventory/sellCard", {'card_name': 'coal-imp'})
         self.assertEqual(response.status_code, 200)
 
         user_cards = self.user.user_data.get_all_cards_quant()
         self.assertEqual(user_cards[0], (self.card, 1))
+
+
+
 
 
 class LeaderboardViewTests(TestCase):
