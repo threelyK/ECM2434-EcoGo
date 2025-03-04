@@ -276,10 +276,13 @@ class UserInventoryTest(TestCase):
         Sets up a user for testing, run before each test by test system
         """
         self.user = get_user_model().objects.create_user(username='123', password='123456789')
+        self.card = Card(card_name="coal-imp", value=10)
+        self.card.save()
 
     def test_user_inventory_index_template(self):
         """
-        Tests the "user/inventory" endpoint, specifically that it properly serves the template if a user is logged in
+        Tests the "user/inventory" endpoint, specifically that it properly serves the 
+        template if a user is logged in
         """
 
         self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=False)
@@ -289,20 +292,60 @@ class UserInventoryTest(TestCase):
 
     def test_user_inventory_index_redirect(self):
         """
-        Tests that the "user/inventory" endpoint correctly redirects to the login page when a non authenticated user attempts access
+        Tests that the "user/inventory" endpoint correctly redirects to the login page when a non 
+        authenticated user attempts access
         """
 
         response = self.client.get("/user/inventory", follow=False)
         self.assertEqual(response.status_code, 302)
 
-    #def test_user_inventory_index_no_init(self):
+    def test_user_inventory_sell_login(self):
         """
-        Tests that a 404 error is appropriatly thrown if the user has not been properly initalised
+        Tests that the "user/inventory/sellCard endpoint does not allow a non logged in user to 
+        access it and promts login if needed
         """
 
-        """ self.user = get_user_model().objects.create_user(username='1234', password='12345678900')
+        response = self.client.post(
+            '/user/inventory/sellCard', 
+            {'card_name': 'myCard'}, 
+            follow=False
+        )
 
-        self.client.post('/login', {'username': '1234', 'password': '12345678900'})
-        response = self.client.get("/user/inventory")
+        self.assertEqual(response.status_code, 302)
 
-        self.assertEqual(response.status_code, 404) """
+    def test_user_inventory_sell_invalid(self):
+        """
+        Tests the "user/inventory/sellCard endpoint for input that is invalid in some way to 
+        return a 400 error
+        """
+
+        self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=False)
+
+        #Checks for invalid request structure
+        response = self.client.post("/user/inventory/sellCard", {'bingus': "worse cat"})
+        self.assertEqual(response.status_code, 400)
+
+        #Checks for card does not exist
+        response = self.client.post("/user/inventory/sellCard", {"card_name": "bingus"})
+        self.assertEqual(response.status_code, 400)
+
+        #Checks for user does not own card
+        response = self.client.post("/user/inventory/sellCard", {"card_name": "coal-imp"})
+        self.assertEqual(response.status_code, 400)
+
+    def test_user_inventory_sell_valid(self):
+        """
+        Tests that the "user/inventory/sellCard" endpoint properly sells a card, removing it
+        from the users inventory, adding its value in points and rendering a new template to
+        the user
+        """
+
+        self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=False)
+        OwnedCard(owner=self.user.user_data, card=self.card, quantity = 2).save()
+
+        response = self.client.post("/user/inventory/sellCard", {'card_name': 'coal-imp'})
+        self.assertEqual(response.status_code, 200)
+
+        user_cards = self.user.user_data.get_all_cards_quant()
+        self.assertEqual(user_cards[0], (self.card, 1))
+
