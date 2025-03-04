@@ -267,6 +267,7 @@ class UserDataTest(TestCase):
 
         self.assertEqual(OwnedCard.objects.get(card=card, owner=tUserData).quantity, 1)
 
+
 class UserInventoryTest(TestCase):
     """
     Tests the functionality of the UserInventory related functions
@@ -349,7 +350,6 @@ class UserInventoryTest(TestCase):
 
         user_cards = self.user.user_data.get_all_cards_quant()
         self.assertEqual(user_cards[0], (self.card, 1))
-
 
 
 
