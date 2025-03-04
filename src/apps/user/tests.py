@@ -4,6 +4,7 @@ from apps.user.models import UserData, User
 from apps.cards.models import Card, OwnedCard
 from django.urls import reverse
 from django.contrib.auth import SESSION_KEY
+from json import dumps
 # run tests using `py manage.py test apps/user`
 
 User = get_user_model()
@@ -322,15 +323,15 @@ class UserInventoryTest(TestCase):
         self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=False)
 
         #Checks for invalid request structure
-        response = self.client.post("/user/inventory/sellCard", {'bingus': "worse cat"})
+        response = self.client.post("/user/inventory/sellCard", {'bingus': "worse cat"}, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
         #Checks for card does not exist
-        response = self.client.post("/user/inventory/sellCard", {"card_name": "bingus"})
+        response = self.client.post("/user/inventory/sellCard", {'card_name': 'bingus'}, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
         #Checks for user does not own card
-        response = self.client.post("/user/inventory/sellCard", {"card_name": "coal-imp"})
+        response = self.client.post("/user/inventory/sellCard", {'card_name': 'coal-imp'}, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
     def test_user_inventory_sell_valid(self):
@@ -340,10 +341,10 @@ class UserInventoryTest(TestCase):
         the user
         """
 
-        self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=False)
+        self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=True)
         OwnedCard(owner=self.user.user_data, card=self.card, quantity = 2).save()
 
-        response = self.client.post("/user/inventory/sellCard", {'card_name': 'coal-imp'})
+        response = self.client.post("/user/inventory/sellCard", {'card_name': 'coal-imp'}, content_type="application/json", follow=True)
         self.assertEqual(response.status_code, 200)
 
         user_cards = self.user.user_data.get_all_cards_quant()
