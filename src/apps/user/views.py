@@ -128,3 +128,16 @@ def sell_card(request):
         return HttpResponse("Hello World")
     else:
         return Http404()
+    
+
+def leaderboard(request):
+    """
+    This function will find and return the top 10 users based on their number of points. 
+    The users are then returned within the context to be used by the front-end team.
+    """
+
+    top_10_users = UserData.objects.order_by('-points')[:10] # Gets the users ordered by the number of points. Limits the query to 10 users.
+
+    con = {'top_10_users' : top_10_users}
+
+    return render(request, 'user/leaderboard.html', context=con)

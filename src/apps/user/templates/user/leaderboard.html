@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Leaderboard</title>
+</head>
+<body>
+    <h1>Leaderboard</h1>
+    <ul>
+        {% for user in top_10_users %}
+            <li>{{ user.user.username }} - {{ user.points }} Points</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
