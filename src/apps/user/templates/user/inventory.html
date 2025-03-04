@@ -60,7 +60,8 @@
                     <li>
                         <div class="card">
                             <div class="bar bar-top">
-                                <div class="card-title">{{card.card_name}}</div>
+                                <div class="card-title">{{ card.card_name }}</div>
+                                <div class="casting-cost">{{ card.value }}</div>
                             </div>
                             <div class="card-image">
                                 <img src= "{% static card.image_path %}" alt="card image">
@@ -81,7 +82,12 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <h1>No cards</h1>
+                <div class="inventory_header">
+                    <h1>Inventory</h1>
+                    <p>
+                        Looks like there are no cards here...
+                    </p>
+                </div>
             {% endif %}
             </div>
         </div>
