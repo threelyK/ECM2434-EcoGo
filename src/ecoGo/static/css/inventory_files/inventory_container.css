@@ -46,9 +46,9 @@ ul:hover .card {
 
 ul:hover .card:hover {
     opacity: 1;
-    transition: opacity .5s ease-out;
+    transition: opacity .5s ease-in-out;
 }
-  
+
 .bar {
     display: flex;
     justify-content: space-between;
