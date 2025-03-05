@@ -128,3 +128,10 @@ def sell_card(request):
         return HttpResponse("Hello World")
     else:
         return Http404()
+    
+@login_required(login_url="login")
+def shop(request):
+    """
+    Endpoint for "shop", serves the shop page
+    """
+    return render(request, "user/shop.html")
