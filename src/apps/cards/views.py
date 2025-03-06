@@ -16,10 +16,11 @@ def get_cards_instance():
         Card.objects.create(card_name="Hydronis", image="/images/card_images/Hydronis.webp", card_desc="Hydropower is the oldest form of mechanical renewable energy! People have been using water to generate power for over 2,000 years, dating back to ancient Greece, where water wheels were used to grind grain into flour!")
         Card.objects.create(card_name="Crudespawn", image="/images/card_images/Crudespawn.jpg", card_desc="Oil drilling causes massive environmental damage, leading to oil spills, habitat destruction, and water contamination. It also releases methane and carbon dioxide, major contributors to climate change and air pollution, harming both ecosystems and human health.")
 
-    return ({# Contains Card and frame number 0 = Blue, 1 = Black, Change frame to be included in card model
-    "vor": (Card.objects.get(card_name="Vortex-9"), 0), 
-    "hyd": (Card.objects.get(card_name="Hydronis"), 0),
-    "cru": (Card.objects.get(card_name="Crudespawn"), 1)})
+    return ({
+        "vor": Card.objects.get(card_name="Vortex-9"),
+        "hyd": Card.objects.get(card_name="Hydronis"),
+        "cru": Card.objects.get(card_name="Crudespawn")
+    })
 
 def get_pack_instance():
     """
@@ -39,9 +40,9 @@ def get_pack_instance():
 
     pack = Pack.objects.get_or_create(pack_name="Electri-city group", cost=250, num_cards=10)[0]
     if pack.get_all_cards().count() == 0:
-        pack.add_to_pack(first_cards.get("vor")[0], 100)
-        pack.add_to_pack(first_cards.get("hyd")[0], 100)
-        pack.add_to_pack(first_cards.get("cru")[0], 100)
+        pack.add_to_pack(first_cards.get("vor"), 100)
+        pack.add_to_pack(first_cards.get("hyd"), 100)
+        pack.add_to_pack(first_cards.get("cru"), 100)
         pack.add_to_pack(coa, 100)
         pack.add_to_pack(fun, 100)
         pack.add_to_pack(hel, 100)
@@ -51,6 +52,7 @@ def get_pack_instance():
         pack.add_to_pack(the, 100)
         if pack.validate_pack():
             pack.save_pack()
+        pack.image
 
     return pack.get_all_cards_rar()
 
@@ -93,7 +95,7 @@ def card_scan(request, url_UUID):
 
     # Initialise card values for given URL
     if url_UUID in card_scan_UUIDs.get("vortex_UUIDs"):
-        card, frame = cards_instance.get("vor")
+        card_alias = "vor"
         
         # Find prev_visitor_IDs list for this URL
         visitors_index = card_scan_UUIDs.get("vortex_UUIDs").index(url_UUID)
@@ -101,13 +103,13 @@ def card_scan(request, url_UUID):
 
 
     elif url_UUID in card_scan_UUIDs.get("hydronis_UUIDs"):
-        card, frame = cards_instance.get("hyd")
+        card_alias = "hyd"
 
         visitors_index = card_scan_UUIDs.get("hydronis_UUIDs").index(url_UUID)
         prev_visitor_IDs = card_scan_UUID_visitors.get(f"hydronis{visitors_index}_visitor_IDs")
 
     elif url_UUID in card_scan_UUIDs.get("crudespawn_UUIDs"):
-        card, frame = cards_instance.get("cru")
+        card_alias = "cru"
 
         visitors_index = card_scan_UUIDs.get("crudespawn_UUIDs").index(url_UUID)
         prev_visitor_IDs = card_scan_UUID_visitors.get(f"crudespawn{visitors_index}_visitor_IDs")
@@ -116,23 +118,16 @@ def card_scan(request, url_UUID):
         # return 404 invalid UUID was given
         render(ERROR_404_TEMPLATE_NAME)
 
-    match frame:
-        case 0:
-            frame = "/images/card_frames/frame0_renewable.jpg"
-        case 1:
-            frame = "/images/card_frames/frame1_non_renewable.jpg"
-    
-
-    card_name = card.card_name
-    card_image = card.image
-    card_desc = card.card_desc
-    
+    card = cards_instance.get(card_alias)
+    cards_context = []
+    cards_context.append({
+        "card_name": card.card_name,
+        "card_desc": card.card_desc,
+        "image_path": card.image,
+    })
 
     view_context = {
-        "card_name": card_name,
-        "card_image": card_image,
-        "card_desc": card_desc,
-        "card_frame": frame,
+        "cards": cards_context,
         "first_visit": True,
     }
     
@@ -175,10 +170,13 @@ def pack_scan(request, url_UUID):
             pack_rarity.append(card_rar[1])
         
         # Randomly rolls for 5 cards. Every card in the pack has a chance to be chosen
+
         selected_cards = rand.choices(pack_cards, weights=pack_rarity, k=5)
 
         
         # Find prev_visitor_IDs list for this URL
+
+        # Cooldown is every 24 hours
         visitors_index = pack_scan_UUIDs.get("pack0_UUIDs").index(url_UUID)
         prev_visitor_IDs = pack_scan_UUID_visitors.get(f"pack{visitors_index}_visitor_IDs")
 
@@ -209,9 +207,9 @@ def pack_scan(request, url_UUID):
     else:
         # Display card with an overlay or alert saying: "Already redeemed"
         view_context.update({"first_visit": False})
-    
+
 
     return render(request, 
                   context=view_context, 
-                  template_name="cards/display_pack.html"
+                  template_name="cards/display_card.html"
                   )
