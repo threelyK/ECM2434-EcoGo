@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from apps.user.models import UserData
 from apps.cards.models import Card, Pack
 import random as rand
+import time
 
 def get_cards_instance():
     """
@@ -74,7 +75,7 @@ card_scan_UUID_visitors = {
 }
 
 pack_scan_UUID_visitors = {
-    "pack0_visitor_IDs": [], 
+    "pack0_visitor_IDs": dict(), 
 }
 
 # .===========.
@@ -170,13 +171,12 @@ def pack_scan(request, url_UUID):
             pack_rarity.append(card_rar[1])
         
         # Randomly rolls for 5 cards. Every card in the pack has a chance to be chosen
-
         selected_cards = rand.choices(pack_cards, weights=pack_rarity, k=5)
 
         
         # Find prev_visitor_IDs list for this URL
 
-        # Cooldown is every 24 hours
+        
         visitors_index = pack_scan_UUIDs.get("pack0_UUIDs").index(url_UUID)
         prev_visitor_IDs = pack_scan_UUID_visitors.get(f"pack{visitors_index}_visitor_IDs")
 
@@ -197,11 +197,22 @@ def pack_scan(request, url_UUID):
         "first_visit": True,
     }
     
+    # Epoch is used for claim cooldown
+    # cooldown length can be set below (in seconds)
+    # 86400 sec = 1 day
+    cooldown_period = 86400
+    cur_epoch = int(time.time())
     userID = current_user.id
+
     if userID not in prev_visitor_IDs:
-        prev_visitor_IDs.append(userID)
+        prev_visitor_IDs[userID] = cur_epoch+cooldown_period
 
         # Get cards
+        for card in selected_cards:
+            current_UD.add_card(card)
+    elif cur_epoch >= prev_visitor_IDs.get(userID):
+        prev_visitor_IDs.update({userID: cur_epoch+cooldown_period})
+
         for card in selected_cards:
             current_UD.add_card(card)
     else:
