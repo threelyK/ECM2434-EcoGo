@@ -356,7 +356,6 @@ class UserInventoryTest(TestCase):
         self.assertEqual(user_cards[0], (self.card, 1))
 
 
-
 class LeaderboardViewTests(TestCase):
     def setUp(self):
         # Deleting all the users from the database before each test
