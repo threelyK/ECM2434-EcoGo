@@ -17,7 +17,11 @@
 <body>
     <div class="px-4 py-5 my-5 text-center">
         {%if first_visit %}
-            
+            <div class="inventory_header">
+                <div class="centered">
+                    <h1>{{ pack.pack_name }}</h1>
+                </div>
+            </div>
             <ul class="card-grid">
                 {% for card in cards %}
                 <li>
@@ -45,7 +49,11 @@
                 {% endfor %}
             </ul>
         {% else %}
-            
+            <div class="inventory_header">
+                <div class="centered">
+                    <h1>You've already claimed this pack for today.</h1>
+                </div>
+            </div>
         {% endif %}
     </div>
     <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
