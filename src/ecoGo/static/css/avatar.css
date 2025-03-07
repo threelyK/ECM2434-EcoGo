@@ -3,7 +3,7 @@
 /* Importing custom font */
 @font-face {
     font-family: 'GameFont';
-    src: url('../atarian_font/Atarian/SF\ Atarian\ System\ Extended.ttf');
+    src: url('../atarian_font/Atarian/SF_Atarian_System_Extended.ttf');
 }
 
 .avatar {
@@ -23,7 +23,7 @@
 }
 
 .avatar p {
-    font-family: GameFont, Arial, Helvetica, sans-serif; /*Using Arial as backup font */
+    font-family: GameFont, Verdana, Geneva, Tahoma, sans-serif; /*Using Arial as backup font */
     font-size: 22px;
     margin-top:10px;
     color: #FEFAE0;
