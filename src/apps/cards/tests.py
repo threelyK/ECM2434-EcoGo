@@ -1,10 +1,44 @@
 from django.test import TestCase
 from apps.cards.models import Card, Pack, PackCards
+from apps.cards.views import get_cards_instance, get_pack_instance
+from pathlib import PurePath
 
 class CardsViewsTest(TestCase):
 
     def setUp(self):
         pass
+
+    def test_get_cards_instance(self):
+        """
+        Tests that get_cards_instance gets or creates the first cards,
+        then returns a dictionary of the first cards.
+        """
+        card_dict = get_cards_instance()
+        hyd = card_dict.get("hyd")
+        vor = card_dict.get("vor")
+        cru = card_dict.get("cru")
+
+        self.assertEqual(hyd.card_name, "Hydronis")
+        self.assertEqual(vor.card_name, "Vortex-9")
+        self.assertEqual(cru.card_name, "Crudespawn")
+
+    def test_get_pack_instance(self):
+        """
+        Tests that get_pack_instance gets or creates the rest of the cards
+        for the pack. Adds cards to the pack and then returns a list of 
+        tuples containing the Card and rarity.
+        """
+        pack = get_pack_instance()
+        #for i in range(len(pack)):
+            #place = i+1
+            #name, rar = pack[i]
+            #print(str(place)+":",name, rar)
+        self.assertEqual(len(pack), 10)
+        for card in pack:
+            self.assertEqual(card[1], 100)
+
+
+
 
 class CardTest(TestCase):
     """
@@ -21,8 +55,8 @@ class CardTest(TestCase):
         uno_card = Card.create_card(name="uno")
         grunty_card = Card.create_card(name="Grunty", card_image="Test.jpg")
         self.assertRaises(FileNotFoundError, Card.create_card, name='dos', card_image='Missing')
-        self.assertEqual(uno_card.image, ".\\images\\card_images\\Missing_Texture.png")
-        self.assertEqual(grunty_card.image, ".\\images\\card_images\\Test.jpg")
+        self.assertEqual(uno_card.image, PurePath("images/card_images/Missing_Texture.png").as_posix())
+        self.assertEqual(grunty_card.image, PurePath("images/card_images/Test.jpg").as_posix())
 
     
     def test_change_image(self):
@@ -34,7 +68,7 @@ class CardTest(TestCase):
 
         testCard.image = "test"
         testCard.change_image("Missing_Texture.png")
-        self.assertEqual(testCard.image, ".\\images\\card_images\\Missing_Texture.png")
+        self.assertEqual(testCard.image, PurePath("images/card_images/Missing_Texture.png").as_posix())
 
         self.assertRaises(FileNotFoundError, testCard.change_image, "NotA.png")
 
