@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="{% static '/css/inventory_files/inventory_container.css' %}">
     <link rel="stylesheet" href="{% static '/css/inventory_files/inventory_grid.css' %}">
     <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="{% static '/css/normalise.css' %}">
     <link rel="icon" href="data:,">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
@@ -81,9 +83,11 @@
                 </ul>
             {% else %}
                 <div class="inventory_header">
-                    <p>
-                        Looks like there are no cards here...
-                    </p>
+                    <div class="centered">
+                        <p>
+                            Looks like there are no cards here...
+                        </p>
+                    </div>
                 </div>
             {% endif %}
             </div>
