@@ -132,12 +132,12 @@ def sell_card(request):
 
 def leaderboard(request):
     """
-    This function will find and return the top 10 users based on their number of points. 
-    The users are then returned within the context to be used by the front-end team.
+    This function will find and return the top 10 users based on their level. 
+    The usernames as well as the level are then returned within the context to be used by the front-end template.
     """
 
-    top_10_users = UserData.objects.order_by('-points')[:10] # Gets the users ordered by the number of points. Limits the query to 10 users.
+    top_10_users = UserData.objects.select_related('owner').order_by('-level')[:10] # Gets the users ordered by the number of points. Limits the query to 10 users.
 
-    con = {'top_10_users' : top_10_users}
+    con = {'top_10_users' : [{'username':user.owner.username, 'level':user.level} for user in top_10_users]}  # Includes username from the paernt table (User) and level from UserData table
 
     return render(request, 'user/leaderboard.html', context=con)
