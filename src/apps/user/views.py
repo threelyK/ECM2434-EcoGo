@@ -9,6 +9,7 @@ from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model # not being used rn
 from .forms import LoginForm, CreateUserForm
 from .models import User, UserData
+from apps.cards.models import Pack
 
 def landing(request):
     # renders the landing page where users can choose to log in or register
@@ -134,4 +135,12 @@ def shop(request):
     """
     Endpoint for "shop", serves the shop page
     """
-    return render(request, "user/shop.html")
+    user_data = request.user.user_data
+    packs = Pack.objects.all()
+    context = {
+        "packs": packs,
+        "points": user_data.points,
+        "level": user_data.level,
+    }
+
+    return render(request, "user/shop.html", context=context)
