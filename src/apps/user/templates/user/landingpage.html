@@ -73,6 +73,11 @@
                     <p>This is currently the prototype version so many features are still in the process to be implemented, thank you for reading.</p>
                 </div>
             </div>
+            
+            {% if request.user.is_authenticated and request.user.groups.all.0.name == "Gamemaster" %}
+                <a href="{% url 'gamemaster_dashboard' %}">Gamemaster Dashboard</a>
+            {% endif %}
+
             <div class="w3-container w3-center w3-animate-bottom">
                 <div class="centered">
                     <button type="button" class="btn btn-success btn-lg mb-3" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 40px; height: 100px; width: 500px; font-size: 40px;" onclick="window.location.href='login';">Login</button>

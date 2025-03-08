@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gamemaster Dashboard</title>
+</head>
+<body>
+    <h1>Gamemaster Dashboard</h1>
+    <p>Welcome, {{ request.user.username }}!</p>
+
+    <h2>All Users:</h2>
+    <table border="1">
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Is Staff</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.is_staff }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
