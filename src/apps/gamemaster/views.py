@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test
 from .forms import WebsiteForm
 from django.contrib import messages
-from django.contrib.gis.geos import Point
+
 def is_gamemaster(user):
     return user.groups.filter(name="Gamemaster").exists() or user.is_superuser
 
@@ -14,11 +14,13 @@ def gamemaster_dashboard(request):
             # Create the Website object
             website = website_form.save(commit=False)
 
-            # Get latitude and longitude from the hidden inputs
+            # Get latitude and longitude from the form
             lat = request.POST.get('location_lat')
             lon = request.POST.get('location_lon')
+            
             if lat and lon:
-                website.location = Point(float(lon), float(lat))
+                website.latitude = float(lat)
+                website.longitude = float(lon)
 
             website.save()
             return redirect('some_view_after_creation')

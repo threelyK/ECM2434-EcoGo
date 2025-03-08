@@ -8,15 +8,14 @@ from django.core.files import File
 from django.utils.text import slugify
 from django.urls import reverse, get_resolver
 from django.conf import settings
-from django.contrib.gis.forms import PointField
 ## This stuff is used for creating a Website and saving a specific QRCode for specific templated and create Websites
 class Website(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(unique=True, blank=True, editable=False)
     url = models.URLField(max_length=200, blank=True, default='http://127.0.0.1:8000/', editable=False)
     qr_code = models.ImageField(upload_to='qr_codes', blank=True)
-    location = models.PointField(null=True, blank=True) 
-
+    latitude = models.FloatField()
+    longitude = models.FloatField()
 
 
     def __str__(self):

@@ -1,3 +1,7 @@
 from django.contrib import admin
+from leaflet.admin import LeafletGeoAdmin
+from .models import Website
 
-# Register your models here.
+@admin.register(Website)
+class WebsiteAdmin(LeafletGeoAdmin):
+    pass

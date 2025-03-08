@@ -1,13 +1,11 @@
 from django import forms
 from apps.qrgenerator.models import Website  
 from apps.cards.models import Card, OwnedCard, Pack, PackCards 
-from django.contrib.gis.forms import PointField
-from django.contrib.gis.forms.widgets import OSMWidget
+
 class WebsiteForm(forms.ModelForm):
     class Meta:
         model = Website
-        fields = ['name', 'qr_code', 'location']
-    location = PointField(widget=OSMWidget(attrs={'map_width': 600, 'map_height': 400}))
+        fields = ['name', 'qr_code', 'latitude', 'longitude']
 
 class CardForm(forms.ModelForm):
     class Meta:
