@@ -8,8 +8,7 @@ from django.contrib.auth.decorators import user_passes_test
 def is_gamemaster(user):
     return user.groups.filter(name="Gamemaster").exists() or user.is_superuser
 
-# Geocoder setup (You can use a different geocoder if needed)
-geolocator = Nominatim(user_agent="eco_go")  # Replace with your own user_agent
+
 
 @user_passes_test(is_gamemaster)
 def gamemaster_dashboard(request):
@@ -18,19 +17,17 @@ def gamemaster_dashboard(request):
         if website_form.is_valid():
             website = website_form.save(commit=False)
 
-            # Get the address from the form
-            address = request.POST.get('location_address')
+            # Get geocoded latitude & longitude
+            lat = request.POST.get('location_lat')
+            lon = request.POST.get('location_lon')
 
-            # If address is provided, geocode it to get latitude and longitude
-            if address:
-                location = geolocator.geocode(address)
-                if location:
-                    website.latitude = location.latitude
-                    website.longitude = location.longitude
-                    website.location = location.address  # Store the address
+            if lat and lon:
+                website.latitude = lat
+                website.longitude = lon
 
             website.save()
-            return redirect('some_view_after_creation')  # Redirect after saving the website
+            return redirect('some_view_after_creation')  # Redirect after saving
+
     else:
         website_form = WebsiteForm()
 
