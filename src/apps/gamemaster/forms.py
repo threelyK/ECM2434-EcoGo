@@ -5,7 +5,7 @@ from apps.cards.models import Card, OwnedCard, Pack, PackCards
 class WebsiteForm(forms.ModelForm):
     class Meta:
         model = Website
-        fields = ['name', 'qr_code', 'latitude', 'longitude']
+        fields = ['name', 'qr_code', 'location']
 
 class CardForm(forms.ModelForm):
     class Meta:

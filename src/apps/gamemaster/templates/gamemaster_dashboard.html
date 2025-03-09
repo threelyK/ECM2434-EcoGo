@@ -23,7 +23,7 @@
                         {% csrf_token %}
                         {{ website_form.as_p }}
                         <title>Choose Location</title>
-                        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    
                         <div id="map" style="height: 400px; width: 100%;"></div>
 
                         <button type="submit" class="btn btn-primary w-100" name="create_website">Create Website</button>
@@ -68,18 +68,5 @@
     </div>
 
 </div>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script>
-    var map = L.map('map').setView([51.505, -0.09], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    var marker = L.marker([51.505, -0.09], {draggable: true}).addTo(map);
-
-    marker.on('dragend', function(event){
-        var position = marker.getLatLng();
-        console.log("Latitude: " + position.lat + ", Longitude: " + position.lng);
-        document.getElementById('id_latitude').value = position.lat;
-        document.getElementById('id_longitude').value = position.lng;
-    });
-</script>
 {% endblock %}

@@ -14,9 +14,7 @@ class Website(models.Model):
     slug = models.SlugField(unique=True, blank=True, editable=False)
     url = models.URLField(max_length=200, blank=True, default='http://127.0.0.1:8000/', editable=False)
     qr_code = models.ImageField(upload_to='qr_codes', blank=True)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-
+    location = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.name
