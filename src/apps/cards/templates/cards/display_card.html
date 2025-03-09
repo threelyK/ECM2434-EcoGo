@@ -5,48 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     {% load static %}
-    <link rel="stylesheet" href="{% static '/css/page.css' %}">
-    <link rel="stylesheet" href="{% static '/css/centered.css' %}">
-    <link rel="stylesheet" href="{% static '/css/pack_opening/pack_opening.css' %}">
-    <link rel="stylesheet" href="{% static '/css/inventory_files/inventory_container.css' %}">
-    <link rel="stylesheet" href="{% static '/css/inventory_files/inventory_grid.css' %}">
     <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
     <title>{{ card_name }}</title>
 </head>
 <body>
     <div class="px-4 py-5 my-5 text-center">
         {%if first_visit %}
-            <ul class="card-grid">
-                {% for card in cards %}
-                <li>
-                    <div class="card">
-                        <div class="bar bar-top">
-                            <div class="card-title">{{ card.card_name }}</div>
-                            <div class="casting-cost">{{ card.value }}</div>
-                        </div>
-                        <div class="card-image">
-                            <img src= "{% static card.image_path %}" alt="card image">
-                        </div>
-                            <div class="bar bar-mid">
-                                <div class="card-title">Instant</div>
-                            </div>
-                        <div class="card-text">
-                            <div class="card-ability">
-                                {{card.card_desc}}
-                            </div>
-                        </div>
-                        <div class="footer">
-                            <div class="author">Created by Breadscrums.</div>
-                        </div>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
+        <h1 class="display-5 fw-bold text-body-emphasis">{{card_name}}</h1>
+        <img class="d-block mx-auto mb-4" src="{% static card_image %}" alt="{{card_name}}" width="480" height="480">
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">{{card_desc}}</p>
+        </div>
         {% else %}
+            <div class="col-lg-6 mx-auto" style="--bs-danger-bg-subtle z-index: 1">
+                <p class="lead mb-4">You have already claimed:</p>
+            </div>
+            <div class="card_div">
+                <img class="d-block mx-auto mb-4" src="{% static card_frame %}" alt="" width="480" height="960">
+                <h1 class="display-5 fw-bold text-body-emphasis">{{card_name}}</h1>
+                <img class="d-block mx-auto mb-4" src="{% static card_image %}" alt="{{card_name}}" width="480" height="480">
+                <div class="col-lg-6 mx-auto">
+                    <p class="lead mb-4">{{card_desc}}</p>
+                </div>
+            </div>
             
         {% endif %}
     </div>
-    <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

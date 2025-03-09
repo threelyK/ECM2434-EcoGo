@@ -1,10 +1,10 @@
 from django.db import models
 from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
-from pathlib import Path, PurePath
+from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # current_directory=Path(__file__).parent
+# card_images_directory=current_directory / 'photos' / 'cards'
 # 'images\card_images\' Note: doesn't come with ./ at the beginning
 # relative_path_to_card_images=card_images_directory.relative_to(current_directory)
 
@@ -13,9 +13,8 @@ class Card(models.Model):
     Card contains all the data for a card.
     """
     card_name = models.TextField(_("Card Name"), unique=True)
-    image = models.TextField(_("Image Url"), default=PurePath("images/card_images/Missing_Texture.png").as_posix())
+    image = models.TextField(_("Image Url"), default="./photos/cards/missing.png")
     card_desc = models.TextField(_("Card Description"), blank=True, null=True)
-    card_frame = models.IntegerField(_("Card Frame"), default=0)
     value = models.IntegerField(_("Card Value"), default=0)
 
     class Meta:
@@ -46,14 +45,15 @@ class Card(models.Model):
         """
         Checks whether the image file exists in the card_images directory
         
-        Returns: Tuple of boolean and relative image path if the image file exists in dir "/static/images/card_images/"
+        Returns: Tuple of boolean and relative image path if the image file exists in dir "./images/card_images/"
         """
-        image_path = BASE_DIR / "static/images/card_images" / image_file
-        path_to_static = BASE_DIR / "static"
+        BASE_DIR = Path(__file__).resolve().parent.parent.parent
+        image_path = BASE_DIR / "static/images/cards" / image_file
+        path_wo_static = BASE_DIR / "static" / "images"
 
         if image_path.exists():
-            relative_path = image_path.relative_to(path_to_static)
-            return (True, relative_path.as_posix())
+            relative_path = image_path.relative_to(path_wo_static)
+            return (True, str(relative_path))
         else:
             return (False, None)
             
@@ -120,8 +120,8 @@ class Pack(models.Model):
         verbose_name=_("Cards"),
         through="cards.PackCards",
     )
-    image = models.TextField(_("Pack Image"), 
-                            default="/images/card_images/Missing_Texture.png")
+    image = models.URLField(_("Image URL"), 
+                            default="https://plus.unsplash.com/premium_photo-1675438998042-8159173ccd82?q=80&w=999&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
     
     #This exists to allow for an instance attribute not related to the database
     def __init__(self, *args, **kwargs):
