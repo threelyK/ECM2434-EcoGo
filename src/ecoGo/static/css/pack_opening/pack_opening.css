@@ -1,0 +1,139 @@
+:root {
+    --card-border-color: #000;
+    --card-border-thickness: 14px;
+    --card-border-radius: 10px;
+    --bars-background: #debca7;
+    --inner-borders-color: #bd4129;
+    --inner-borders-thickness: 3px;
+}
+
+@font-face {
+    font-family: 'GameFont';
+    src: url('../../atarian_font/Atarian/SF_Atarian_System_Extended.ttf');
+}
+
+* {
+    box-sizing: border-box;
+}
+  
+body {
+    margin: 0;
+    padding: 0;
+    background: #222;
+    min-height: 100vh;
+}
+
+.inventory_header {
+    color: white;
+    font-family: GameFont, Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.inventory_header h1 {
+    color: white;
+    font-family: GameFont, Verdana, Geneva, Tahoma, sans-serif;
+}
+  
+.card {
+    position: absolute;
+    flex: 1 1 calc(25% - 16px);
+    width: 300px;
+    height: 418px;
+    margin-left: 30px;
+    box-shadow: inset 0 0 0 var(--card-border-thickness) var(--card-border-color);
+    border-radius: var(--card-border-radius);
+    padding: var(--card-border-thickness);
+}
+
+
+ul:hover .card {
+    opacity: 0.5;
+    transition: opacity .5s ease-in-out;
+}
+
+ul:hover .card:hover {
+    opacity: 1;
+    transition: opacity .5s ease-in-out;
+}
+
+.bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bars-background);
+    margin: 7px;
+    margin-bottom: 0;
+    padding: 1px 4px;
+    box-shadow: 0 0 0 var(--inner-borders-thickness) var(--inner-borders-color);
+    border-radius: 3px / 10px;
+}
+  
+.bar-top {
+    margin-top: 10px;
+}
+  
+.card-title {
+    margin-left: 5px;
+    padding-top: 5px;
+    letter-spacing: 1px;
+}
+  
+.casting-cost {
+    margin-right: 5px;
+    display: flex;
+    gap: 2px;
+}
+  
+.card-image {
+    position: relative;
+    margin: 0 12px;
+    margin-top: var(--inner-borders-thickness);
+    margin-bottom: calc(-1 * var(--inner-borders-thickness) - 1px);
+    height: 188px;
+    box-shadow: 0 0 0 var(--inner-borders-thickness) var(--inner-borders-color);
+    overflow: hidden;
+}
+
+.card-image img {
+    min-width: 100%;
+    min-height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    
+}
+
+.bar-mid {
+    margin-bottom: var(--inner-borders-thickness);
+}
+
+.card-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px;
+    margin: 0 12px;
+    height: 115px;
+    box-shadow: 0 0 0 var(--inner-borders-thickness) var(--inner-borders-color);
+    background-color: var(--bars-background);
+}
+  
+.card-ability {
+    font-size: 13px;
+    line-height: 1;
+}
+  
+.card-quote {
+    font-style: italic;
+    font-size: 12px;
+    line-height: 1;
+}
+  
+.footer {
+    margin-top: 7px;
+    margin-left: 10px;
+}
+  
+.author {
+    font-weight: bold;
+    font-size: 10px;
+}
