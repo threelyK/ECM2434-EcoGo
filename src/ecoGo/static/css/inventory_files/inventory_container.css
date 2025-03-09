@@ -32,6 +32,32 @@ body {
     color: white;
     font-family: GameFont, Verdana, Geneva, Tahoma, sans-serif;
 }
+
+.sell-button{
+    margin-top: 5px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    top: 100%;
+    margin-left: 60px;
+}
+
+.sell-button img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    padding: 5px;
+}
+
+.sell-button:active {
+    background-color:darkgreen;
+}
+
+.card-container {
+    position: relative;
+    width: 300px;
+}
   
 .card {
     position: absolute;
@@ -44,13 +70,12 @@ body {
     padding: var(--card-border-thickness);
 }
 
-
-ul:hover .card {
+ul:hover .card-container {
     opacity: 0.5;
     transition: opacity .5s ease-in-out;
 }
 
-ul:hover .card:hover {
+ul:hover .card-container:hover {
     opacity: 1;
     transition: opacity .5s ease-in-out;
 }
