@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponseBadRequest
 from django.views.decorators.http import require_http_methods
 from django.views.defaults import ERROR_404_TEMPLATE_NAME
 from django.contrib.auth.decorators import login_required
@@ -224,3 +225,48 @@ def pack_scan(request, url_UUID):
                   context=view_context, 
                   template_name="cards/display_card.html"
                   )
+
+def open_pack(request, pack_name):
+    """
+    Takes in a request and a pack_name, then adds the card to the users inventory
+    and returns the template for the pack opening page, to be called from views
+    but is not linked to URLs.
+    """
+
+    user = request.user
+
+    try:
+        pack = Pack.objects.get(pack_name = pack_name)
+    except:
+        return HttpResponseBadRequest("Pack does not exist")
+
+    #Unpack to card data for use with rand.choices()
+    pack_cards_rar = pack.get_all_cards_rar()
+    pack_cards = []
+    pack_rarity = []
+    for card_rar in pack_cards_rar:
+        pack_cards.append(card_rar[0])
+        pack_rarity.append(card_rar[1])
+
+    #Selects a set of cards to be given to the user 
+    selected_cards = rand.choices(pack_cards, weights=pack_rarity, k=5)
+
+    #Add card to users inventory
+    for card in selected_cards:
+        user.userData.add_card(card)
+
+    #Fill in the context and render the template
+    cards_context = []
+    for card in selected_cards:
+        cards_context.append({
+            "card_name": card.card_name,
+            "card_desc": card.card_desc,
+            "image_path": card.image
+        })
+
+    view_context = {
+        "cards": cards_context,
+        "first_visit": True,
+    }
+
+    return render(request, context=view_context, template_name="cards/display_card.html")
