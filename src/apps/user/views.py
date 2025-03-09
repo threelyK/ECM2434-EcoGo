@@ -144,3 +144,10 @@ def shop(request):
     }
 
     return render(request, "user/shop.html", context=context)
+
+@login_required(login_url='login')
+def buy_item(request):
+    if request.method == "POST":
+        pass
+    else:
+        return Http404()
