@@ -44,6 +44,7 @@ body {
     padding: var(--card-border-thickness);
 }
 
+
 ul:hover .card {
     opacity: 0.5;
     transition: opacity .5s ease-in-out;
