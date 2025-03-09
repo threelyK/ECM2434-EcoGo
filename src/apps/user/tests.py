@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from apps.user.models import UserData, User
-from apps.cards.models import Card, OwnedCard
+from apps.cards.models import Card, OwnedCard, Pack
 from django.urls import reverse
 from django.contrib.auth import SESSION_KEY
 from json import dumps
@@ -363,8 +363,12 @@ class UserShopTest(TestCase):
 
         self.user = get_user_model().objects.create_user(username='123', password='123456789')
 
-        #Initalises a pack, specifically the "Electri-city group" pack and its cards
+        #Initalises a pack, specifically the "Electri-city group" pack and its value
         get_pack_instance()
+
+        pack = Pack.objects.get(pack_name = "Electri-city group")
+        pack.cost = 20
+        pack.save()
 
     def test_shop_index_template(self):
         """
@@ -384,5 +388,61 @@ class UserShopTest(TestCase):
         authenticated user attempts access
         """
 
-        response = self.client.get("/user/inventory", follow=False)
+        response = self.client.get("/user/shop", follow=False)
         self.assertEqual(response.status_code, 302)
+
+    def test_shop_buy_item_invalid(self):
+        """
+        Tests that an invlaid input into 'user/shop/buyItem' will result in
+        the proper error code being sent
+        """
+
+        self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=False)
+        self.user.user_data.add_points(2000)
+
+        #Checks for invalid request structure
+        response = self.client.post("/user/shop/buyItem", {'bingus': "worse cat"}, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        response = self.client.post("/user/shop/buyItem", 
+                                    {'item_name': "Electri-city group", "beans" : "on toast"}, 
+                                    content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        #Checks for pack does not exist
+        response = self.client.post("/user/shop/buyItem",
+                                    {'item_name': 'bingus', 'item_type': "pack"},
+                                    content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        #ensures no points were spent on invalid transactions
+        self.assertEqual(self.user.user_data.points, 2000)
+
+        #Checks for user does not have enough points
+        self.user.user_data.remove_points(2000)
+        response = self.client.post("/user/shop/buyItem",
+                                    {'item_name': 'Electri-city group', 'item_type': "pack"},
+                                    content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+
+    def test_shop_buy_item_valid(self):
+        """
+        Tests that if the input into 'user/ship/buyItem' is valid that
+        cards will be added and the template will be sent
+        """
+
+        self.client.post('/login', {'username': '123', 'password': '123456789'})
+        self.user.user_data.add_points(2000)
+
+        response = self.client.post("/user/shop/buyItem",
+                                    {'item_name': 'Electri-city group', 'item_type': "pack"},
+                                    content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        
+        #Checks that 5 cards have been awarded to the user
+        cards = self.user.user_data.get_all_cards()
+        self.assertEqual(len(cards), 5)
+
+        #Checks that 20 points have been taken from the user
+        self.assertEqual(self.user.user_data.points, 1980)
