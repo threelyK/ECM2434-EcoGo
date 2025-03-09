@@ -168,15 +168,19 @@ def shop(request):
     """
     Endpoint for "shop", serves the shop page
     """
-    user_data = request.user.user_data
-    packs = Pack.objects.all()
-    context = {
-        "packs": packs,
-        "points": user_data.points,
-        "level": user_data.level,
-    }
 
-    return render(request, "user/shop.html", context=context)
+    if(request.method == "GET"):
+        user_data = request.user.user_data
+        packs = Pack.objects.all()
+        context = {
+            "packs": packs,
+            "points": user_data.points,
+            "level": user_data.level,
+        }
+
+        return render(request, "user/shop.html", context=context)
+    else:
+        return Http404()
 
 @login_required(login_url='login')
 def buy_item(request):
