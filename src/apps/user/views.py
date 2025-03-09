@@ -11,6 +11,7 @@ from django.contrib.auth import get_user_model # not being used rn
 from .forms import LoginForm, CreateUserForm
 from .models import User, UserData
 from apps.cards.models import Pack
+from apps.cards.models import Card
 
 def landing(request):
     # renders the landing page where users can choose to log in or register
@@ -119,6 +120,9 @@ def inventory(request):
 
         return render(request, "user/inventory.html", context=con)
     
+    else:
+        return Http404()
+    
 @login_required(login_url="login")
 def sell_card(request):
     """
@@ -127,7 +131,35 @@ def sell_card(request):
     """
 
     if request.method == "POST":
-        return HttpResponse("Hello World")
+        #Checks request body is correct json
+        try:
+            data = loads(request.body.decode("utf-8"))
+        except:
+            return HttpResponseBadRequest("INVALID REQUEST BODY FORMAT")
+
+        #Checks request body includes a card name element
+        if not "card_name" in data.keys():
+            return HttpResponseBadRequest("INVALID REQUEST BODY FORMAT")
+
+        #Checks that the card requested exists
+        try:
+            card = Card.objects.get(card_name=data["card_name"])
+        except:
+            return HttpResponseBadRequest("REQUESTED CARD DOES NOT EXIST")
+
+        user_data = request.user.user_data
+
+        try:
+            user_data.remove_card(card)
+        except:
+            return HttpResponseBadRequest("USER DOES NOT HAVE THE REQUIRED CARD")
+        
+        user_data.add_points(card.value)
+
+        #renders the template again using the inventory view
+        request.method = 'GET'
+        return inventory(request)
+
     else:
         return Http404()
     

@@ -177,11 +177,13 @@ class UserData(models.Model):   # Maybe needs a related_name in the cards attrib
 
 
     def remove_card(self, card_to_remove : Card, quantity : int = 1):
+
         """
         Removes a given amount of instances of the card_to_remove from the users inventory,
         will throw an exception if the user does not have that card.
         Default quantity is 1.
         """
+        
         if quantity < 1:
             raise ValueError("Invalid number: No negatives or zero.")
         
