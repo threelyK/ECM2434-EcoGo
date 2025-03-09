@@ -5,6 +5,7 @@ from apps.cards.models import Card, OwnedCard
 from django.urls import reverse
 from django.contrib.auth import SESSION_KEY
 from json import dumps
+from apps.cards.views import get_pack_instance
 # run tests using `py manage.py test apps/user`
 
 User = get_user_model()
@@ -350,3 +351,38 @@ class UserInventoryTest(TestCase):
         user_cards = self.user.user_data.get_all_cards_quant()
         self.assertEqual(user_cards[0], (self.card, 1))
 
+class UserShopTest(TestCase):
+    """
+    Tests the functionality of the user shop related functions
+    """
+
+    def setUp(self):
+        """
+        Sets up a user for testing, run before each test by test system
+        """
+
+        self.user = get_user_model().objects.create_user(username='123', password='123456789')
+
+        #Initalises a pack, specifically the "Electri-city group" pack and its cards
+        get_pack_instance()
+
+    def test_shop_index_template(self):
+        """
+        Tests the "user/shop" endpoint, specifically that it properly serves the 
+        template if a user is logged in
+        """
+         
+        self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=False)
+        response = self.client.get("/user/shop")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "user/shop.html")
+
+    def test_shop_index_redirect(self):
+        """
+        Tests that the "user/shop" endpoint correctly redirects to the login page when a non 
+        authenticated user attempts access
+        """
+
+        response = self.client.get("/user/inventory", follow=False)
+        self.assertEqual(response.status_code, 302)
