@@ -27,6 +27,11 @@ body {
     color: white;
     font-family: GameFont, Verdana, Geneva, Tahoma, sans-serif;
 }
+
+.inventory_header h1 {
+    color: white;
+    font-family: GameFont, Verdana, Geneva, Tahoma, sans-serif;
+}
   
 .card {
     position: absolute;
