@@ -3,9 +3,10 @@
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate
 
+from json import loads
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.contrib.auth import get_user_model # not being used rn
 from .forms import LoginForm, CreateUserForm
 from .models import User, UserData
@@ -148,6 +149,14 @@ def shop(request):
 @login_required(login_url='login')
 def buy_item(request):
     if request.method == "POST":
-        pass
+        try:
+            data = loads(request.body.decode("utf-8"))
+        except:
+            return HttpResponseBadRequest("skibidi (error) 💀")
+        
+        if not "item_name" in data.keys() or not "item_type" in data.keys():
+            return HttpResponseBadRequest("you need to include 'item_name' and 'item_type'")
+        
+        return HttpResponse("your button works king 🦀")
     else:
         return Http404()
