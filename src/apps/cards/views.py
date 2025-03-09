@@ -253,7 +253,7 @@ def open_pack(request, pack_name):
 
     #Add card to users inventory
     for card in selected_cards:
-        user.userData.add_card(card)
+        user.user_data.add_card(card)
 
     #Fill in the context and render the template
     cards_context = []
