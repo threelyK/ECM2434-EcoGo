@@ -11,6 +11,7 @@ from django.conf import settings
 ## This stuff is used for creating a Website and saving a specific QRCode for specific templated and create Websites
 class Website(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    date = models.DateField("Date", auto_now=False, auto_now_add=True)
     slug = models.SlugField(unique=True, blank=True, editable=False)
     url = models.URLField(max_length=200, blank=True, default='http://127.0.0.1:8000/', editable=False)
     qr_code = models.ImageField(upload_to='qr_codes', blank=True)
