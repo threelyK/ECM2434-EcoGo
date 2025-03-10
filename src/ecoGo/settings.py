@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'apps.cards.apps.CardsConfig',
     'apps.qrgenerator.apps.QrgeneratorConfig',
     'apps.gamemaster.apps.GamemasterConfig',
+    'apps.location.apps.LocationConfig',
 
     'django.contrib.admin',
     'django.contrib.contenttypes', # Make sure this is above django.contrib.auth

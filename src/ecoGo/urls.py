@@ -24,7 +24,8 @@ urlpatterns = [
     path('', include('apps.user.urls')),
     path('cards/', include('apps.cards.urls')),
     path('qrgenerator/', include('apps.qrgenerator.urls')),
-    path('gamemaster/', include('apps.gamemaster.urls'))
+    path('gamemaster/', include('apps.gamemaster.urls')),
+    path('location/', include('apps.location.urls'))
 ] 
 
 if settings.DEBUG:
