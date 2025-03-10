@@ -12,18 +12,25 @@ def is_gamemaster(user):
 
 @user_passes_test(is_gamemaster)
 def gamemaster_dashboard(request):
+    geolocator = Nominatim(user_agent="geoapiExercises")  # Initialize Geopy
+
     if request.method == 'POST':
         website_form = WebsiteForm(request.POST)
         if website_form.is_valid():
             website = website_form.save(commit=False)
 
-            # Get geocoded latitude & longitude
+            # Get lat/lon from form
             lat = request.POST.get('location_lat')
             lon = request.POST.get('location_lon')
 
             if lat and lon:
-                website.latitude = lat
-                website.longitude = lon
+                website.latitude = float(lat)
+                website.longitude = float(lon)
+
+                # Reverse geocode to get the address
+                location = geolocator.reverse((lat, lon), exactly_one=True)
+                if location:
+                    website.location = location.address  # Store the address
 
             website.save()
             return redirect('some_view_after_creation')  # Redirect after saving
