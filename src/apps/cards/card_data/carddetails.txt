@@ -34,3 +34,36 @@ Miscellaneous:
 
 Name: Livewire: Pulse of the endless grid
 Description: The power grid is one of the largest machines on Earth! It’s a huge, interconnected network spanning millions of miles of power lines, delivering electricity to billions of people in real time. Despite its size, it operates within a delicate balance—too much or too little power can cause blackouts.
+
+Transport 
+
+Name: VELO-CRUISER: The Pedal Power Pioneer 
+Description: Cycling is one of the most energy-efficient forms of transport! Biking produces zero emissions and improves public health by reducing air pollution and encouraging physical activity. Cities with strong cycling infrastructure see lower traffic congestion and better air quality.
+
+Name: ELECTRO-RUSH: Charge of the Future
+Description: Electric vehicles (EVs) produce up to 70% fewer emissions than gasoline-powered cars over their lifetime, especially when charged with renewable energy. Advances in battery technology are increasing EV range and reducing costs.
+
+Name: METRO-FORCE: Urban Lifeline
+Description: Public transit systems like subways, buses, and trains reduce congestion and emissions by carrying large numbers of people at once. A well-designed metro system can reduce a city’s carbon emissions by up to 30%!
+
+Name: AEROGLIDE: Greener Skies
+Description: Biofuels and more fuel-efficient aircraft designs are helping to reduce aviation emissions. Modern aircraft are up to 80% more efficient than those from the 1960s, thanks to lighter materials and improved engines.
+
+Name: HYPERSTREAM: Speed Without Emissions
+Description: High-speed trains powered by electricity can travel at over 300 km/h with minimal environmental impact. Trains produce up to 90% fewer emissions than equivalent air travel for the same distance.
+
+Name: GRIDLOCKER: Chokehold of the Roads
+Description: Traffic congestion wastes over 3 billion gallons of fuel in the U.S. alone every year, releasing massive amounts of carbon dioxide and pollutants into the air, worsening urban air quality and public health.
+
+Name: FUMEFORGE: The Diesel Menace
+Description: Diesel engines release high levels of particulate matter (PM) and nitrogen oxides (NOx), which cause respiratory problems and contribute to acid rain and smog.
+
+Name: OILDRIFTER: Tanker of Destruction
+Description: Oil spills from transport tankers devastate marine ecosystems, coating shorelines and killing wildlife. The Deepwater Horizon spill released over 4 million barrels of oil, causing lasting damage to the Gulf of America.
+
+Name: SKYCORRUPTOR: The High-Flying Polluter
+Description: Aviation is responsible for over 2% of global CO₂ emissions and growing rapidly. A single transatlantic flight produces as much CO₂ per passenger as the average person generates in a year of driving.
+
+Name: ROADRAVAGER: Paving Over Nature
+Description: Road construction destroys habitats, fragments wildlife populations, and increases pollution. Over 420,000 miles of roads cut through U.S. forests and grasslands, impacting animal migration and ecosystem balance.
+
