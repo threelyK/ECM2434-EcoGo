@@ -76,7 +76,10 @@
                                 <div class="pack_price">
                                     <p>Cost: {{ pack.cost }}</p> 
                                 </div>
-                                <button type="button" class="buy_button" onclick="window.location.href='{% url 'homepage' %}';">Buy</button>
+                                <button type="button" class="buy_button" onclick="buyPack('{{ pack.pack_name }}', '{{ pack.pack_type }}')">Buy</button>
+                                <script src="{% static 'js/shop.js' %}"></script>
+                                <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+                                <script src="{% static 'js/navbar.js' %}"></script>
 
                             </div>
                         </div>
