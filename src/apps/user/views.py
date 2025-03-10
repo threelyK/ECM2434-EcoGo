@@ -12,6 +12,7 @@ from .forms import LoginForm, CreateUserForm
 from .models import User, UserData
 from apps.cards.models import Pack
 from apps.cards.models import Card
+from apps.cards.views import open_pack
 
 def landing(request):
     # renders the landing page where users can choose to log in or register
@@ -119,15 +120,16 @@ def inventory(request):
         }
 
         return render(request, "user/inventory.html", context=con)
-    
+
     else:
         return Http404()
-    
+
 @login_required(login_url="login")
 def sell_card(request):
     """
-    Endpoint for "user/inventory/sellCard": removes a card from a users inventory, adds the cards value to
-    the users points and serves and updated template with the changes reflected.
+    Endpoint for "user/inventory/sellCard": removes a card from a users inventory, 
+    adds the cards value to the users points and serves and updated template with 
+    the changes reflected.
     """
 
     if request.method == "POST":
@@ -153,7 +155,7 @@ def sell_card(request):
             user_data.remove_card(card)
         except:
             return HttpResponseBadRequest("USER DOES NOT HAVE THE REQUIRED CARD")
-        
+
         user_data.add_points(card.value)
 
         #renders the template again using the inventory view
@@ -162,14 +164,14 @@ def sell_card(request):
 
     else:
         return Http404()
-    
+
 @login_required(login_url="login")
 def shop(request):
     """
     Endpoint for "shop", serves the shop page
     """
 
-    if(request.method == "GET"):
+    if request.method == "GET":
         user_data = request.user.user_data
         packs = Pack.objects.all()
         context = {
@@ -184,15 +186,38 @@ def shop(request):
 
 @login_required(login_url='login')
 def buy_item(request):
+    """
+    Endpoint handling view for allowing a user to buy an item (card
+    pack) and returning the corresponding html for the transaction
+    """
     if request.method == "POST":
+        #Checks that body is valid json
         try:
             data = loads(request.body.decode("utf-8"))
         except:
-            return HttpResponseBadRequest("skibidi (error) 💀")
-        
+            return HttpResponseBadRequest("INVALID REQUEST BODY")
+
+        #Checks that JSON includes valid fields
         if not "item_name" in data.keys() or not "item_type" in data.keys():
             return HttpResponseBadRequest("you need to include 'item_name' and 'item_type'")
-        
-        return HttpResponse("your button works king 🦀")
+
+        if data["item_type"] == "pack":
+            try:
+                pack = Pack.objects.get(pack_name = data["item_name"])
+            except:
+                return HttpResponseBadRequest("PACK REQUESTED DOES NOT EXIST")
+    
+            pack_cost = pack.cost
+            user_points = request.user.user_data.points
+
+            if user_points >= pack_cost:
+                response = open_pack(request, data["item_name"])
+                request.user.user_data.remove_points(pack_cost)
+                return response
+            else:
+                return HttpResponseBadRequest("NOT ENOUGH POINTS FOR TRANSACTION")
+        else:
+            #Currenlty only cards can be purchased from the shop, but this makes it extensable
+            return HttpResponseBadRequest("ERROR: ONLY PACK ITEM TYPES ARE CURRENTLY SUPPORTED")
     else:
         return Http404()

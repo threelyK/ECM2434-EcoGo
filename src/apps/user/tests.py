@@ -440,9 +440,13 @@ class UserShopTest(TestCase):
                                     content_type="application/json")
         self.assertEqual(response.status_code, 200)
         
-        #Checks that 5 cards have been awarded to the user
-        cards = self.user.user_data.get_all_cards()
-        self.assertEqual(len(cards), 5)
+        #Checks that 5 cards have been awarded to the user, including duplicates
+        cards = self.user.user_data.get_all_cards_quant()
+        count = 0
+        for card in cards:
+            count = count + card[1]
+
+        self.assertEqual(count, 5)
 
         #Checks that 20 points have been taken from the user
         self.assertEqual(self.user.user_data.points, 1980)
