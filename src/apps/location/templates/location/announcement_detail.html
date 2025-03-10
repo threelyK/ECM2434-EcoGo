@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
+</head>
+<body>
+    <div id="map" style="width: 100%; height: 100%" tabindex="0"></div>
+</body>
+<script>
+    var map = L.map('map').setView([50.725, -3.527], 14);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var circle = L.circleMarker([50.736199, -3.531705], {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: {{ radius }} // By default is 25
+    }).addTo(map);
+</script>
+{% endblock %}
