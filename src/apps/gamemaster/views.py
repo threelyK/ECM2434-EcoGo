@@ -24,7 +24,7 @@ def gamemaster_dashboard(request):
 
                 lat = request.POST.get('location_lat')
                 lon = request.POST.get('location_lon')
-                address = request.POST.get('location_address')
+                address = request.POST.get('address')
 
                 if lat and lon:
                     website.latitude = float(lat)
@@ -32,6 +32,10 @@ def gamemaster_dashboard(request):
 
                 if address:
                     website.address = address
+                else:
+                    location = geolocator.reverse((lat, lon), exactly_one=True)
+                    website.address = location.address if location else "Unknown Address"
+
                 
 
                 website.save()

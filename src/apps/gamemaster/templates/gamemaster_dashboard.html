@@ -45,46 +45,59 @@
                     document.addEventListener("DOMContentLoaded", function () {
                         var map = L.map('map').setView([50.73737953275868, -3.5315806025553944], 13);
                         map.setZoom(17);
-                        
+                    
+                        // Add OpenStreetMap Tile Layer
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             attribution: '&copy; OpenStreetMap contributors'
                         }).addTo(map);
-    
-                        var marker = L.marker([50.73737953275868, -3.5315806025553944], { draggable: true }).addTo(map);
                     
+                        // Variables for form fields
                         const latField = document.querySelector("#id_latitude");
                         const lonField = document.querySelector("#id_longitude");
-                        const addressField = document.getElementById("location_address");
-                        <!-- address doesnt auto update but someone can manually put it there-->
+                        const addressField = document.querySelector("#id_address");
+                    
+                        // Function to update fields with new coordinates
                         function updateLatLng(lat, lon) {
                             latField.value = lat;
                             lonField.value = lon;
-                            <!--This is meant to update address Field to make it so pointer click displays address but not working atm-->
+                            reverseGeocode(lat, lon);  // Fetch address from coordinates
+                        }
+                    
+                        // Function to reverse geocode and fetch an address
+                        function reverseGeocode(lat, lon) {
                             fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
                                 .then(response => response.json())
                                 .then(data => {
-                                    if (data.display_name) {
+                                    if (data && data.display_name) {
                                         addressField.value = data.display_name;
                                     } else {
                                         addressField.value = "Address not found";
                                     }
                                 })
                                 .catch(() => {
-                                    addressField.value = "Geocoder failed";
+                                    addressField.value = "Failed to fetch address";
                                 });
                         }
-    
-                        updateLatLng(50.73737953275868, -3.5315806025553944);
-    
-                        map.on('click', function (e) {
+                    
+                        // Add marker when clicking on the map
+                        var marker = L.marker([50.73737953275868, -3.5315806025553944], {
+                            draggable: true
+                        }).addTo(map);
+                    
+                        // When the map is clicked, move the marker and update fields
+                        map.on("click", function (e) {
                             marker.setLatLng(e.latlng);
                             updateLatLng(e.latlng.lat, e.latlng.lng);
                         });
-    
-                        marker.on('dragend', function (e) {
+                    
+                        // When the marker is dragged, update fields
+                        marker.on("dragend", function () {
                             var position = marker.getLatLng();
                             updateLatLng(position.lat, position.lng);
                         });
+                    
+                        // Set initial location
+                        updateLatLng(50.73737953275868, -3.5315806025553944);
                     });
                     </script>
 
