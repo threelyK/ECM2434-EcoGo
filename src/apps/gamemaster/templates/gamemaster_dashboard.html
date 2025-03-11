@@ -51,7 +51,7 @@
                             
                             // Add a movable red marker
                             var marker = L.marker([51.505, -0.09], { draggable: true}).addTo(map);
-
+                        
                             // Update hidden input fields when marker is dragged
                             function updateLatLng(lat, lon) {
                                 document.getElementById("location_lat").value = lat;
