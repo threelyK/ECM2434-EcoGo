@@ -19,6 +19,13 @@
 
     </head>
     <div class="row">
+        {% if messages %}
+            <div class="alert alert-success">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
         <!-- Website Form -->
         <div class="col-md-6">
             <div class="card shadow-sm">
@@ -29,66 +36,57 @@
                     <form method="post" id="website-form">
                         {% csrf_token %}
                         {{ website_form.as_p }}
-                        <label for="location_address">Selected Location:</label>
-                        <input type="text" id="location_address" name="location_address" class="form-control" placeholder="Click on the map to set location" readonly>
-
-                        <!-- Hidden inputs to store lat/lon -->
-                        <input type="hidden" id="location_lat" name="location_lat">
-                        <input type="hidden" id="location_lon" name="location_lon">
-
-                        <!-- Map Container -->
-                        <div id="map" style="height: 400px;"></div>
-
-                        <script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            // Initialize map centered on a default location
-                            var map = L.map('map').setView([50.73737953275868, -3.5315806025553944], 13);
-                            map.setZoom(17);
-                            // Add OpenStreetMap Tile Layer
-                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                attribution: '&copy; OpenStreetMap contributors'
-                            }).addTo(map);
-                            
-                            // Add a movable red marker
-                            var marker = L.marker([51.505, -0.09], { draggable: true}).addTo(map);
                         
-                            // Update hidden input fields when marker is dragged
-                            function updateLatLng(lat, lon) {
-                                document.getElementById("location_lat").value = lat;
-                                document.getElementById("location_lon").value = lon;
-                            }
-                            function updateAddress(lat, lon) {
-                                var geocoder = new google.maps.Geocoder();
-                                var latlng = { lat: parseFloat(lat), lng: parseFloat(lon) };
+
+       
+                <div id="map" style="height: 400px;"></div>
+                
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        var map = L.map('map').setView([50.73737953275868, -3.5315806025553944], 13);
+                        map.setZoom(17);
                         
-                                geocoder.geocode({ location: latlng }, function (results, status) {
-                                    if (status === "OK") {
-                                        if (results[0]) {
-                                            document.getElementById("location_address").value = results[0].formatted_address;
-                                        } else {
-                                            document.getElementById("location_address").value = "Address not found";
-                                        }
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap contributors'
+                        }).addTo(map);
+    
+                        var marker = L.marker([50.73737953275868, -3.5315806025553944], { draggable: true }).addTo(map);
+                    
+                        const latField = document.querySelector("#id_latitude");
+                        const lonField = document.querySelector("#id_longitude");
+                        const addressField = document.getElementById("location_address");
+                        <!-- address doesnt auto update but someone can manually put it there-->
+                        function updateLatLng(lat, lon) {
+                            latField.value = lat;
+                            lonField.value = lon;
+                            <!--This is meant to update address Field to make it so pointer click displays address but not working atm-->
+                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.display_name) {
+                                        addressField.value = data.display_name;
                                     } else {
-                                        document.getElementById("location_address").value = "Geocoder failed: " + status;
+                                        addressField.value = "Address not found";
                                     }
+                                })
+                                .catch(() => {
+                                    addressField.value = "Geocoder failed";
                                 });
-                            }
-                            // Set initial values
-                            updateLatLng(50.73737953275868, -3.5315806025553944);
-
-                            // Update marker position on click
-                            map.on('click', function (e) {
-                                marker.setLatLng(e.latlng);
-                                updateLatLng(e.latlng.lat, e.latlng.lng);
-                            });
-
-                            // Update values when the marker is manually dragged
-                            marker.on('dragend', function (e) {
-                                var position = marker.getLatLng();
-                                updateLatLng(position.lat, position.lng);
-                            });
+                        }
+    
+                        updateLatLng(50.73737953275868, -3.5315806025553944);
+    
+                        map.on('click', function (e) {
+                            marker.setLatLng(e.latlng);
+                            updateLatLng(e.latlng.lat, e.latlng.lng);
                         });
-                        </script>
+    
+                        marker.on('dragend', function (e) {
+                            var position = marker.getLatLng();
+                            updateLatLng(position.lat, position.lng);
+                        });
+                    });
+                    </script>
 
                         <button type="submit" class="btn btn-primary w-100 mt-2" name="create_website">Create Website</button>
                     </form>
@@ -108,6 +106,22 @@
                         {% csrf_token %}
                         {{ card_form.as_p }}
                         <button type="submit" class="btn btn-success w-100" name="create_card">Create Card</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pack Form -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5>Create a Pack</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ pack_form.as_p }}
+                        <button type="submit" class="btn btn-success w-100" name="create_pack">Create Pack</button>
                     </form>
                 </div>
             </div>
