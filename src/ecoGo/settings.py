@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'apps.user.apps.UserConfig',
     'apps.cards.apps.CardsConfig',
     'apps.qrgenerator.apps.QrgeneratorConfig',
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.trading',
 ]
 
 MIDDLEWARE = [
@@ -72,9 +74,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'ecoGo.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -150,3 +149,11 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login'
+
+ASGI_APPLICATION = 'ecoGo.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
