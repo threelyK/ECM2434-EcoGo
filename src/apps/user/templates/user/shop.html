@@ -76,8 +76,10 @@
                                 <div class="pack_price">
                                     <p>Cost: {{ pack.cost }}</p> 
                                 </div>
-                                <button type="button" class="buy_button" onclick="window.location.href='{% url 'homepage' %}';">Buy</button>
-
+                                <form action="/user/shop" method="post">
+                                    {% csrf_token %}
+                                    <input type="submit" class="buy_button" name="item_name" value="{{pack.pack_name}}">
+                                </form>
                             </div>
                         </div>
                     </li>

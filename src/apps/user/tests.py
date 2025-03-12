@@ -393,7 +393,7 @@ class UserShopTest(TestCase):
 
     def test_shop_buy_item_invalid(self):
         """
-        Tests that an invlaid input into 'user/shop/buyItem' will result in
+        Tests that an invlaid input into 'user/shop' will result in
         the proper error code being sent
         """
 
@@ -401,18 +401,11 @@ class UserShopTest(TestCase):
         self.user.user_data.add_points(2000)
 
         #Checks for invalid request structure
-        response = self.client.post("/user/shop/buyItem", {'bingus': "worse cat"}, content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-
-        response = self.client.post("/user/shop/buyItem", 
-                                    {'item_name': "Electri-city group", "beans" : "on toast"}, 
-                                    content_type="application/json")
+        response = self.client.post("/user/shop", {'bingus': "worse cat"})
         self.assertEqual(response.status_code, 400)
 
         #Checks for pack does not exist
-        response = self.client.post("/user/shop/buyItem",
-                                    {'item_name': 'bingus', 'item_type': "pack"},
-                                    content_type="application/json")
+        response = self.client.post("/user/shop", {'item_name': 'bingus'})
         self.assertEqual(response.status_code, 400)
 
         #ensures no points were spent on invalid transactions
@@ -420,24 +413,20 @@ class UserShopTest(TestCase):
 
         #Checks for user does not have enough points
         self.user.user_data.remove_points(2000)
-        response = self.client.post("/user/shop/buyItem",
-                                    {'item_name': 'Electri-city group', 'item_type': "pack"},
-                                    content_type="application/json")
+        response = self.client.post("/user/shop", {'item_name': 'Electri-city group'},)
         self.assertEqual(response.status_code, 400)
 
 
     def test_shop_buy_item_valid(self):
         """
-        Tests that if the input into 'user/ship/buyItem' is valid that
+        Tests that if the input into 'user/shop/' is valid that
         cards will be added and the template will be sent
         """
 
         self.client.post('/login', {'username': '123', 'password': '123456789'})
         self.user.user_data.add_points(2000)
 
-        response = self.client.post("/user/shop/buyItem",
-                                    {'item_name': 'Electri-city group', 'item_type': "pack"},
-                                    content_type="application/json")
+        response = self.client.post("/user/shop", {'item_name': 'Electri-city group'})
         self.assertEqual(response.status_code, 200)
         
         #Checks that 5 cards have been awarded to the user, including duplicates

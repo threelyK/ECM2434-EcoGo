@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.contrib.auth import get_user_model # not being used rn
-from .forms import LoginForm, CreateUserForm
+from .forms import LoginForm, CreateUserForm, BuyForm
 from .models import User, UserData
 from apps.cards.models import Pack
 from apps.cards.models import Card
@@ -171,53 +171,41 @@ def shop(request):
     Endpoint for "shop", serves the shop page
     """
 
-    if request.method == "GET":
-        user_data = request.user.user_data
-        packs = Pack.objects.all()
-        context = {
-            "packs": packs,
-            "points": user_data.points,
-            "level": user_data.level,
-        }
-
-        return render(request, "user/shop.html", context=context)
-    else:
-        return Http404()
-
-@login_required(login_url='login')
-def buy_item(request):
-    """
-    Endpoint handling view for allowing a user to buy an item (card
-    pack) and returning the corresponding html for the transaction
-    """
     if request.method == "POST":
-        #Checks that body is valid json
-        try:
-            data = loads(request.body.decode("utf-8"))
-        except:
-            return HttpResponseBadRequest("INVALID REQUEST BODY")
+        data_form = BuyForm(request.POST)
 
-        #Checks that JSON includes valid fields
-        if not "item_name" in data.keys() or not "item_type" in data.keys():
-            return HttpResponseBadRequest("you need to include 'item_name' and 'item_type'")
-
-        if data["item_type"] == "pack":
+        if data_form.is_valid():
+            item_name = data_form.cleaned_data["item_name"]
+            
             try:
-                pack = Pack.objects.get(pack_name = data["item_name"])
+                pack = Pack.objects.get(pack_name = item_name)
             except:
                 return HttpResponseBadRequest("PACK REQUESTED DOES NOT EXIST")
-    
+                
             pack_cost = pack.cost
             user_points = request.user.user_data.points
 
             if user_points >= pack_cost:
-                response = open_pack(request, data["item_name"])
+                response = open_pack(request, item_name)
                 request.user.user_data.remove_points(pack_cost)
                 return response
             else:
                 return HttpResponseBadRequest("NOT ENOUGH POINTS FOR TRANSACTION")
+            
         else:
-            #Currenlty only cards can be purchased from the shop, but this makes it extensable
-            return HttpResponseBadRequest("ERROR: ONLY PACK ITEM TYPES ARE CURRENTLY SUPPORTED")
+            return HttpResponseBadRequest("INVALID FORM")
+    elif request.method == "GET":
+        data_form = BuyForm()
     else:
         return Http404()
+    
+    user_data = request.user.user_data
+    packs = Pack.objects.all()
+    context = {
+        "packs": packs,
+        "points": user_data.points,
+        "level": user_data.level,
+        "form": data_form,
+    }
+
+    return render(request, "user/shop.html", context=context)

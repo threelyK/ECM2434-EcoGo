@@ -20,3 +20,7 @@ class LoginForm(AuthenticationForm):
 
     username = forms.CharField(widget=TextInput())
     password = forms.CharField(widget=PasswordInput())
+ 
+class BuyForm(forms.Form):
+
+    item_name = forms.CharField()

@@ -12,6 +12,5 @@ urlpatterns = [
     path("user/inventory", views.inventory, name="user-inventory"), # Takes the user to their inventory
     path("user/inventory/sellCard", views.sell_card, name="sell-card"), # Sells a specified user card
     path('logout', views.user_logout, name="logout"),  # Logs the user out
-    path('user/shop', views.shop, name="shop"),  # Takes the user to the shop page
-    path('user/shop/buyItem', views.buy_item, name="buy-item") # Buys a specified item from the shop
+    path('user/shop', views.shop, name="shop"),  # Takes the user to the shop page, and allows them to buy a card
 ]
