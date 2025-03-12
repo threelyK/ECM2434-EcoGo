@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'apps.user.apps.UserConfig',
     'apps.cards.apps.CardsConfig',
     'apps.qrgenerator.apps.QrgeneratorConfig',
+    'apps.trading',
 
     'django.contrib.admin',
     'django.contrib.contenttypes', # Make sure this is above django.contrib.auth
@@ -42,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.trading',
 ]
 
 MIDDLEWARE = [
