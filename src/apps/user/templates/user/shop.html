@@ -78,7 +78,8 @@
                                 </div>
                                 <form action="/user/shop" method="post">
                                     {% csrf_token %}
-                                    <input type="submit" class="buy_button" name="item_name" value="{{pack.pack_name}}">
+                                    <input hidden="true" value="{{ pack.pack_name }}" name="item_name">
+                                    <input type="submit" class="buy_button" value="BUY">
                                 </form>
                             </div>
                         </div>
