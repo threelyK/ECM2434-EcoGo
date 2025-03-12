@@ -350,3 +350,48 @@ class UserInventoryTest(TestCase):
         user_cards = self.user.user_data.get_all_cards_quant()
         self.assertEqual(user_cards[0], (self.card, 1))
 
+    
+class LeaderboardViewTests(TestCase):
+    def setUp(self):
+        # Deleting all the users from the database before each test
+        User.objects.all().delete()
+        UserData.objects.all().delete()
+
+    def test_leaderboard_only_5_users(self):
+        # Creating exactly 5 users
+        for i in range(5):
+            User.objects.create_user(username=f"user{i}", password="password123")
+
+        # getting the leaderboard response
+        response = self.client.get(reverse('leaderboard'))
+
+        # checking response status code = 200 (OK)
+        self.assertEqual(response.status_code, 200)
+
+        # ensuring 'top_10_users' exists in the context
+        self.assertIn('top_10_users', response.context)
+
+        # ensuring that exactly 5 users are in the leaderboard (as there aren't 10 or more)
+        self.assertEqual(len(response.context['top_10_users']), 5)    
+    
+    def test_leaderboard_returns_top_10_users(self):
+        # Creating 20 users
+        for i in range(20):
+            user = User.objects.create_user(username=f"user{i}", password="password123")
+            UserData.objects.create(owner=user, level=i)  # assigning increasing levels to all the users
+
+        # getting the leaderboard response
+        response = self.client.get(reverse('leaderboard'))
+
+        # checking response status code = 200 (OK)
+        self.assertEqual(response.status_code, 200)
+
+        # ensuring 'top_10_users' exists in the context
+        self.assertIn('top_10_users', response.context)
+        # Ensuring that exactly 10 users are in the leaderboard
+        self.assertEqual(len(response.context['top_10_users']), 10)
+
+        # checking if leaderboard is sorted by 'level'
+        top_users = response.context['top_10_users']
+        self.assertTrue(top_users[0]['level'] >= top_users[-1]['level'])  # ensuring correct leaderboard order
+
