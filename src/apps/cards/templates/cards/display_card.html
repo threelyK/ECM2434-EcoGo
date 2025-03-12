@@ -8,43 +8,53 @@
     <link rel="stylesheet" href="{% static '/css/page.css' %}">
     <link rel="stylesheet" href="{% static '/css/centered.css' %}">
     <link rel="stylesheet" href="{% static '/css/pack_opening/pack_opening.css' %}">
-    <link rel="stylesheet" href="{% static '/css/inventory_files/inventory_container.css' %}">
     <link rel="stylesheet" href="{% static '/css/inventory_files/inventory_grid.css' %}">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
     <title>{{ card_name }}</title>
 </head>
 <body>
-    <div class="px-4 py-5 my-5 text-center">
+    <div class="main p-3">
         {%if first_visit %}
+            <div class="inventory_header">
+                <div class="centered">
+                    <h1>{{ pack.pack_name }}</h1>
+                </div>
+            </div>
             <ul class="card-grid">
                 {% for card in cards %}
                 <li>
-                    <div class="card">
-                        <div class="bar bar-top">
-                            <div class="card-title">{{ card.card_name }}</div>
-                            <div class="casting-cost">{{ card.value }}</div>
-                        </div>
-                        <div class="card-image">
-                            <img src= "{% static card.image_path %}" alt="card image">
-                        </div>
+                    <div class="card-container">
+                        <div class="card">
+                            <div class="bar bar-top">
+                                <div class="card-title">{{ card.card_name }}</div>
+                                <div class="casting-cost">{{ card.value }}</div>
+                            </div>
+                            <div class="card-image">
+                                <img src= "{% static card.image_path %}" alt="card image">
+                            </div>
                             <div class="bar bar-mid">
                                 <div class="card-title">Instant</div>
                             </div>
-                        <div class="card-text">
-                            <div class="card-ability">
-                                {{card.card_desc}}
+                            <div class="card-text">
+                                <div class="card-ability">
+                                    {{card.card_desc}}
+                                </div>
                             </div>
-                        </div>
-                        <div class="footer">
-                            <div class="author">Created by Breadscrums.</div>
+                            <div class="footer">
+                                <div class="author">Created by Breadscrums.</div>
+                            </div>
                         </div>
                     </div>
                 </li>
                 {% endfor %}
             </ul>
         {% else %}
-            
+            <div class="inventory_header">
+                <div class="centered">
+                    <h1>You've already claimed this pack for today.</h1>
+                </div>
+            </div>
         {% endif %}
     </div>
     <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>

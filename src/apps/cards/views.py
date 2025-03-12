@@ -201,7 +201,7 @@ def pack_scan(request, url_UUID):
     # Epoch is used for claim cooldown
     # cooldown length can be set below (in seconds)
     # 86400 sec = 1 day
-    cooldown_period = 86400
+    cooldown_period = 1
     cur_epoch = int(time.time())
     userID = current_user.id
 
