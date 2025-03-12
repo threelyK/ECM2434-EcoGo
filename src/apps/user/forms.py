@@ -24,3 +24,7 @@ class LoginForm(AuthenticationForm):
 class BuyForm(forms.Form):
 
     item_name = forms.CharField()
+
+class SellForm(forms.Form):
+    
+    card_name = forms.CharField()
