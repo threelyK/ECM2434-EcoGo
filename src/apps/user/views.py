@@ -11,6 +11,7 @@ from django.contrib.auth import get_user_model # not being used rn
 from .forms import LoginForm, CreateUserForm
 from .models import User, UserData
 from apps.cards.models import Card
+from django.contrib import messages
 
 def landing(request):
     # renders the landing page where users can choose to log in or register
@@ -31,7 +32,7 @@ def register(request):
             return redirect("login")
         
         else:
-            print(form.errors)
+            messages.error(request, {'registerform': form})  # passes the error messages to the form
 
     # passes the form to the template context to display it on the page
     context = {'registerform': form}
