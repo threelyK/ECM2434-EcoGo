@@ -3,7 +3,7 @@ from apps.qrgenerator.models import Website
 from random import uniform
 
 def announcement_list(request):
-    websites = Website.objects.all()
+    websites = Website.objects.all().order_by("-date")
 
     announcements = []
     for announcement in websites:
