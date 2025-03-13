@@ -98,3 +98,34 @@ Description: Hazardous waste can remain toxic for hundreds to thousands of years
 
 Litterimp: Spreader of Waste
 Description: Littering harms wildlife and the environment by causing entanglement, ingestion, and poisoning.
+Waste Warriors:
+
+Plastic Pat: Sentinel of Second Chances
+Description: Only about 9% of all plastic ever produced has been recycled! The rest ends up in landfills, oceans or is incinerated.
+
+Recyc-larry: The sorting sage
+Decription: Recycling just one aluminium can saves enough energy to power a TV for 3 hours!
+
+Paper Pam: Paper-powered protector
+Description: Recycling just one ton of paper saves 17 trees, 7000 gallons of water and enough energy to power a home for six months!
+
+Renewox: The Everlasting Reclaimer
+Description: Using reusable bags instead of single-use plastic ones can save over 700 plastic bags per person per year.
+
+Fertilis: Bringer of Growth and Renewal
+Description: Composting just one banana peel creates enough nutrient-rich soil to grow several new banana plants!
+
+Landfill Larry: Waster of Worlds
+Description: Landfills are responsible for releasing methane gas, a greenhouse gas that contributes to climate change.
+
+Rubbix: The Waste Warden
+Description: Many items tossed in black bins could be recycled or composted, but they're ofen sent to the wrong place, which worsens environmental damage.
+
+Pollutide: Wastelord of the depths
+Description: Over 8 million tons of plastic end up in the ocean every year, harming marine life and ecosystems.
+
+Hazmord: Harbinger of contamination
+Description: Hazardous waste can remain toxic for hundreds to thousands of years, contaminating soil, water, and air.
+
+Litterimp: Spreader of Waste
+Description: Littering harms wildlife and the environment by causing entanglement, ingestion, and poisoning.
