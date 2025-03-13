@@ -63,24 +63,27 @@
                     {% for pack in packs %}
                     <li>
                         <!-- Implement for packs in some way-->
-                        <div class="pack">
-                            <div class="bar bar-top">
-                                <div class="pack_title">
-                                    <p>{{ pack.pack_name }}</p>
+                        <div class="pack-container">
+                            <div class="pack">
+                                <div class="bar bar-top">
+                                    <div class="pack_title">
+                                        <p>{{ pack.pack_name }}</p>
+                                    </div>
+                                </div>
+                                <div class="pack_image">
+                                    <img src= "{% static pack.image_path %}" alt="pack image">
+                                </div>
+                                <div class="footer">
+                                    <div class="pack_price">
+                                        <p>Cost: {{ pack.cost }}</p> 
+                                    </div>
+                                    <script src="{% static 'js/shop.js' %}"></script>
+                                    <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+                                    <script src="{% static 'js/navbar.js' %}"></script>
                                 </div>
                             </div>
-                            <div class="pack_image">
-                                <img src= "{% static pack.image_path %}" alt="pack image">
-                            </div>
-                            <div class="footer">
-                                <div class="pack_price">
-                                    <p>Cost: {{ pack.cost }}</p> 
-                                </div>
+                            <div class="centered">
                                 <button type="button" class="buy_button" onclick="buyPack('{{ pack.pack_name }}', '{{ pack.pack_type }}')">Buy</button>
-                                <script src="{% static 'js/shop.js' %}"></script>
-                                <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
-                                <script src="{% static 'js/navbar.js' %}"></script>
-
                             </div>
                         </div>
                     </li>
@@ -93,10 +96,6 @@
                     </p>
                 </div>
             {% endif %}
-            </div>
-            <div class = "points-box">
-                <p><strong>Level: {{ level }}</strong></p>
-                <p><strong>Points: {{ points }}</strong></p>
             </div>
         </div>
     <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
