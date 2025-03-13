@@ -25,11 +25,33 @@ class TradeConsumer(AsyncWebsocketConsumer):
     #Extracts action, card_id and user_id from the data
     async def receive(self, text_data):
         data = json.loads(text_data)
-        action = data['action'] # 'offer', 'accept', 'reject'
+        action = data['action'] # 'offer', 'accept', 'reject', 'create_room', 'join_room'
         card_id = data['card_id']
         user_id = self.scope['user'].id
+        room_name = data.get('room_name')
 
-        await self.channel_layer.group_send(
+        if action == 'create_room':
+            self.room_group_name = f'trading_room_{room_name}'
+            await self.channel_layer.group_add(
+                self.room_group_name,
+                self.channel_name
+            )
+            await self.send(text_data=json.dumps({
+                'message': f'Room {room_name} created',
+                'room_name': room_name,
+            }))
+        elif action == 'join_room':
+            self.room_group_name = f'trading_room_{room_name}'
+            await self.channel_layer.group_add(
+                self.room_group_name,
+                self.channel_name
+            )
+            await self.send(text_data=json.dumps({
+                'message': f'Joined room {room_name}',
+                'room_name': room_name,
+            }))
+        else:
+            await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'trade_offer',

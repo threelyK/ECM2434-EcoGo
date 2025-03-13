@@ -62,7 +62,8 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             BASE_DIR / "apps/user/templates",  #user template path
-            BASE_DIR / "apps/qrgenerator/templates",], # qrgenerator template path
+            BASE_DIR / "apps/qrgenerator/templates", # qrgenerator template path
+            BASE_DIR / "apps/trading/templates",], # trading template path
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,6 +75,9 @@ TEMPLATES = [
         },
     },
 ]
+
+WSGI_APPLICATION = 'ecoGo.wsgi.application'
+ASGI_APPLICATION = 'ecoGo.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -114,6 +118,8 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
 
 # Uses a custom user class that contains an FK to UserData table
@@ -150,10 +156,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login'
 
-ASGI_APPLICATION = 'ecoGo.asgi.application'
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
+
+# Logging configuration
+LOGGING_CONFIG = 'logging.config.dictConfig' # This is the default value
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
     },
 }

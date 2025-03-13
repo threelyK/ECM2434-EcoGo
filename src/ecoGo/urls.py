@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('apps.user.urls')),
     path('cards/', include('apps.cards.urls')),
     path('qrgenerator/', include('apps.qrgenerator.urls')),
+    path('trading/', include('apps.trading.urls')),
 ] 
 
 if settings.DEBUG:
