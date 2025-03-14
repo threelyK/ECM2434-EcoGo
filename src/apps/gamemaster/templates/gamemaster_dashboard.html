@@ -102,6 +102,9 @@
                     </script>
 
                         <button type="submit" class="btn btn-primary w-100 mt-2" name="create_website">Create Website</button>
+                        {% if qr_code_url %}
+                            <p>QR Code URL with the URL = <a href="{{ qr_code_url }}" target="_blank">{{ qr_code_url }}</a></p>
+                        {% endif %}
                     </form>
                 </div>
             </div>
@@ -160,5 +163,7 @@
     </div>
 
 </div>
+
+
 
 {% endblock %}

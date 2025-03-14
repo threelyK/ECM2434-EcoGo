@@ -41,9 +41,18 @@ def gamemaster_dashboard(request):
                 
 
                 website.save()
-        
+                qr_code_url = website.qr_code.url
+
+                print(f"QR Code URL: {qr_code_url}")
+
                 messages.success(request, f"Website '{website.name}' successfully created!")
-                return redirect('gamemaster_dashboard')  # Reload to display message
+               
+                return render(request, 'gamemaster_dashboard.html', {
+                    'website_form': website_form,
+                    'card_form': card_form,
+                    'pack_form': pack_form,
+                    'qr_code_url': qr_code_url  # Passing the QR code URL to the template
+                })
 
         elif 'create_card' in request.POST:  # If the card form is submitted
             card_form = CardForm(request.POST)
