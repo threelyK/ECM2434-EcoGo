@@ -25,6 +25,8 @@ def gamemaster_dashboard(request):
                 lat = request.POST.get('location_lat')
                 lon = request.POST.get('location_lon')
                 address = request.POST.get('address')
+           
+                
 
                 if lat and lon:
                     website.latitude = float(lat)
@@ -39,6 +41,7 @@ def gamemaster_dashboard(request):
                 
 
                 website.save()
+        
                 messages.success(request, f"Website '{website.name}' successfully created!")
                 return redirect('gamemaster_dashboard')  # Reload to display message
 

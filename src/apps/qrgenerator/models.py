@@ -44,6 +44,8 @@ class Website(models.Model):
 
         super().save(*args, **kwargs)
 
+        return self.qr_code.url
+
     ## my failure of attempt to create a QR code for templates automatically 
     @staticmethod
     def get_user_urls():
