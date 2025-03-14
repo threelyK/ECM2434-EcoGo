@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/css/navbar.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/page.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/avatar.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/centered.css' %}" />
+    <link rel="stylesheet" href="{% static '/css/footer.css' %}" />
+    <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
+    <!-- Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}"
+    />
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <title>Announcements</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <aside id="sidebar">
+        <div class="d-flex">
+          <button class="toggle-btn" type="button">
+            <i class="lni lni-menu-hamburger-1"></i>
+          </button>
+        </div>
+        <ul class="sidebar-nav">
+          <li class="sidebar-item">
+            <a href="{% url 'homepage' %}" class="sidebar-link">
+              <i class="lni lni-user-4"></i>
+              <span>Homepage</span>
+            </a>
+          </li>
+        </ul>
+        <div class="sidebar-footer">
+          <a href="#" class="sidebar-link">
+            <i class="lni lni-gear-1"></i>
+            <span>Settings</span>
+          </a>
+          <a href="{% url 'landing' %}" class="sidebar-link">
+            <i class="lni lni-exit"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
+      <div class="main p-3">
+        <ul class="list-group h-100 container row-gap-3">
+          {% for announcement in announcements %}
+          <div class="bg-light p-1 rounded">
+            <li class="position-relative d-flex-column">
+              <p class="text-center">{{announcement.name}}</p>
+              <div
+                style="height: 25vh"
+                id="map{{ announcement.id }}"
+                tabindex="0"
+              ></div>
+              <p class="text-center">{{ announcement.date }}</p>
+              <a
+                href="http://127.0.0.1:8000/location/announcement/{{ announcement.name }}"
+              >
+                <button type="button" class="btn btn-sm btn-outline-secondary">
+                  View
+                </button>
+              </a>
+            </li>
+          </div>
+          <script>
+              // Creates the map to be displayed
+              var map{{ announcement.id }} = L.map('map{{ announcement.id }}').setView([{{ announcement.lat }}, {{ announcement.lon }}], 16);
+              L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  attribution: '&copy; OpenStreetMap contributors'
+              }).addTo(map{{ announcement.id }});
+
+              // Creates the circle on the map
+              var circle = L.circleMarker([{{ announcement.lat }}, {{ announcement.lon }}], {
+                color: '#6dcae2',
+                fillColor: '#aff2ea',
+                fillOpacity: 0.5,
+                radius: 25
+            }).addTo(map{{ announcement.id }});
+          </script>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
