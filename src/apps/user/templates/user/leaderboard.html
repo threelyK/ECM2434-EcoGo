@@ -15,40 +15,41 @@
     <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
-    <title>Home</title>
+    <title>Leaderboard - EcoGo</title>
 </head>
-{% block title %}Leaderboard - EcoGo{% endblock %}
 
 {% block content %}
-<div class="leaderboard-container">
-    <h1>🏆 Leaderboard</h1>
-    <table class="leaderboard-table">
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Username</th>
-                <th>Level</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for player in top_10_users %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>
-                    <div class="player-info">
-                        <img src="{% static 'photos/default.png' %}" alt="Avatar" class="avatar">
-                        {{ player.username }}
-                    </div>
-                </td>
-                <td>{{ player.level }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="3">No scores available yet!</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div style="
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    max-width: 500px;
+    background: rgb(233, 233, 233);
+    padding: 15px;
+    margin: 30px auto;
+    border-radius: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+">
+    <h1 style="color: #333;">🏆 Leaderboard 🏆 </h1>
+    {% for player in top_10_users %}
+    <div style="
+        display: flex;
+        align-items: center;
+        background: #f9f9f9;
+        padding: 10px 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        box-shadow: 0px 2px 5px rgba(1, 59, 14, 0.1);
+        width: 100%;
+    ">
+        <span style="color: #4CAF50; font-weight: bold;">#{{ forloop.counter }}</span>
+        <span style="flex-grow: 1; text-align: center; font-weight: bold;">{{ player.username }}</span>
+        <span style="font-weight: bold; color: #333;">Lvl {{ player.level }}</span>
+    </div>
+    {% empty %}
+    <p>No scores available yet!</p>
+    {% endfor %}
 </div>
 {% endblock %}
 </html>
