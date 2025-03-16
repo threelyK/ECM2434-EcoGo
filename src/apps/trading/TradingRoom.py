@@ -45,6 +45,11 @@ class TradingRoom():
         to send a proper response through the socket_output function
         """
 
+        if message_source == self.room_owner:
+            if self.state == 'N':
+                #move from N to D
+                self.__N_to_D(message_data)
+
     def join_room(self, room_member : User, response_func : Callable[[dict, User], None]):
         """
         Allows a second user to join the room and establishes the response_func used
@@ -139,3 +144,36 @@ class TradingRoom():
                 self.state=new_state
         else:
             raise Exception("Invalid state transition")
+
+    def __N_to_D(self, message_data: dict):
+        """
+        Handles a proposed N to D state transition
+        """
+
+        #Checking that the other user has the cards that are needed to trade
+        proposed_member_cards = message_data["body"]["member_cards"]
+        owned_member_cards = self.room_member.user_data.get_all_cards()
+        owned_member_card_names = []
+
+        for card in owned_member_cards:
+            owned_member_card_names.append(card.card_name)
+
+        valid = True
+        not_owned_cards = []
+        for card in proposed_member_cards:
+            if not card in owned_member_card_names:
+                valid = False
+                not_owned_cards.append(card)
+
+        #Either accept the transition or reject it
+        if valid:
+            self.__update_state("D")
+            self.__send_message(message_data, self.room_owner)
+            self.__send_message(message_data, self.room_member)
+        else:
+            message = {
+                "state_flag" : 'N',
+                "body": not_owned_cards
+            }
+
+            self.__send_message(message, self.room_owner)

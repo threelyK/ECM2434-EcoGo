@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 from .TradingRoom import TradingRoom
+from apps.cards.views import get_cards_instance
+from apps.cards.models import Card
 
 # Create your tests here.
 
@@ -150,3 +152,80 @@ class TradingRoomTest(TestCase):
 
         self.assertEqual(tr.room_member, self.room_member)
         self.assertEqual(tr.response_func, rc)
+
+    def test_N_to_D_transition_sucess(self):
+        """
+        Tests the transition from the nutral to the decison state functions properly
+        """
+
+        class mock_response_class():
+            def __init__(self, outer):
+                self.testClass = outer
+                self.counter = 0
+            
+            def __call__(self, data, user):
+                #first two calls
+                if self.counter == 0 or self.counter == 1:
+                    self.counter += 1
+                #third call
+                elif self.counter == 2:
+                    self.testClass.assertEqual(user, self.testClass.room_owner)
+                    self.testClass.assertEqual(data["state_flag"], "D")
+                    self.counter += 1
+                elif self.counter == 3:
+                    #ensure the thrid message goes to the room_memeber
+                    self.testClass.assertEqual(user, self.testClass.room_member)
+                    self.testClass.assertEqual(data["state_flag"], "D")
+                    self.counter += 1
+                #there should not be a fith call
+                else:
+                    self.testClass.fail()
+
+        #Init our cards
+        get_cards_instance()
+
+        vortex_card = Card.objects.get(card_name = "Vortex-9")
+        self.room_member.user_data.add_card(vortex_card)
+
+        tr = TradingRoom(self.room_owner)
+        tr.join_room(self.room_member, mock_response_class(self))
+
+        tr.handle({
+            "state_flag": "D",
+            "body": {
+                "member_cards":["Vortex-9"]
+            }
+        }, self.room_owner)
+
+    def test_N_to_D_transaction_fail(self):
+        """
+        Tests that the transition from N to D cannot be done if the 
+        room member does not have the requested cards
+        """
+
+        class mock_response_class():
+            def __init__(self, outer):
+                self.testClass = outer
+                self.counter = 0
+            
+            def __call__(self, data, user):
+                #first two calls
+                if self.counter == 0 or self.counter == 1:
+                    self.counter += 1
+                #third call
+                elif self.counter == 2:
+                   self.testClass.assertEqual(user, self.testClass.room_owner)
+                   self.testClass.assertEqual(data["state_flag"], "N") 
+                #there should not be a fourth call
+                else:
+                    self.testClass.fail()
+
+        tr = TradingRoom(self.room_owner)
+        tr.join_room(self.room_member, mock_response_class(self))
+
+        tr.handle({
+            "state_flag": "D",
+            "body": {
+                "member_cards":["Vortex-9"]
+            }
+        }, self.room_owner)
