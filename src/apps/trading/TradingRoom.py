@@ -34,8 +34,11 @@ class TradingRoom():
     def __init__(self, room_owner : User, response_func : Callable[[dict, User], None]):
         """
         Constructor for a trading room, sets up the trading room into
-        the 'w' or waiting state with only a room_owner
+        the 'W' or waiting state with only a room_owner
         """
+
+        self.room_owner = room_owner
+        self.response_func = response_func
 
     def handle(self, message_data : dict, message_source : User):
         """
@@ -43,4 +46,16 @@ class TradingRoom():
         to send a proper response through the socket_output function
         """
 
-    
+    # -------------- Internal methods --------------
+
+    def __respond(self, message_data : dict, message_dest : User):
+        """
+        Validates a response to ensure that its valid, then calls the response_func
+        """
+
+        if not (message_dest == self.room_owner or message_dest == self.room_member):
+            raise Exception("This room cannot respond to user: " + message_dest.username)
+        elif message_dest == None:
+            raise Exception("Cannot respond to 'None' user")
+        
+        self.response_func(message_data, message_dest)
