@@ -39,7 +39,7 @@ def get_pack_instance()->Pack:
     rea = Card.objects.get_or_create(card_name="REACT-O-TRON", image="/images/card_images/REACT-O-TRON.jpg", card_desc="WIP")[0]
     the = Card.objects.get_or_create(card_name="Thermagon", image="/images/card_images/Thermagon.jpg", card_desc="WIP")[0]
 
-    pack = Pack.objects.get_or_create(pack_name="Electri-city squad", cost=250, num_cards=10)[0]
+    pack = Pack.objects.get_or_create(pack_name="pakwan", cost=250, num_cards=10)[0]
     if pack.get_all_cards().count() == 0:
         pack.add_to_pack(first_cards.get("vor"), 100)
         pack.add_to_pack(first_cards.get("hyd"), 100)
@@ -57,25 +57,25 @@ def get_pack_instance()->Pack:
     return pack
 
 card_scan_UUIDs = {
-    "vortex-9_UUIDs": ['4012cf77-7b46-4c2c-90f0-a1b821a123ea'],
-    "hydronis_UUIDs": ['24d79f65-4a8e-4f77-8bf4-b2447cf7ebcf'],
-    "crudespawn_UUIDs": ['bc9519d9-0adc-43d7-8912-13611c80fd38']
+    "Vortex-9_UUIDs": ['4012cf77-7b46-4c2c-90f0-a1b821a123ea'],
+    "Hydronis_UUIDs": ['24d79f65-4a8e-4f77-8bf4-b2447cf7ebcf'],
+    "Crudespawn_UUIDs": ['bc9519d9-0adc-43d7-8912-13611c80fd38']
 }
 
 pack_scan_UUIDs = {
-    "pack0_UUIDs": ['8408d587-9b62-4d34-8dd7-4bfec213f443'],
+    "pakwan_UUIDs": ['8408d587-9b62-4d34-8dd7-4bfec213f443'],
 }
 
 # A new entry will be created for new QR code with the repective index number
 card_scan_visitors = {
-    "vortex0_visitors": [],
+    "vortex-90_visitors": [],
     "hydronis0_visitors": [],
     "crudespawn0_visitors": [],
 }
 
 pack_scan_visitors = {
     # Dict cotaining userID and epoch time
-    "pack0_visitor_IDs": dict(), 
+    "pakwan0_visitors": dict(), 
 }
 
 # .===========.
@@ -91,17 +91,17 @@ def add_card_website(card: Card, website_ID):
     if type(website_ID) != str:
         website_ID = str(website_ID)
 
-    card_name_lower = card.card_name.lower()
-    card_key = card_name_lower + "_UUIDs"
+    card_name = card.card_name
+    card_key = card_name + "_UUIDs"
     target_card_scan_UUID = card_scan_UUIDs.get(card_key)
 
     if target_card_scan_UUID != None:
         target_card_scan_UUID.append(website_ID)
-        create_card_visitors(card_name_lower)
+        create_card_visitors(card_name)
 
     else:
         card_scan_UUIDs[card_key] = [website_ID]
-        create_card_visitors(card_name_lower)
+        create_card_visitors(card_name)
 
 
 def add_pack_website(pack: Pack, website_ID):
@@ -114,54 +114,79 @@ def add_pack_website(pack: Pack, website_ID):
     if type(website_ID) != str:
         website_ID = str(website_ID)
 
-    pack_name_lower = pack.pack_name.lower()
-    pack_key = pack_name_lower + "_UUIDs"
+    pack_name = pack.pack_name
+    pack_key = pack_name + "_UUIDs"
     target_pack_scan_UUID = pack_scan_UUIDs.get(pack_key)
 
     if target_pack_scan_UUID != None:
         target_pack_scan_UUID.append(website_ID)
-        create_pack_visitors(pack_name_lower)
+        create_pack_visitors(pack_name)
 
     else:
         pack_scan_UUIDs[pack_key] = [website_ID]
-        create_pack_visitors(pack_name_lower)
+        create_pack_visitors(pack_name)
 
 
-def create_card_visitors(card_name_lower: str):
+def create_card_visitors(card_name: str):
     """
     Creates an auxiliary dict entry to track who's viewed a card website
     """
+    card_name_lower = card_name.lower()
     i = 0
     while (card_scan_visitors.get(f"{card_name_lower+str(i)}_visitors") != None):
         i += 1
     card_scan_visitors[f"{card_name_lower+str(i)}_visitors"] = []
 
 
-def create_pack_visitors(pack_name_lower: str):
+def create_pack_visitors(pack_name: str):
     """
     Creates an auxiliary dict entry to track who's viewed a pack website\n
     This dictionary's value is another dict (UserID: timeEpoch)
     """
+    pack_name_lower = pack_name.lower()
     i = 0
     while (pack_scan_visitors.get(f"{pack_name_lower+str(i)}_visitors") != None):
         i += 1
     pack_scan_visitors[f"{pack_name_lower+str(i)}_visitors"] = dict()
 
 
-def get_card_from_ID(ID: str) -> Card:
+def get_card_from_ID(id) -> Card:
     """
     Returns Card if ID is in entry. Returns None if ID invalid.
     """
-    card_key = [key for key, val in card_scan_UUIDs.items() if ID in val]
-    if len(card_key) != 0:
-        card_name = card_key[:-6]
+    if type(id) != str:
+        id = str(id)
 
-        return Card.objects.get(card_name)
+
+    card_name = None
+    for key, val in card_scan_UUIDs.items():
+        if id in val:
+            card_name = key[:-6]
+
+    if card_name:
+        return Card.objects.get(card_name=card_name)
     else:
         return None
 
-def get_pack_from_ID(ID: str) -> Pack:
-    pass
+
+def get_pack_from_ID(id) -> Pack:
+    """
+    Returns Pack if ID is in entry. Returns None if ID invalid.
+    """
+    if type(id) != str:
+        id = str(id)
+    
+
+    pack_name = None
+    for key, val in pack_scan_UUIDs.items():
+        if id in val:
+            pack_name = key[:-6]
+            
+    if pack_name:
+        return Pack.objects.get(pack_name=pack_name)
+    else:
+        return None
+
 
 @require_http_methods(["GET"])
 @login_required
@@ -181,14 +206,14 @@ def card_scan(request, url_UUID):
         # return 404 invalid UUID was given
         render(ERROR_404_TEMPLATE_NAME)
     
+    card_name = card.card_name
     # Find prev_visitor_IDs list for this URL
-    card_name_lower = card.card_name.lower()
-    visitors_index = card_scan_UUIDs.get(f"{card_name_lower}_UUIDs").index(url_UUID)
-    prev_visitor_IDs = card_scan_visitors.get(f"{card_name_lower}{visitors_index}_visitors")
+    visitors_index = card_scan_UUIDs.get(f"{card_name}_UUIDs").index(url_UUID)
+    prev_visitor_IDs = card_scan_visitors.get(f"{card_name.lower()}{visitors_index}_visitors")
     
     cards_context = []
     cards_context.append({
-        "card_name": card.card_name,
+        "card_name": card_name,
         "card_desc": card.card_desc,
         "image_path": card.image,
     })
@@ -221,32 +246,31 @@ def pack_scan(request, url_UUID):
     It then adds those 5 cards to user's inventory
     """
     url_UUID = str(url_UUID)
+    base_pack = get_pack_instance() # Just to create initial pack
 
     current_user = request.user
     current_UD = UserData.objects.get(owner=current_user)
 
     # Initialise card values for given URL
-    if url_UUID in pack_scan_UUIDs.get("pack0_UUIDs"):
-        pack_cards_rar = get_pack_instance().get_all_cards_rar()
-        pack_cards = []
-        pack_rarity = []
-        for card_rar in pack_cards_rar:
-            pack_cards.append(card_rar[0])
-            pack_rarity.append(card_rar[1])
-        
-        # Randomly rolls for 5 cards. Every card in the pack has a chance to be chosen
-        selected_cards = rand.choices(pack_cards, weights=pack_rarity, k=5)
-
-        
-        # Find prev_visitor_IDs list for this URL
-
-        
-        visitors_index = pack_scan_UUIDs.get("pack0_UUIDs").index(url_UUID)
-        prev_visitor_IDs = pack_scan_visitors.get(f"pack{visitors_index}_visitor_IDs")
-
-    else:
-        # return 404 invalid UUID was given
+    pack = get_pack_from_ID(url_UUID)
+    if not pack:
         render(ERROR_404_TEMPLATE_NAME)
+        
+    pack_cards_rar = pack.get_all_cards_rar()
+    pack_cards = []
+    pack_rarity = []
+    for card_rar in pack_cards_rar:
+        pack_cards.append(card_rar[0])
+        pack_rarity.append(card_rar[1])
+        
+    # Randomly rolls for 5 cards. Every card in the pack has a chance to be chosen
+    selected_cards = rand.choices(pack_cards, weights=pack_rarity, k=5)
+
+    
+    pack_name = pack.pack_name
+    # Find prev_visitor_IDs list for this URL
+    visitors_index = pack_scan_UUIDs.get(f"{pack_name}_UUIDs").index(url_UUID)
+    prev_visitor_IDs = pack_scan_visitors.get(f"{pack_name.lower()}{visitors_index}_visitors")
 
     cards_context = []
     for card in selected_cards:
@@ -264,7 +288,7 @@ def pack_scan(request, url_UUID):
     # Epoch is used for claim cooldown
     # cooldown length can be set below (in seconds)
     # 86400 sec = 1 day
-    cooldown_period = 1
+    cooldown_period = 10
     cur_epoch = int(time.time())
     userID = current_user.id
 
