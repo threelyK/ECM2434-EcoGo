@@ -7,6 +7,7 @@ from apps.cards.models import Card, Pack
 import random as rand
 import time
 
+
 def get_cards_instance():
     """
     Returns a dict of 3 starting cards. key: (Card, frameNo)
@@ -23,10 +24,9 @@ def get_cards_instance():
         "cru": Card.objects.get(card_name="Crudespawn")
     })
 
-def get_pack_instance():
+def get_pack_instance()->Pack:
     """
-    Returns a list of tuples representing a pack: (Card, Rarity)
-    If the pack is not already created, it creates it.
+    Returns a pack object. If the pack doesn't exist, it creates it.
     """
     first_cards = get_cards_instance()
 
@@ -39,7 +39,7 @@ def get_pack_instance():
     rea = Card.objects.get_or_create(card_name="REACT-O-TRON", image="/images/card_images/REACT-O-TRON.jpg", card_desc="WIP")[0]
     the = Card.objects.get_or_create(card_name="Thermagon", image="/images/card_images/Thermagon.jpg", card_desc="WIP")[0]
 
-    pack = Pack.objects.get_or_create(pack_name="Electri-city group", cost=250, num_cards=10)[0]
+    pack = Pack.objects.get_or_create(pack_name="Electri-city squad", cost=250, num_cards=10)[0]
     if pack.get_all_cards().count() == 0:
         pack.add_to_pack(first_cards.get("vor"), 100)
         pack.add_to_pack(first_cards.get("hyd"), 100)
@@ -53,12 +53,11 @@ def get_pack_instance():
         pack.add_to_pack(the, 100)
         if pack.validate_pack():
             pack.save_pack()
-        pack.image
 
-    return pack.get_all_cards_rar()
+    return pack
 
 card_scan_UUIDs = {
-    "vortex_UUIDs": ['4012cf77-7b46-4c2c-90f0-a1b821a123ea'],
+    "vortex-9_UUIDs": ['4012cf77-7b46-4c2c-90f0-a1b821a123ea'],
     "hydronis_UUIDs": ['24d79f65-4a8e-4f77-8bf4-b2447cf7ebcf'],
     "crudespawn_UUIDs": ['bc9519d9-0adc-43d7-8912-13611c80fd38']
 }
@@ -68,19 +67,101 @@ pack_scan_UUIDs = {
 }
 
 # A new entry will be created for new QR code with the repective index number
-card_scan_UUID_visitors = {
-    "vortex0_visitor_IDs": [],
-    "hydronis0_visitor_IDs": [],
-    "crudespawn0_visitor_IDs": [],
+card_scan_visitors = {
+    "vortex0_visitors": [],
+    "hydronis0_visitors": [],
+    "crudespawn0_visitors": [],
 }
 
-pack_scan_UUID_visitors = {
+pack_scan_visitors = {
+    # Dict cotaining userID and epoch time
     "pack0_visitor_IDs": dict(), 
 }
 
 # .===========.
 # |  METHODS  |
 # '==========='
+
+def add_card_website(card: Card, website_ID):
+    """
+    Adds new website ID to the card_scan_UUIDs dict.\n
+    If the website is for a new card it makes a new dict entry 
+    and a new card_scan_visitors entry.
+    """
+    if type(website_ID) != str:
+        website_ID = str(website_ID)
+
+    card_name_lower = card.card_name.lower()
+    card_key = card_name_lower + "_UUIDs"
+    target_card_scan_UUID = card_scan_UUIDs.get(card_key)
+
+    if target_card_scan_UUID != None:
+        target_card_scan_UUID.append(website_ID)
+        create_card_visitors(card_name_lower)
+
+    else:
+        card_scan_UUIDs[card_key] = [website_ID]
+        create_card_visitors(card_name_lower)
+
+
+def add_pack_website(pack: Pack, website_ID):
+    """
+    Adds new website ID to the pack_scan_UUIDs dict.\n
+    If the website is for a new pack it makes a new dict entry 
+    and a new pack_scan_visitors entry.
+    """
+
+    if type(website_ID) != str:
+        website_ID = str(website_ID)
+
+    pack_name_lower = pack.pack_name.lower()
+    pack_key = pack_name_lower + "_UUIDs"
+    target_pack_scan_UUID = pack_scan_UUIDs.get(pack_key)
+
+    if target_pack_scan_UUID != None:
+        target_pack_scan_UUID.append(website_ID)
+        create_pack_visitors(pack_name_lower)
+
+    else:
+        pack_scan_UUIDs[pack_key] = [website_ID]
+        create_pack_visitors(pack_name_lower)
+
+
+def create_card_visitors(card_name_lower: str):
+    """
+    Creates an auxiliary dict entry to track who's viewed a card website
+    """
+    i = 0
+    while (card_scan_visitors.get(f"{card_name_lower+str(i)}_visitors") != None):
+        i += 1
+    card_scan_visitors[f"{card_name_lower+str(i)}_visitors"] = []
+
+
+def create_pack_visitors(pack_name_lower: str):
+    """
+    Creates an auxiliary dict entry to track who's viewed a pack website\n
+    This dictionary's value is another dict (UserID: timeEpoch)
+    """
+    i = 0
+    while (pack_scan_visitors.get(f"{pack_name_lower+str(i)}_visitors") != None):
+        i += 1
+    pack_scan_visitors[f"{pack_name_lower+str(i)}_visitors"] = dict()
+
+
+def get_card_from_ID(ID: str) -> Card:
+    """
+    Returns Card if ID is in entry. Returns None if ID invalid.
+    """
+    card_key = [key for key, val in card_scan_UUIDs.items() if ID in val]
+    if len(card_key) != 0:
+        card_name = card_key[:-6]
+
+        return Card.objects.get(card_name)
+    else:
+        return None
+
+def get_pack_from_ID(ID: str) -> Pack:
+    pass
 
 @require_http_methods(["GET"])
 @login_required
@@ -89,37 +170,22 @@ def card_scan(request, url_UUID):
     Add specific card related to URL UUID into visitor's inventory
     """
     url_UUID = str(url_UUID)
-    cards_instance = get_cards_instance()
+    cards_instance = get_cards_instance() # Just used to create cards
 
     current_user = request.user
     current_UD = UserData.objects.get(owner=current_user)
 
     # Initialise card values for given URL
-    if url_UUID in card_scan_UUIDs.get("vortex_UUIDs"):
-        card_alias = "vor"
-        
-        # Find prev_visitor_IDs list for this URL
-        visitors_index = card_scan_UUIDs.get("vortex_UUIDs").index(url_UUID)
-        prev_visitor_IDs = card_scan_UUID_visitors.get(f"vortex{visitors_index}_visitor_IDs")
-
-
-    elif url_UUID in card_scan_UUIDs.get("hydronis_UUIDs"):
-        card_alias = "hyd"
-
-        visitors_index = card_scan_UUIDs.get("hydronis_UUIDs").index(url_UUID)
-        prev_visitor_IDs = card_scan_UUID_visitors.get(f"hydronis{visitors_index}_visitor_IDs")
-
-    elif url_UUID in card_scan_UUIDs.get("crudespawn_UUIDs"):
-        card_alias = "cru"
-
-        visitors_index = card_scan_UUIDs.get("crudespawn_UUIDs").index(url_UUID)
-        prev_visitor_IDs = card_scan_UUID_visitors.get(f"crudespawn{visitors_index}_visitor_IDs")
-
-    else:
+    card = get_card_from_ID(url_UUID)
+    if card == None:
         # return 404 invalid UUID was given
         render(ERROR_404_TEMPLATE_NAME)
-
-    card = cards_instance.get(card_alias)
+    
+    # Find prev_visitor_IDs list for this URL
+    card_name_lower = card.card_name.lower()
+    visitors_index = card_scan_UUIDs.get(f"{card_name_lower}_UUIDs").index(url_UUID)
+    prev_visitor_IDs = card_scan_visitors.get(f"{card_name_lower}{visitors_index}_visitors")
+    
     cards_context = []
     cards_context.append({
         "card_name": card.card_name,
@@ -141,8 +207,6 @@ def card_scan(request, url_UUID):
         # Display card with an overlay or alert saying: "Already redeemed"
         view_context.update({"first_visit": False})
     
-    # TODO: Should switch card.images to MEDIA instead of STATIC for 
-    # files which can be uploaded by users
     return render(request, 
                   context=view_context, 
                   template_name="cards/display_card.html"
@@ -163,7 +227,7 @@ def pack_scan(request, url_UUID):
 
     # Initialise card values for given URL
     if url_UUID in pack_scan_UUIDs.get("pack0_UUIDs"):
-        pack_cards_rar = get_pack_instance()
+        pack_cards_rar = get_pack_instance().get_all_cards_rar()
         pack_cards = []
         pack_rarity = []
         for card_rar in pack_cards_rar:
@@ -178,7 +242,7 @@ def pack_scan(request, url_UUID):
 
         
         visitors_index = pack_scan_UUIDs.get("pack0_UUIDs").index(url_UUID)
-        prev_visitor_IDs = pack_scan_UUID_visitors.get(f"pack{visitors_index}_visitor_IDs")
+        prev_visitor_IDs = pack_scan_visitors.get(f"pack{visitors_index}_visitor_IDs")
 
     else:
         # return 404 invalid UUID was given
