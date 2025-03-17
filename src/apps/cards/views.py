@@ -75,14 +75,14 @@ card_scan_visitors = {
 
 pack_scan_visitors = {
     # Dict cotaining userID and epoch time
-    "pakwan0_visitors": dict(), 
+    "pakwan0_visitors": dict(),
 }
 
 # .===========.
 # |  METHODS  |
 # '==========='
 
-def add_card_website(card: Card, website_ID):
+def add_card_website(card: Card, website_ID, isTimed: bool = False):
     """
     Adds new website ID to the card_scan_UUIDs dict.\n
     If the website is for a new card it makes a new dict entry 
@@ -97,14 +97,20 @@ def add_card_website(card: Card, website_ID):
 
     if target_card_scan_UUID != None:
         target_card_scan_UUID.append(website_ID)
-        create_card_visitors(card_name)
+        if isTimed:
+            create_card_visitors(card_name, True)
+        else:
+            create_card_visitors(card_name)
+        
 
     else:
         card_scan_UUIDs[card_key] = [website_ID]
-        create_card_visitors(card_name)
+        if isTimed:
+            create_card_visitors(card_name, True)
+        else:
+            create_card_visitors(card_name)
 
-
-def add_pack_website(pack: Pack, website_ID):
+def add_pack_website(pack: Pack, website_ID, isTimed: bool = False):
     """
     Adds new website ID to the pack_scan_UUIDs dict.\n
     If the website is for a new pack it makes a new dict entry 
@@ -120,36 +126,49 @@ def add_pack_website(pack: Pack, website_ID):
 
     if target_pack_scan_UUID != None:
         target_pack_scan_UUID.append(website_ID)
-        create_pack_visitors(pack_name)
+        if isTimed:
+            create_pack_visitors(pack_name, True)
+        else:
+            create_pack_visitors(pack_name)
 
     else:
         pack_scan_UUIDs[pack_key] = [website_ID]
-        create_pack_visitors(pack_name)
+        if isTimed:
+            create_pack_visitors(pack_name, True)
+        else:
+            create_pack_visitors(pack_name)
 
-
-def create_card_visitors(card_name: str):
+def create_card_visitors(card_name: str, isTimed: bool = False):
     """
     Creates an auxiliary dict entry to track who's viewed a card website
+    If timed then it creates the entry's value is a dictionary otherwise a list
+    This dictionary's value is another dict (UserID: timeEpoch)
     """
     card_name_lower = card_name.lower()
     i = 0
+    
     while (card_scan_visitors.get(f"{card_name_lower+str(i)}_visitors") != None):
         i += 1
-    card_scan_visitors[f"{card_name_lower+str(i)}_visitors"] = []
-
-
-def create_pack_visitors(pack_name: str):
+    if isTimed:
+        card_scan_visitors[f"{card_name_lower+str(i)}_visitors"] = dict()
+    else:
+        card_scan_visitors[f"{card_name_lower+str(i)}_visitors"] = []
+    
+def create_pack_visitors(pack_name: str, isTimed: bool = False):
     """
-    Creates an auxiliary dict entry to track who's viewed a pack website\n
+    Creates an auxiliary dict entry to track who's viewed a pack website
+    If timed then it creates the entry's value is a dictionary otherwise a list
     This dictionary's value is another dict (UserID: timeEpoch)
     """
     pack_name_lower = pack_name.lower()
     i = 0
     while (pack_scan_visitors.get(f"{pack_name_lower+str(i)}_visitors") != None):
         i += 1
-    pack_scan_visitors[f"{pack_name_lower+str(i)}_visitors"] = dict()
-
-
+    if isTimed:
+        pack_scan_visitors[f"{pack_name_lower+str(i)}_visitors"] = dict()
+    else:
+        pack_scan_visitors[f"{pack_name_lower+str(i)}_visitors"] = []
+    
 def get_card_from_ID(id) -> Card:
     """
     Returns Card if ID is in entry. Returns None if ID invalid.
@@ -167,7 +186,6 @@ def get_card_from_ID(id) -> Card:
         return Card.objects.get(card_name=card_name)
     else:
         return None
-
 
 def get_pack_from_ID(id) -> Pack:
     """
@@ -222,12 +240,23 @@ def card_scan(request, url_UUID):
         "cards": cards_context,
         "first_visit": True,
     }
-    
+
+    # Epoch is used for claim cooldown
+    # cooldown length can be set below (in seconds)
+    # 86400 sec = 1 day
+    cooldown_period = 10
+    cur_epoch = int(time.time())
     userID = current_user.id
+    
     if userID not in prev_visitor_IDs:
-        prev_visitor_IDs.append(userID)
-        # Get card
         current_UD.add_card(card)
+        if type(prev_visitor_IDs) == dict:
+            prev_visitor_IDs[userID] = cur_epoch+cooldown_period
+        else:
+            prev_visitor_IDs.append(userID)
+    elif type(prev_visitor_IDs) == dict and cur_epoch >= prev_visitor_IDs.get(userID):
+        current_UD.add_card(card)
+        prev_visitor_IDs.update({userID: cur_epoch+cooldown_period})
     else:
         # Display card with an overlay or alert saying: "Already redeemed"
         view_context.update({"first_visit": False})
@@ -293,16 +322,17 @@ def pack_scan(request, url_UUID):
     userID = current_user.id
 
     if userID not in prev_visitor_IDs:
-        prev_visitor_IDs[userID] = cur_epoch+cooldown_period
-
         # Get cards
         for card in selected_cards:
             current_UD.add_card(card)
-    elif cur_epoch >= prev_visitor_IDs.get(userID):
-        prev_visitor_IDs.update({userID: cur_epoch+cooldown_period})
-
+        if type(prev_visitor_IDs) == dict:
+            prev_visitor_IDs[userID] = cur_epoch+cooldown_period
+        else:
+            prev_visitor_IDs.append(userID)
+    elif type(prev_visitor_IDs) == dict and cur_epoch >= prev_visitor_IDs.get(userID):
         for card in selected_cards:
             current_UD.add_card(card)
+        prev_visitor_IDs.update({userID: cur_epoch+cooldown_period})
     else:
         # Display card with an overlay or alert saying: "Already redeemed"
         view_context.update({"first_visit": False})

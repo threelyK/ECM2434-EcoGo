@@ -23,7 +23,6 @@ class CardsViewsTest(TestCase):
         self.assertEqual(vor.card_name, "Vortex-9")
         self.assertEqual(cru.card_name, "Crudespawn")
 
-
     def test_get_pack_instance(self):
         """
         Tests that get_pack_instance gets or creates the rest of the cards
@@ -32,10 +31,9 @@ class CardsViewsTest(TestCase):
         pack = get_pack_instance()
         self.assertIs(type(pack), Pack)
 
-
     def test_create_card_visitors(self):
         """
-        Tests to see if a visitor entry is created in the card_visitors dict
+        Tests to see if a visitor entry is created in the card_visitors dict for timed and non-timed.
         """
         card_name = "Ooga"
         create_card_visitors(card_name)
@@ -46,20 +44,26 @@ class CardsViewsTest(TestCase):
         create_card_visitors(card_name)
         self.assertEqual(card_scan_visitors.get("ooga1_visitors"), [])
 
+        # Tests timed entry
+        create_card_visitors(card_name, True)
+        self.assertEqual(card_scan_visitors.get("ooga2_visitors"), {})
         
     def test_create_pack_visitors(self):
         """
-        Tests to see if a visitor entry is created in the pack_visitors dict
+        Tests to see if a visitor entry is created in the pack_visitors dict for timed and non-timed.
         """
         pack_name = "Ooga"
         create_pack_visitors(pack_name)
-        self.assertEqual(pack_scan_visitors.get("ooga0_visitors"), dict())
+        self.assertEqual(pack_scan_visitors.get("ooga0_visitors"), [])
 
         # Tests to see that it creates a new entry with a different index
         # Simulates different websites with the same pack reward and tracking its visitors
         create_pack_visitors(pack_name)
-        self.assertEqual(pack_scan_visitors.get("ooga1_visitors"), dict())
+        self.assertEqual(pack_scan_visitors.get("ooga1_visitors"), [])
 
+        # Tests timed entry
+        create_pack_visitors(pack_name, True)
+        self.assertEqual(pack_scan_visitors.get("ooga2_visitors"), {})
         
     def test_add_card_website(self):
         """
@@ -71,19 +75,27 @@ class CardsViewsTest(TestCase):
         hyd = cards.get("hyd")
         newID1 = uuid4()
         newID2 = uuid4()
-
-        strID1 = str(newID1)
-        strID2 = str(newID2)
+        newID3 = uuid4()
+        newID4 = uuid4()
 
         # Tests adding a website to existing card
         add_card_website(hyd, newID1)
-        self.assertIn(strID1, card_scan_UUIDs.get(f"{hyd.card_name}_UUIDs"))
+        self.assertIn(str(newID1), card_scan_UUIDs.get(f"{hyd.card_name}_UUIDs"))
 
         booga = Card.objects.create(card_name="Booga")
         # Tests adding a website for a new card
         add_card_website(booga, newID2)
-        self.assertIn(strID2, card_scan_UUIDs.get(f"{booga.card_name}_UUIDs"))
+        self.assertIn(str(newID2), card_scan_UUIDs.get(f"{booga.card_name}_UUIDs"))
 
+
+        # Tests adding a timed website to existing card
+        add_card_website(hyd, newID3, True)
+        self.assertIn(str(newID3), card_scan_UUIDs.get(f"{hyd.card_name}_UUIDs"))
+
+        wooga = Card.objects.create(card_name="Wooga")
+        # Tests adding a timed website for a new card
+        add_card_website(wooga, newID4, True)
+        self.assertIn(str(newID4), card_scan_UUIDs.get(f"{wooga.card_name}_UUIDs"))
 
     def test_add_pack_website(self):
         """
@@ -94,18 +106,28 @@ class CardsViewsTest(TestCase):
 
         newID1 = uuid4()
         newID2 = uuid4()
-        strID1 = str(newID1)
-        strID2 = str(newID2)
+        newID3 = uuid4()
+        newID4 = uuid4()
+
 
         # Tests adding a website to existing pack
         add_pack_website(pack, newID1)
-        self.assertIn(strID1, pack_scan_UUIDs.get(f"{pack.pack_name}_UUIDs"))
+        self.assertIn(str(newID1), pack_scan_UUIDs.get(f"{pack.pack_name}_UUIDs"))
 
         pack1 = Pack.objects.create(pack_name="packUno", cost=10, num_cards="0")
         # Tests adding a website for a new pack
         add_pack_website(pack1, newID2)
-        self.assertIn(strID2, pack_scan_UUIDs.get(f"{pack1.pack_name}_UUIDs"))
+        self.assertIn(str(newID2), pack_scan_UUIDs.get(f"{pack1.pack_name}_UUIDs"))
 
+
+        # Tests adding a timed website to existing pack
+        add_pack_website(pack, newID3, True)
+        self.assertIn(str(newID3), pack_scan_UUIDs.get(f"{pack.pack_name}_UUIDs"))
+
+        pack2 = Pack.objects.create(pack_name="packDos", cost=10, num_cards="0")
+        # Tests adding a timed website for a new pack
+        add_pack_website(pack2, newID4, True)
+        self.assertIn(str(newID4), pack_scan_UUIDs.get(f"{pack2.pack_name}_UUIDs"))
 
     def test_get_card_from_ID(self):
         """
@@ -118,7 +140,6 @@ class CardsViewsTest(TestCase):
         add_card_website(awooga, newID1)
         self.assertEqual(get_card_from_ID(strID1), awooga)
         self.assertIsNone(get_pack_from_ID(00))
-
 
     def test_get_pack_from_ID(self):
         """
@@ -152,7 +173,6 @@ class CardTest(TestCase):
         self.assertEqual(uno_card.image, PurePath("images/card_images/Missing_Texture.png").as_posix())
         self.assertEqual(grunty_card.image, PurePath("images/card_images/Test.jpg").as_posix())
 
-    
     def test_change_image(self):
         """
         Tests to see if Card is able to change the image to an existing file
