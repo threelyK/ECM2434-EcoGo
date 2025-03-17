@@ -2,6 +2,8 @@
 
 from apps.user.models import User
 from collections.abc import Callable
+from functools import wraps
+import logging
 
 class TradingRoom():
     """
@@ -29,6 +31,10 @@ class TradingRoom():
     #The output function used to send messages back to the users
     response_func = None
 
+    #The logger responsable for recording unhandled errors triggerd by server logic
+    logging.basicConfig(filename='ecoGo.log', filemode='a',encoding='utf-8')
+    error_logger = logging.getLogger(__name__)
+
     # -------------- External interface --------------
 
     def __init__(self, room_owner : User):
@@ -39,6 +45,20 @@ class TradingRoom():
 
         self.room_owner = room_owner
 
+    def error_handler(func):
+        """
+        Decorates a function to call the error service routine when it throws an exception
+        """
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            try:
+                return func(self, *args, **kwargs)
+            except Exception as e:
+                self.__error_service_routine(e)
+
+        return wrapper
+
+    @error_handler
     def handle(self, message_data : dict, message_source : User):
         """
         Handles any message sent by either user, using the data and sender
@@ -50,6 +70,7 @@ class TradingRoom():
                 #move from N to D
                 self.__N_to_D(message_data)
 
+    @error_handler
     def join_room(self, room_member : User, response_func : Callable[[dict, User], None]):
         """
         Allows a second user to join the room and establishes the response_func used
@@ -100,6 +121,29 @@ class TradingRoom():
             raise Exception("Cannot respond to 'None' user")
         
         self.response_func(message_data, message_dest)
+
+    def __error_service_routine(self, e : Exception):
+        """
+        Called when there is an unhandled internal server error, properly ends the room as to
+        keep the server running and informs users
+        """
+
+        if self.state == 'W':
+            raise Exception("Cannot handle errors in W state")
+
+        self.error_logger.error(e)
+
+        self.__update_state("E")
+
+        error_message = {
+            "state_flag" : "E",
+            "body":""
+        }
+
+        #Inform the users clients of the error
+        self.__send_message(error_message, self.room_owner)
+
+        self.__send_message(error_message, self.room_member)
 
     def __validate_state(self, state : str):
         """

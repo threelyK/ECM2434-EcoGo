@@ -148,7 +148,7 @@ class TradingRoomTest(TestCase):
 
         rc = mock_response_class(self)
 
-        tr.join_room(self.room_member, rc)
+        tr.join_room.__wrapped__(tr, self.room_member, rc)
 
         self.assertEqual(tr.room_member, self.room_member)
         self.assertEqual(tr.response_func, rc)
@@ -215,7 +215,8 @@ class TradingRoomTest(TestCase):
                 #third call
                 elif self.counter == 2:
                    self.testClass.assertEqual(user, self.testClass.room_owner)
-                   self.testClass.assertEqual(data["state_flag"], "N") 
+                   self.testClass.assertEqual(data["state_flag"], "N")
+                   self.counter += 1
                 #there should not be a fourth call
                 else:
                     self.testClass.fail()
@@ -229,3 +230,48 @@ class TradingRoomTest(TestCase):
                 "member_cards":["Vortex-9"]
             }
         }, self.room_owner)
+
+    def test_error_service_routine(self):
+        """
+        Test that the error service routine propelry handles errors
+        """
+
+        class mock_error_logger():
+            def __init__(self, outer):
+                self.testClass = outer
+
+            def error(self, msg):
+                if not str(msg) == "Something wrong":
+                    self.testClass.fail()
+
+        class mock_response_class():
+            def __init__(self, outer):
+                self.testClass = outer
+                self.counter = 0
+            
+            def __call__(self, data, user):
+                #first two calls
+                if self.counter == 0 or self.counter == 1:
+                    self.counter += 1
+                #third call
+                elif self.counter == 2:
+                    self.testClass.assertEqual(user, self.testClass.room_owner)
+                    self.testClass.assertEqual(data["state_flag"], "E")
+                    self.counter += 1
+                #Fourth call
+                elif self.counter == 3:
+                    self.testClass.assertEqual(user, self.testClass.room_member)
+                    self.testClass.assertEqual(data["state_flag"], "E")
+                    self.counter += 1
+                #there should not be a fith call
+                else:
+                    self.testClass.fail()
+
+        tr = TradingRoom(self.room_owner)
+        tr.error_logger = mock_error_logger(self)
+        tr.join_room(self.room_member, mock_response_class(self))
+
+        e = Exception("Something wrong")
+        tr._TradingRoom__error_service_routine(e)
+
+        self.assertEqual(tr.state, 'E')
