@@ -372,3 +372,65 @@ class TradingRoomTest(TestCase):
         }, self.room_member)
 
         self.assertEqual(tr.state, "N")
+
+    def test_D_to_A_transition(self):
+        """
+        Tests the transition from state D to state A (trade accepted)
+        """
+    
+        class mock_response_class():
+            def __init__(self, outer):
+                self.testClass = outer
+                self.counter = 0
+            
+            def __call__(self, data, user):
+                #first four calls
+                if self.counter < 4:
+                    self.counter += 1
+                #fourth call
+                elif self.counter == 4:
+                    self.testClass.assertEqual(user, self.testClass.room_owner)
+                    self.testClass.assertEqual(data["state_flag"], "A")
+                    self.counter += 1
+                elif self.counter == 5:
+                    #ensure the fith message goes to the room_memeber
+                    self.testClass.assertEqual(user, self.testClass.room_member)
+                    self.testClass.assertEqual(data["state_flag"], "A")
+                    self.counter += 1
+                #there should not be a sixth call
+                else:
+                    self.testClass.fail()
+
+        #Init our cards
+        get_cards_instance()
+
+        vortex_card = Card.objects.get(card_name = "Vortex-9")
+        self.room_member.user_data.add_card(vortex_card)
+
+        hydronis_card = Card.objects.get(card_name = "Hydronis")
+        self.room_owner.user_data.add_card(hydronis_card)
+
+        tr = TradingRoom(self.room_owner)
+        tr.join_room(self.room_member, mock_response_class(self))
+
+        #propose a trade
+        tr.handle({
+            "state_flag": "D",
+            "body": {
+                "member_cards":["Vortex-9"],
+                "owner_cards":["Hydronis"]
+            }
+        }, self.room_owner)
+
+        #accept the trade
+        tr.handle({
+            "state_flag": "A",
+            "body":{}
+        }, self.room_member)
+
+        #Check that the cards have been traded
+        member_cards = self.room_member.user_data.get_all_cards_quant()
+        owner_cards = self.room_owner.user_data.get_all_cards_quant()
+
+        self.assertEqual(member_cards, [(hydronis_card, 1)])
+        self.assertEqual(owner_cards, [(vortex_card, 1)])
