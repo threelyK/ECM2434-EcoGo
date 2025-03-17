@@ -7,6 +7,7 @@ from apps.cards.models import Card, Pack
 import random as rand
 import time
 
+
 def get_cards_instance():
     """
     Returns a dict of 3 starting cards. key: (Card, frameNo)
@@ -23,10 +24,9 @@ def get_cards_instance():
         "cru": Card.objects.get(card_name="Crudespawn")
     })
 
-def get_pack_instance():
+def get_pack_instance()->Pack:
     """
-    Returns a list of tuples representing a pack: (Card, Rarity)
-    If the pack is not already created, it creates it.
+    Returns a pack object. If the pack doesn't exist, it creates it.
     """
     first_cards = get_cards_instance()
 
@@ -39,7 +39,7 @@ def get_pack_instance():
     rea = Card.objects.get_or_create(card_name="REACT-O-TRON", image="/images/card_images/REACT-O-TRON.jpg", card_desc="WIP")[0]
     the = Card.objects.get_or_create(card_name="Thermagon", image="/images/card_images/Thermagon.jpg", card_desc="WIP")[0]
 
-    pack = Pack.objects.get_or_create(pack_name="Electri-city group", cost=250, num_cards=10)[0]
+    pack = Pack.objects.get_or_create(pack_name="pakwan", cost=250, num_cards=10)[0]
     if pack.get_all_cards().count() == 0:
         pack.add_to_pack(first_cards.get("vor"), 100)
         pack.add_to_pack(first_cards.get("hyd"), 100)
@@ -53,34 +53,158 @@ def get_pack_instance():
         pack.add_to_pack(the, 100)
         if pack.validate_pack():
             pack.save_pack()
-        pack.image
 
-    return pack.get_all_cards_rar()
+    return pack
 
 card_scan_UUIDs = {
-    "vortex_UUIDs": ['4012cf77-7b46-4c2c-90f0-a1b821a123ea'],
-    "hydronis_UUIDs": ['24d79f65-4a8e-4f77-8bf4-b2447cf7ebcf'],
-    "crudespawn_UUIDs": ['bc9519d9-0adc-43d7-8912-13611c80fd38']
+    "Vortex-9_UUIDs": ['4012cf77-7b46-4c2c-90f0-a1b821a123ea'],
+    "Hydronis_UUIDs": ['24d79f65-4a8e-4f77-8bf4-b2447cf7ebcf'],
+    "Crudespawn_UUIDs": ['bc9519d9-0adc-43d7-8912-13611c80fd38']
 }
 
 pack_scan_UUIDs = {
-    "pack0_UUIDs": ['8408d587-9b62-4d34-8dd7-4bfec213f443'],
+    "pakwan_UUIDs": ['8408d587-9b62-4d34-8dd7-4bfec213f443'],
 }
 
 # A new entry will be created for new QR code with the repective index number
-card_scan_UUID_visitors = {
-    "vortex0_visitor_IDs": [],
-    "hydronis0_visitor_IDs": [],
-    "crudespawn0_visitor_IDs": [],
+card_scan_visitors = {
+    "vortex-90_visitors": [],
+    "hydronis0_visitors": [],
+    "crudespawn0_visitors": [],
 }
 
-pack_scan_UUID_visitors = {
-    "pack0_visitor_IDs": dict(), 
+pack_scan_visitors = {
+    # Dict cotaining userID and epoch time
+    "pakwan0_visitors": dict(),
 }
 
 # .===========.
 # |  METHODS  |
 # '==========='
+
+def add_card_website(card: Card, website_ID, isTimed: bool = False):
+    """
+    Adds new website ID to the card_scan_UUIDs dict.\n
+    If the website is for a new card it makes a new dict entry 
+    and a new card_scan_visitors entry.
+    """
+    if type(website_ID) != str:
+        website_ID = str(website_ID)
+
+    card_name = card.card_name
+    card_key = card_name + "_UUIDs"
+    target_card_scan_UUID = card_scan_UUIDs.get(card_key)
+
+    if target_card_scan_UUID != None:
+        target_card_scan_UUID.append(website_ID)
+        if isTimed:
+            create_card_visitors(card_name, True)
+        else:
+            create_card_visitors(card_name)
+        
+
+    else:
+        card_scan_UUIDs[card_key] = [website_ID]
+        if isTimed:
+            create_card_visitors(card_name, True)
+        else:
+            create_card_visitors(card_name)
+
+def add_pack_website(pack: Pack, website_ID, isTimed: bool = False):
+    """
+    Adds new website ID to the pack_scan_UUIDs dict.\n
+    If the website is for a new pack it makes a new dict entry 
+    and a new pack_scan_visitors entry.
+    """
+
+    if type(website_ID) != str:
+        website_ID = str(website_ID)
+
+    pack_name = pack.pack_name
+    pack_key = pack_name + "_UUIDs"
+    target_pack_scan_UUID = pack_scan_UUIDs.get(pack_key)
+
+    if target_pack_scan_UUID != None:
+        target_pack_scan_UUID.append(website_ID)
+        if isTimed:
+            create_pack_visitors(pack_name, True)
+        else:
+            create_pack_visitors(pack_name)
+
+    else:
+        pack_scan_UUIDs[pack_key] = [website_ID]
+        if isTimed:
+            create_pack_visitors(pack_name, True)
+        else:
+            create_pack_visitors(pack_name)
+
+def create_card_visitors(card_name: str, isTimed: bool = False):
+    """
+    Creates an auxiliary dict entry to track who's viewed a card website
+    If timed then it creates the entry's value is a dictionary otherwise a list
+    This dictionary's value is another dict (UserID: timeEpoch)
+    """
+    card_name_lower = card_name.lower()
+    i = 0
+    
+    while (card_scan_visitors.get(f"{card_name_lower+str(i)}_visitors") != None):
+        i += 1
+    if isTimed:
+        card_scan_visitors[f"{card_name_lower+str(i)}_visitors"] = dict()
+    else:
+        card_scan_visitors[f"{card_name_lower+str(i)}_visitors"] = []
+    
+def create_pack_visitors(pack_name: str, isTimed: bool = False):
+    """
+    Creates an auxiliary dict entry to track who's viewed a pack website
+    If timed then it creates the entry's value is a dictionary otherwise a list
+    This dictionary's value is another dict (UserID: timeEpoch)
+    """
+    pack_name_lower = pack_name.lower()
+    i = 0
+    while (pack_scan_visitors.get(f"{pack_name_lower+str(i)}_visitors") != None):
+        i += 1
+    if isTimed:
+        pack_scan_visitors[f"{pack_name_lower+str(i)}_visitors"] = dict()
+    else:
+        pack_scan_visitors[f"{pack_name_lower+str(i)}_visitors"] = []
+    
+def get_card_from_ID(id) -> Card:
+    """
+    Returns Card if ID is in entry. Returns None if ID invalid.
+    """
+    if type(id) != str:
+        id = str(id)
+
+
+    card_name = None
+    for key, val in card_scan_UUIDs.items():
+        if id in val:
+            card_name = key[:-6]
+
+    if card_name:
+        return Card.objects.get(card_name=card_name)
+    else:
+        return None
+
+def get_pack_from_ID(id) -> Pack:
+    """
+    Returns Pack if ID is in entry. Returns None if ID invalid.
+    """
+    if type(id) != str:
+        id = str(id)
+    
+
+    pack_name = None
+    for key, val in pack_scan_UUIDs.items():
+        if id in val:
+            pack_name = key[:-6]
+            
+    if pack_name:
+        return Pack.objects.get(pack_name=pack_name)
+    else:
+        return None
+
 
 @require_http_methods(["GET"])
 @login_required
@@ -89,40 +213,25 @@ def card_scan(request, url_UUID):
     Add specific card related to URL UUID into visitor's inventory
     """
     url_UUID = str(url_UUID)
-    cards_instance = get_cards_instance()
+    cards_instance = get_cards_instance() # Just used to create cards
 
     current_user = request.user
     current_UD = UserData.objects.get(owner=current_user)
 
     # Initialise card values for given URL
-    if url_UUID in card_scan_UUIDs.get("vortex_UUIDs"):
-        card_alias = "vor"
-        
-        # Find prev_visitor_IDs list for this URL
-        visitors_index = card_scan_UUIDs.get("vortex_UUIDs").index(url_UUID)
-        prev_visitor_IDs = card_scan_UUID_visitors.get(f"vortex{visitors_index}_visitor_IDs")
-
-
-    elif url_UUID in card_scan_UUIDs.get("hydronis_UUIDs"):
-        card_alias = "hyd"
-
-        visitors_index = card_scan_UUIDs.get("hydronis_UUIDs").index(url_UUID)
-        prev_visitor_IDs = card_scan_UUID_visitors.get(f"hydronis{visitors_index}_visitor_IDs")
-
-    elif url_UUID in card_scan_UUIDs.get("crudespawn_UUIDs"):
-        card_alias = "cru"
-
-        visitors_index = card_scan_UUIDs.get("crudespawn_UUIDs").index(url_UUID)
-        prev_visitor_IDs = card_scan_UUID_visitors.get(f"crudespawn{visitors_index}_visitor_IDs")
-
-    else:
+    card = get_card_from_ID(url_UUID)
+    if card == None:
         # return 404 invalid UUID was given
         render(ERROR_404_TEMPLATE_NAME)
-
-    card = cards_instance.get(card_alias)
+    
+    card_name = card.card_name
+    # Find prev_visitor_IDs list for this URL
+    visitors_index = card_scan_UUIDs.get(f"{card_name}_UUIDs").index(url_UUID)
+    prev_visitor_IDs = card_scan_visitors.get(f"{card_name.lower()}{visitors_index}_visitors")
+    
     cards_context = []
     cards_context.append({
-        "card_name": card.card_name,
+        "card_name": card_name,
         "card_desc": card.card_desc,
         "image_path": card.image,
     })
@@ -131,18 +240,27 @@ def card_scan(request, url_UUID):
         "cards": cards_context,
         "first_visit": True,
     }
-    
+
+    # Epoch is used for claim cooldown
+    # cooldown length can be set below (in seconds)
+    # 86400 sec = 1 day
+    cooldown_period = 10
+    cur_epoch = int(time.time())
     userID = current_user.id
+    
     if userID not in prev_visitor_IDs:
-        prev_visitor_IDs.append(userID)
-        # Get card
         current_UD.add_card(card)
+        if type(prev_visitor_IDs) == dict:
+            prev_visitor_IDs[userID] = cur_epoch+cooldown_period
+        else:
+            prev_visitor_IDs.append(userID)
+    elif type(prev_visitor_IDs) == dict and cur_epoch >= prev_visitor_IDs.get(userID):
+        current_UD.add_card(card)
+        prev_visitor_IDs.update({userID: cur_epoch+cooldown_period})
     else:
         # Display card with an overlay or alert saying: "Already redeemed"
         view_context.update({"first_visit": False})
     
-    # TODO: Should switch card.images to MEDIA instead of STATIC for 
-    # files which can be uploaded by users
     return render(request, 
                   context=view_context, 
                   template_name="cards/display_card.html"
@@ -157,32 +275,31 @@ def pack_scan(request, url_UUID):
     It then adds those 5 cards to user's inventory
     """
     url_UUID = str(url_UUID)
+    base_pack = get_pack_instance() # Just to create initial pack
 
     current_user = request.user
     current_UD = UserData.objects.get(owner=current_user)
 
     # Initialise card values for given URL
-    if url_UUID in pack_scan_UUIDs.get("pack0_UUIDs"):
-        pack_cards_rar = get_pack_instance()
-        pack_cards = []
-        pack_rarity = []
-        for card_rar in pack_cards_rar:
-            pack_cards.append(card_rar[0])
-            pack_rarity.append(card_rar[1])
-        
-        # Randomly rolls for 5 cards. Every card in the pack has a chance to be chosen
-        selected_cards = rand.choices(pack_cards, weights=pack_rarity, k=5)
-
-        
-        # Find prev_visitor_IDs list for this URL
-
-        
-        visitors_index = pack_scan_UUIDs.get("pack0_UUIDs").index(url_UUID)
-        prev_visitor_IDs = pack_scan_UUID_visitors.get(f"pack{visitors_index}_visitor_IDs")
-
-    else:
-        # return 404 invalid UUID was given
+    pack = get_pack_from_ID(url_UUID)
+    if not pack:
         render(ERROR_404_TEMPLATE_NAME)
+        
+    pack_cards_rar = pack.get_all_cards_rar()
+    pack_cards = []
+    pack_rarity = []
+    for card_rar in pack_cards_rar:
+        pack_cards.append(card_rar[0])
+        pack_rarity.append(card_rar[1])
+        
+    # Randomly rolls for 5 cards. Every card in the pack has a chance to be chosen
+    selected_cards = rand.choices(pack_cards, weights=pack_rarity, k=5)
+
+    
+    pack_name = pack.pack_name
+    # Find prev_visitor_IDs list for this URL
+    visitors_index = pack_scan_UUIDs.get(f"{pack_name}_UUIDs").index(url_UUID)
+    prev_visitor_IDs = pack_scan_visitors.get(f"{pack_name.lower()}{visitors_index}_visitors")
 
     cards_context = []
     for card in selected_cards:
@@ -200,21 +317,22 @@ def pack_scan(request, url_UUID):
     # Epoch is used for claim cooldown
     # cooldown length can be set below (in seconds)
     # 86400 sec = 1 day
-    cooldown_period = 1
+    cooldown_period = 10
     cur_epoch = int(time.time())
     userID = current_user.id
 
     if userID not in prev_visitor_IDs:
-        prev_visitor_IDs[userID] = cur_epoch+cooldown_period
-
         # Get cards
         for card in selected_cards:
             current_UD.add_card(card)
-    elif cur_epoch >= prev_visitor_IDs.get(userID):
-        prev_visitor_IDs.update({userID: cur_epoch+cooldown_period})
-
+        if type(prev_visitor_IDs) == dict:
+            prev_visitor_IDs[userID] = cur_epoch+cooldown_period
+        else:
+            prev_visitor_IDs.append(userID)
+    elif type(prev_visitor_IDs) == dict and cur_epoch >= prev_visitor_IDs.get(userID):
         for card in selected_cards:
             current_UD.add_card(card)
+        prev_visitor_IDs.update({userID: cur_epoch+cooldown_period})
     else:
         # Display card with an overlay or alert saying: "Already redeemed"
         view_context.update({"first_visit": False})
