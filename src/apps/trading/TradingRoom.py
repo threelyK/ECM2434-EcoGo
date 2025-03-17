@@ -71,8 +71,14 @@ class TradingRoom():
 
         if message_source == self.room_owner:
             if self.state == 'N' and message_data["state_flag"] == 'D':
-                #move from N to D
+                #move from N to D (trade proposed)
                 self.__N_to_D(message_data)
+        elif message_source == self.room_member:
+            if self.state == 'D' and message_data["state_flag"] == 'N':
+                #move from D to N (trade rejected)
+                self.__D_to_N(message_data)
+        else:
+            raise Exception("Invalid message source")
 
     @error_handler
     def join_room(self, room_member : User, response_func : Callable[[dict, User], None]):
@@ -198,6 +204,8 @@ class TradingRoom():
         Handles a proposed N to D state transition
         """
 
+        self.__validate_state("N")
+
         #Checking that the other user has the cards that are needed to trade
         proposed_member_cards = message_data["body"]["member_cards"]
         owned_member_cards = self.room_member.user_data.get_all_cards()
@@ -225,3 +233,21 @@ class TradingRoom():
             }
 
             self.__send_message(message, self.room_owner)
+
+    def __D_to_N(self, message_data: dict):
+        """
+        Handles a proposed D to N state transition
+        """
+
+        #Moving back to N state
+        self.__validate_state("D")
+        self.__update_state("N")
+
+        message = {
+            "state_flag": "N",
+            "body": {}
+        }
+
+        #Informing the users of the change in state
+        self.__send_message(message, self.room_owner)
+        self.__send_message(message, self.room_member)

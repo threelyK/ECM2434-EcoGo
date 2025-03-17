@@ -323,3 +323,52 @@ class TradingRoomTest(TestCase):
                 "msg": "Something wrong"
             }
         }, self.room_owner)
+
+    def test_D_to_N_transition(self):
+        """
+        Tests the transtition from state D back to state N (trade rejected)
+        """
+
+        class mock_response_class():
+            def __init__(self, outer):
+                self.testClass = outer
+                self.counter = 0
+            
+            def __call__(self, data, user):
+                #first four calls
+                if self.counter < 4:
+                    self.counter += 1
+                elif self.counter == 4:
+                    self.testClass.assertEqual(user, self.testClass.room_owner)
+                    self.testClass.assertEqual(data["state_flag"], "N")
+                    self.counter += 1
+                elif self.counter == 5:
+                    self.testClass.assertEqual(user, self.testClass.room_member)
+                    self.testClass.assertEqual(data["state_flag"], "N")
+                    self.counter += 1
+                else:
+                    self.testClass.fail()
+
+        get_cards_instance()
+
+        vortex_card = Card.objects.get(card_name = "Vortex-9")
+        self.room_member.user_data.add_card(vortex_card)
+
+        tr = TradingRoom(self.room_owner)
+        tr.join_room(self.room_member, mock_response_class(self))
+
+        #proposing the trade
+        tr.handle({
+            "state_flag": "D",
+            "body": {
+                "member_cards":["Vortex-9"]
+            }
+        }, self.room_owner)
+
+        #rejecting the trade
+        tr.handle({
+            "state_flag": "N",
+            "body": {}
+        }, self.room_member)
+
+        self.assertEqual(tr.state, "N")
