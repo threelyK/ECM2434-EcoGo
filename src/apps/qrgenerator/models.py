@@ -18,7 +18,7 @@ class Website(models.Model):
     latitude = models.FloatField(null=True, blank=True)  
     longitude = models.FloatField(null=True, blank=True)  
     address = models.CharField(max_length=255, null=True, blank=True) 
-    card = models.ForeignKey('cards.Card', on_delete=models.SET_NULL, null=True, blank=True)  # NEW FIELD
+    card = models.ForeignKey('cards.Card', on_delete=models.SET_NULL, null=True, blank=True)  # Card to attach to webpage
     def __str__(self):
         return self.name
 
@@ -47,23 +47,4 @@ class Website(models.Model):
 
         return self.qr_code.url
 
-    ## my failure of attempt to create a QR code for templates automatically 
-    @staticmethod
-    def get_user_urls():
-        user_urls = []
-        resolver = get_resolver()
-        for pattern in resolver.reverse_dict.keys():
-            if isinstance(pattern, str) and pattern not in ["admin", "qrgenerator"]:  
-                user_urls.append(pattern)  
-        return user_urls
-    ## failure for adding to Websites Templated QRCodes
-    @classmethod
-    def create_from_templates(cls):
-        templates_path = os.path.join(settings.BASE_DIR, "apps/user/templates/")
-        if os.path.exists(templates_path):
-            for file in os.listdir(templates_path):
-                if file.endswith(".html"):
-                    name = file.replace(".html", "")
-                    slug = name.replace(" ", "-").lower()
-                    if not cls.objects.filter(slug=slug).exists():
-                        cls.objects.create(name=name, slug=slug)
+ 
