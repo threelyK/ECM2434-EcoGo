@@ -1,6 +1,7 @@
 """Module responsable for the state logic of the trading room"""
 
 from apps.user.models import User
+from apps.cards.models import Card
 from collections.abc import Callable
 from functools import wraps
 import logging
@@ -30,6 +31,9 @@ class TradingRoom():
 
     #The output function used to send messages back to the users
     response_func = None
+
+    #A hash used to ensure that an accepted trade is the same as a proposed trade
+    trade_hash = None
 
     #The logger responsable for recording unhandled errors triggerd by server logic
     logging.basicConfig(filename='ecoGo.log', filemode='a',encoding='utf-8')
@@ -77,6 +81,9 @@ class TradingRoom():
             if self.state == 'D' and message_data["state_flag"] == 'N':
                 #move from D to N (trade rejected)
                 self.__D_to_N(message_data)
+            elif self.state == 'D' and message_data["state_flag"] == 'A':
+                #move from d to A (trade accepted)
+                self.__D_to_A(message_data)
         else:
             raise Exception("Invalid message source")
 
@@ -224,6 +231,8 @@ class TradingRoom():
         #Either accept the transition or reject it
         if valid:
             self.__update_state("D")
+            #Save the hash for later validation
+            self.trade_hash = hash(str(message_data["body"]))
             self.__send_message(message_data, self.room_owner)
             self.__send_message(message_data, self.room_member)
         else:
@@ -249,5 +258,44 @@ class TradingRoom():
         }
 
         #Informing the users of the change in state
+        self.__send_message(message, self.room_owner)
+        self.__send_message(message, self.room_member)
+
+    def __D_to_A(self, message_data: dict):
+        """
+        Handles a proposed transtion from D to A
+        """
+
+        self.__validate_state("D")
+        self.__update_state("A")
+
+        #Check that the hash is the same as the proposed trade
+        if not self.trade_hash == hash(str(message_data["body"])):
+            raise Exception(
+                "Hash mismach - trade accepted is different to trade proposed"
+            )
+
+        #Getting the cards
+        member_cards = []
+        for card in message_data["body"]["member_cards"]:
+            member_cards.append(Card.objects.get(card_name = card))
+
+        owner_cards = []
+        for card in message_data["body"]["owner_cards"]:
+            owner_cards.append(Card.objects.get(card_name = card))
+
+        for card in member_cards:
+            self.room_member.user_data.remove_card(card)
+            self.room_owner.user_data.add_card(card)
+
+        for card in owner_cards:
+            self.room_owner.user_data.remove_card(card)
+            self.room_member.user_data.add_card(card)
+
+        message = {
+            "state_flag": "A",
+            "body":{}
+        }
+
         self.__send_message(message, self.room_owner)
         self.__send_message(message, self.room_member)

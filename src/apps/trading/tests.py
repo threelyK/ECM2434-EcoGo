@@ -425,7 +425,10 @@ class TradingRoomTest(TestCase):
         #accept the trade
         tr.handle({
             "state_flag": "A",
-            "body":{}
+            "body":{
+                "member_cards":["Vortex-9"],
+                "owner_cards":["Hydronis"]
+            }
         }, self.room_member)
 
         #Check that the cards have been traded
