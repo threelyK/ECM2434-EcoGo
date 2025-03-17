@@ -65,8 +65,12 @@ class TradingRoom():
         to send a proper response through the socket_output function
         """
 
+        #Handle a user submitted error
+        if message_data["state_flag"] == "E":
+            raise Exception("Client error: " + message_data["body"]["msg"])
+
         if message_source == self.room_owner:
-            if self.state == 'N':
+            if self.state == 'N' and message_data["state_flag"] == 'D':
                 #move from N to D
                 self.__N_to_D(message_data)
 

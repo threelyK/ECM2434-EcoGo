@@ -275,3 +275,51 @@ class TradingRoomTest(TestCase):
         tr._TradingRoom__error_service_routine(e)
 
         self.assertEqual(tr.state, 'E')
+
+    def test_user_error_handling(self):
+        """
+        Tests that an error is properly raised when the user sends an 
+        error through the socket
+        """
+
+        class mock_error_logger():
+            def __init__(self, outer):
+                self.testClass = outer
+
+            def error(self, msg):
+                if not str(msg) == "Client error: Something wrong":
+                    self.testClass.fail()
+
+        class mock_response_class():
+            def __init__(self, outer):
+                self.testClass = outer
+                self.counter = 0
+            
+            def __call__(self, data, user):
+                #first two calls
+                if self.counter == 0 or self.counter == 1:
+                    self.counter += 1
+                #third call
+                elif self.counter == 2:
+                    self.testClass.assertEqual(user, self.testClass.room_owner)
+                    self.testClass.assertEqual(data["state_flag"], "E")
+                    self.counter += 1
+                #Fourth call
+                elif self.counter == 3:
+                    self.testClass.assertEqual(user, self.testClass.room_member)
+                    self.testClass.assertEqual(data["state_flag"], "E")
+                    self.counter += 1
+                #there should not be a fith call
+                else:
+                    self.testClass.fail()
+
+        tr = TradingRoom(self.room_owner)
+        tr.error_logger = mock_error_logger(self)
+        tr.join_room(self.room_member, mock_response_class(self))
+
+        tr.handle({
+            "state_flag" : "E",
+            "body":{
+                "msg": "Something wrong"
+            }
+        }, self.room_owner)
