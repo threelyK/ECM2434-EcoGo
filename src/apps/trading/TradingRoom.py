@@ -35,6 +35,9 @@ class TradingRoom():
     #A hash used to ensure that an accepted trade is the same as a proposed trade
     trade_hash = None
 
+    #A flag to check if the room should be closed
+    end_room = False
+
     #The logger responsable for recording unhandled errors triggerd by server logic
     logging.basicConfig(filename='ecoGo.log', filemode='a',encoding='utf-8')
     error_logger = logging.getLogger(__name__)
@@ -124,6 +127,40 @@ class TradingRoom():
         #Send a message to the users informing them of the change in state
         self.__send_message(message_owner, self.room_owner)
         self.__send_message(message_member, self.room_member)
+
+    def disconnect(self, disconnected_user : User):
+        """
+        Method to be called when a user unexpectedly disconnects
+        """
+
+        self.__update_state("X")
+
+        if disconnected_user == self.room_member:
+            #Informs room owner client of disconnect
+            message = {
+                "state_flag": "X",
+                "body":{}
+            }
+
+            self.__send_message(message, self.room_owner)
+
+            #Returns the room to the W state
+            self.response_func = None
+            self.room_member = None
+            self.trade_hash = None
+
+            self.__update_state('W')
+        else:
+            #Informs the room member that the room is gone
+            message = {
+                "state_flag": "X",
+                "body":{}
+            }
+
+            self.__send_message(message, self.room_member)
+
+            #Sets the flag to end the room
+            self.end_room = True
 
     # -------------- Internal methods --------------
 
@@ -299,3 +336,6 @@ class TradingRoom():
 
         self.__send_message(message, self.room_owner)
         self.__send_message(message, self.room_member)
+
+        #Sets the flag to end the room
+        self.end_room = True

@@ -422,6 +422,8 @@ class TradingRoomTest(TestCase):
             }
         }, self.room_owner)
 
+        self.assertEqual(tr.end_room, False)
+
         #accept the trade
         tr.handle({
             "state_flag": "A",
@@ -437,3 +439,71 @@ class TradingRoomTest(TestCase):
 
         self.assertEqual(member_cards, [(hydronis_card, 1)])
         self.assertEqual(owner_cards, [(vortex_card, 1)])
+
+        self.assertEqual(tr.end_room, True)
+
+    def test_owner_disconnect(self):
+        """
+        Tests that the class can properly handle the owner disconnecting
+        """
+
+        class mock_response_class():
+            def __init__(self, outer):
+                self.testClass = outer
+                self.counter = 0
+            
+            def __call__(self, data, user):
+                #first three calls
+                if self.counter < 2:
+                    self.counter += 1
+                #third call
+                elif self.counter == 2:
+                    self.testClass.assertEqual(user, self.testClass.room_member)
+                    self.testClass.assertEqual(data["state_flag"], "X")
+                    self.counter += 1
+                #there should not be a fourth call
+                else:
+                    self.testClass.fail()
+
+        tr = TradingRoom(self.room_owner)
+        tr.join_room(self.room_member, mock_response_class(self))
+
+        tr.disconnect(self.room_owner)
+
+        self.assertEqual(tr.end_room, True)
+        self.assertEqual(tr.state, 'X')
+
+    def test_member_disconnect(self):
+        """
+        Tests that the class properly handles the room member disconnecting
+        """
+
+        class mock_response_class():
+            def __init__(self, outer):
+                self.testClass = outer
+                self.counter = 0
+            
+            def __call__(self, data, user):
+                #first three calls
+                if self.counter < 2:
+                    self.counter += 1
+                #third call
+                elif self.counter == 2:
+                    self.testClass.assertEqual(user, self.testClass.room_owner)
+                    self.testClass.assertEqual(data["state_flag"], "X")
+                    self.counter += 1
+                #there should not be a fourth call
+                else:
+                    self.testClass.fail()
+
+        tr = TradingRoom(self.room_owner)
+        tr.join_room(self.room_member, mock_response_class(self))
+
+        tr.disconnect(self.room_member)
+
+        self.assertEqual(tr.end_room, False)
+        self.assertEqual(tr.state, "W")
+        self.assertIsNone(tr.room_member)
+        self.assertIsNone(tr.response_func)
+        self.assertIsNone(tr.trade_hash)
+        
