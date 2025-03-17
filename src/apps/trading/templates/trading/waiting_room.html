@@ -18,13 +18,13 @@
 <body>
     <div>
         <input type="text" id="roomName" placeholder="Room Name">
-        <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="create_Room()">Create Room</button>
+        <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick=redirectToTradingRoom()>Create Room</button>
         <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="window.location.href='{% url 'join_room' %}';">Join Room</button>
     </div>
     <div id="messages"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'js/waiting_room.js' %}"></script>
-    
+</body>
 </body>
 </html>
