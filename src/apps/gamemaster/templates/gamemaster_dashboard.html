@@ -11,9 +11,7 @@
 <div class="container mt-4">
     <h1>Gamemaster Dashboard</h1>
     <head> 
-        <!-- Leaflet CSS -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-        <!-- Leaflet JS -->
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
 
@@ -46,24 +44,24 @@
                         var map = L.map('map').setView([50.73737953275868, -3.5315806025553944], 13);
                         map.setZoom(17);
                     
-                        // Add OpenStreetMap Tile Layer
+                        // Leflet credit
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             attribution: '&copy; OpenStreetMap contributors'
                         }).addTo(map);
                     
-                        // Variables for form fields
+                        
                         const latField = document.querySelector("#id_latitude");
                         const lonField = document.querySelector("#id_longitude");
                         const addressField = document.querySelector("#id_address");
                     
-                        // Function to update fields with new coordinates
+                        // Updates when click on map
                         function updateLatLng(lat, lon) {
                             latField.value = lat;
                             lonField.value = lon;
-                            reverseGeocode(lat, lon);  // Fetch address from coordinates
+                            reverseGeocode(lat, lon);  
                         }
                     
-                        // Function to reverse geocode and fetch an address
+                        // Grabs Address from Lat/Lon
                         function reverseGeocode(lat, lon) {
                             fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
                                 .then(response => response.json())
@@ -79,24 +77,24 @@
                                 });
                         }
                     
-                        // Add marker when clicking on the map
+                        // Marker on map
                         var marker = L.marker([50.73737953275868, -3.5315806025553944], {
                             draggable: true
                         }).addTo(map);
                     
-                        // When the map is clicked, move the marker and update fields
+                       
                         map.on("click", function (e) {
                             marker.setLatLng(e.latlng);
                             updateLatLng(e.latlng.lat, e.latlng.lng);
                         });
                     
-                        // When the marker is dragged, update fields
+                        
                         marker.on("dragend", function () {
                             var position = marker.getLatLng();
                             updateLatLng(position.lat, position.lng);
                         });
                     
-                        // Set initial location
+                        // Initial place
                         updateLatLng(50.73737953275868, -3.5315806025553944);
                     });
                     </script>
@@ -113,40 +111,40 @@
 
         <!-- Card Form -->
         <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">
-                    <h5>Create a Card</h5>
+       
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5>Create a Card</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ card_form.as_p }}
+                            <button type="submit" class="btn btn-success w-100" name="create_card">Create Card</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ card_form.as_p }}
-                        <button type="submit" class="btn btn-success w-100" name="create_card">Create Card</button>
-                    </form>
+        </div>
+
+        <div class="col-md-6">
+            <div class="mt-3">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5>Create a Pack</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ pack_form.as_p }}
+                            <button type="submit" class="btn btn-success w-100" name="create_pack">Create Pack</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Pack Form -->
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">
-                    <h5>Create a Pack</h5>
-                </div>
-                <div class="card-body">
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ pack_form.as_p }}
-                        <button type="submit" class="btn btn-success w-100" name="create_pack">Create Pack</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="row mt-4">
-        <!-- OwnedCard Form -->
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
             <div class="card shadow-sm">
                 <div class="card-header bg-warning text-white">
                     <h5>Assign Owned Cards</h5>
@@ -154,13 +152,13 @@
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
-                        {{ owned_card_form.as_p }}
-                        <button type="submit" class="btn btn-warning w-100" name="create_owned_card">Assign Card</button>
+                        {{ owned_form.as_p }}
+                        <button type="submit" class="btn btn-warning w-100" name="assign_card">Assign Card</button>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
+
 
 </div>
 
