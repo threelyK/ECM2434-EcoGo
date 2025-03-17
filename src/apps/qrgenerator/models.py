@@ -18,7 +18,7 @@ class Website(models.Model):
     latitude = models.FloatField(null=True, blank=True)  
     longitude = models.FloatField(null=True, blank=True)  
     address = models.CharField(max_length=255, null=True, blank=True) 
-    card = models.ForeignKey('cards.Card', on_delete=models.SET_NULL, null=True, blank=True)  # NEW FIELD
+    card = models.ForeignKey('cards.Card', on_delete=models.SET_NULL, null=True, blank=True)  # Card to attach to webpage
     def __str__(self):
         return self.name
 

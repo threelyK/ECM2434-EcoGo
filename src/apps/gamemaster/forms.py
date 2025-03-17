@@ -10,6 +10,7 @@ class WebsiteForm(forms.ModelForm):
         fields = ['name',  'latitude', 'longitude', 'address', 'card']
 
 class CardForm(forms.ModelForm):
+    """"Form to create Card"""
     class Meta:
         model = Card
         fields = ['card_name', 'image', 'card_desc', 'value']  
