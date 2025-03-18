@@ -18,22 +18,18 @@
 </head>
 <body>
     <h1>Available Rooms</h1>
-    <ul id="roomList">
-        <!-- List of available rooms will be populated here -->
-    </ul>
+    {% for room in rooms %}
+        <ul id="roomList">
+            <button onclick="join_room('{{ room.0 }}')"> {{ room.0 }} </button>
+        </ul>
+    {% endfor %}
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Fetch the list of available rooms from the server
-            $.get('/trading/api/available_rooms/', function(data) {
-                const rooms = data.rooms;
-                rooms.forEach(function(room) {
-                    $('#roomList').append('<li><a href="/trading_room/' + room + '/">' + room + '</a></li>');
-                });
-            });
-        });
-    </script>
     <script src="{% static 'js/waiting_room.js' %}"></script>
+    <script>
+        function join_room(room_name){
+            window.location.href = '/trading/trading_room/' + room_name + '/';
+        }
+    </script>
 </body>
 </html>

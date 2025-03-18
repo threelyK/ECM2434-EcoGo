@@ -24,12 +24,12 @@ class TradeConsumer(WebsocketConsumer):
             self.room = room
             response_func = get_response_func(room.room_owner, response_owner, self.user, self.send)
             room.join_room(self.user, response_func)
-            print("joined room")
         #State flag for inital starting of a room
         elif data["state_flag"] == "S":
             room = TradingRoom(self.user)
             rooms.append((data["room_name"], room, self.send))
             self.room = room
+            print(rooms)
 
         else:
             self.room.handle(data, self.user)

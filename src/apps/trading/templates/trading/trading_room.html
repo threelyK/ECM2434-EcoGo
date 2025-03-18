@@ -16,10 +16,18 @@
     <title>Trading Room</title>
     <script>
         let ws = new WebSocket("ws://127.0.0.1:8000/ws/trading/", )
+
+        setTimeout(()=>{
+            ws.send(JSON.stringify({
+                "state_flag" : "S",
+                "body" : {},
+                "room_name" : "{{ room_name}}"
+            }))
+        }, 1000)
     </script>
 </head>
 <body>
-    <h1>Trading Room: {{ room_name }}</h1>
+    <h1>Trading Room: {{ room_name }}, User role: {{ user }}</h1>
 </body>
 
 </html>
