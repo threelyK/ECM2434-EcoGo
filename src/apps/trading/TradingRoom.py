@@ -5,6 +5,9 @@ from apps.cards.models import Card
 from collections.abc import Callable
 from functools import wraps
 import logging
+from json import dumps
+
+rooms = []
 
 class TradingRoom():
     """
@@ -339,3 +342,34 @@ class TradingRoom():
 
         #Sets the flag to end the room
         self.end_room = True
+
+def get_room(rooms : list[(str, TradingRoom, Callable)], room_name : str) -> tuple[TradingRoom, Callable]:
+    """
+    Gets the room with a specific name out of a list of rooms
+    """
+
+    for room in rooms:
+        if room[0] == room_name:
+            return (room[1], room[2])
+
+    raise Exception("non-existent room requested")
+
+def get_response_func(
+        owner_user : User, 
+        owner_respond : Callable, 
+        member_user : User, 
+        member_respond : Callable) -> callable:
+    """
+    Uses currying to provide a response func with all the necsissary data to properly respond
+    """
+    def respond(message_data : dict, message_dest : User):
+        if message_dest == owner_user:
+            data = dumps(message_data)
+            owner_respond(data)
+        elif message_dest == member_user:
+            data = dumps(message_data)
+            member_respond(data)
+        else:
+            raise Exception("Invalid response destination")
+        
+    return respond

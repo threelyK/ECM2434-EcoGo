@@ -14,6 +14,17 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
     <title>Waiting Room</title>
+    <script>
+        function redirectToTradingRoom() {
+            const roomName = $('#roomName').val();
+            if (!roomName) {
+                alert("Please enter a room name.");
+                return;
+            }
+        
+    window.location.href = '/trading/trading_room/' + roomName + '/';
+        }
+    </script>
 </head>
 <body>
     <div>
