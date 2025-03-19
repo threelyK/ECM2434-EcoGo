@@ -1,3 +1,5 @@
+var trade_offer
+
 socket.onopen = () => {
     let message;
 
@@ -15,12 +17,17 @@ socket.onopen = () => {
         }
     }
 
+    console.log("connected")
+
     socket.send(JSON.stringify(message))
 }
 
 socket.onmessage = (event) =>{
-    let state_flag = event.data["state_flag"]
-    let data_body = event.data["body"]
+    let data = JSON.parse(event.data)
+    let state_flag = data["state_flag"]
+    let data_body = data["body"]
+
+    console.log("moving into state: " + state_flag)
 
     try{
         if(state_flag == "E"){
@@ -68,6 +75,7 @@ socket.onmessage = (event) =>{
                     throw "Invalid state transition" //pretty sure this is impossible
 
                 state = "D"
+                trade_offer = data_body
                 member_proposed_trade(data_body)
             }
             else if(state_flag == "N" && state == "D"){
@@ -107,7 +115,7 @@ function acceptTrade(){
 
     let message = {
         "state_flag": "A",
-        "body": {}
+        "body": trade_offer
     }
 
     socket.send(JSON.stringify(message));
@@ -211,7 +219,7 @@ function owner_joined_room(data_body){
 }
 
 //Called when the member joins the room, data_body contains the owners name/level
-function memeber_joined_room(data_body){
+function member_joined_room(data_body){
 
 }
 

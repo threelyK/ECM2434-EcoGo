@@ -135,35 +135,35 @@ class TradingRoom():
         """
         Method to be called when a user unexpectedly disconnects
         """
+        if not self.state == "E":
+            self.__update_state("X")
 
-        self.__update_state("X")
+            if disconnected_user == self.room_member:
+                #Informs room owner client of disconnect
+                message = {
+                    "state_flag": "X",
+                    "body":{}
+                }
 
-        if disconnected_user == self.room_member:
-            #Informs room owner client of disconnect
-            message = {
-                "state_flag": "X",
-                "body":{}
-            }
+                self.__send_message(message, self.room_owner)
 
-            self.__send_message(message, self.room_owner)
+                #Returns the room to the W state
+                self.response_func = None
+                self.room_member = None
+                self.trade_hash = None
 
-            #Returns the room to the W state
-            self.response_func = None
-            self.room_member = None
-            self.trade_hash = None
+                self.__update_state('W')
+            else:
+                #Informs the room member that the room is gone
+                message = {
+                    "state_flag": "X",
+                    "body":{}
+                }
 
-            self.__update_state('W')
-        else:
-            #Informs the room member that the room is gone
-            message = {
-                "state_flag": "X",
-                "body":{}
-            }
+                self.__send_message(message, self.room_member)
 
-            self.__send_message(message, self.room_member)
-
-            #Sets the flag to end the room
-            self.end_room = True
+                #Sets the flag to end the room
+                self.end_room = True
 
     # -------------- Internal methods --------------
 
@@ -189,6 +189,7 @@ class TradingRoom():
             raise Exception("Cannot handle errors in W state")
 
         self.error_logger.error(e)
+        self.error_logger.error("------------------------------------------------------")
 
         self.__update_state("E")
 
@@ -244,7 +245,10 @@ class TradingRoom():
             else:
                 self.state=new_state
         else:
-            raise Exception("Invalid state transition")
+            if not new_state == "E":
+                raise Exception("Invalid state transition")
+            else:
+                self.state = 'E'
 
     def __N_to_D(self, message_data: dict):
         """
