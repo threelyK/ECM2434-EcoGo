@@ -28,6 +28,6 @@ class QRCodeTesting(TestCase):
             os.remove(qr_code_path)  # Delete the file
             self.assertFalse(os.path.exists(qr_code_path))
 
-
+    #old version of tests
     #Manually tested each QRCode generated myself to see if it leads to the right link
         
