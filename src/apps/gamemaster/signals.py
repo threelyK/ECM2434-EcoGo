@@ -8,7 +8,7 @@ User = get_user_model()
 
 @receiver(post_migrate)
 def create_gamemaster_group(sender, **kwargs):
-    """Ensure the Gamemaster group exists with the correct permissions"""
+    """Gamemaster Group creation on startup"""
     gamemaster_group, created = Group.objects.get_or_create(name="Gamemaster")
 
     if created:
