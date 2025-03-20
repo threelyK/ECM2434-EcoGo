@@ -1,6 +1,6 @@
 from django.test import TestCase
 from apps.cards.models import Card, Pack, PackCards
-from apps.cards.views import get_pack_from_ID, get_card_from_ID, get_cards_instance, get_pack_instance, add_card_website, create_pack_visitors, add_pack_website, create_card_visitors, card_scan_UUIDs, card_scan_visitors, pack_scan_UUIDs, pack_scan_visitors
+from apps.cards.views import get_pack_from_ID, get_card_from_ID, init_cards_instance, init_pack_instance, add_card_website, create_pack_visitors, add_pack_website, create_card_visitors, card_scan_UUIDs, card_scan_visitors, pack_scan_UUIDs, pack_scan_visitors
 from pathlib import PurePath
 from uuid import uuid4
 
@@ -9,26 +9,27 @@ class CardsViewsTest(TestCase):
     def setUp(self):
         pass
 
-    def test_get_cards_instance(self):
+    def test_init_cards_instance(self):
         """
         Tests that get_cards_instance gets or creates the first cards,
         then returns a dictionary of the first cards.
         """
-        card_dict = get_cards_instance()
-        hyd = card_dict.get("hyd")
-        vor = card_dict.get("vor")
-        cru = card_dict.get("cru")
+        init_cards_instance()
+        hyd = Card.objects.get(card_name="Hydronis")
+        vor = Card.objects.get(card_name="Vortex-9")
+        cru = Card.objects.get(card_name="Crudespawn")
 
         self.assertEqual(hyd.card_name, "Hydronis")
         self.assertEqual(vor.card_name, "Vortex-9")
         self.assertEqual(cru.card_name, "Crudespawn")
 
-    def test_get_pack_instance(self):
+    def test_init_pack_instance(self):
         """
         Tests that get_pack_instance gets or creates the rest of the cards
         for the pack. Adds cards to the pack and then returns a pack object
         """
-        pack = get_pack_instance()
+        init_pack_instance()
+        pack = Pack.objects.get(pack_name="pakwan")
         self.assertIs(type(pack), Pack)
 
     def test_create_card_visitors(self):
@@ -70,9 +71,9 @@ class CardsViewsTest(TestCase):
         Tests that an id entry is added to a card's id list. Creates a new dict key with if card doesn't already exist.
         Also creates a related corresponding visitors entry to card visitors list.
         """
-        cards = get_cards_instance()
+        init_cards_instance()
 
-        hyd = cards.get("hyd")
+        hyd = Card.objects.get(card_name="Hydronis")
         newID1 = uuid4()
         newID2 = uuid4()
         newID3 = uuid4()
@@ -102,13 +103,14 @@ class CardsViewsTest(TestCase):
         Tests that an id entry is added to a pack's id list. Creates a new dict key with if pack doesn't already exist.
         Also creates a related corresponding visitors entry to pack visitors list.
         """
-        pack = get_pack_instance()
+        init_pack_instance()
 
         newID1 = uuid4()
         newID2 = uuid4()
         newID3 = uuid4()
         newID4 = uuid4()
 
+        pack = Pack.objects.get(pack_name="pakwan")
 
         # Tests adding a website to existing pack
         add_pack_website(pack, newID1)

@@ -8,42 +8,82 @@ import random as rand
 import time
 
 
-def get_cards_instance():
+def init_cards_instance():
     """
     Returns a dict of 3 starting cards. key: (Card, frameNo)
     Creates cards if they don't exist.
     """
-    if not Card.objects.exists():
-        Card.objects.create(card_name="Vortex-9", image="/images/card_images/Vortex-9.jpg", card_desc="Wind energy is one of the cheapest and fastest-growing renewable energy sources, with modern turbines converting up to 50% of wind’s kinetic energy into electricity.")
-        Card.objects.create(card_name="Hydronis", image="/images/card_images/Hydronis.webp", card_desc="Hydropower is the oldest form of mechanical renewable energy! People have been using water to generate power for over 2,000 years, dating back to ancient Greece, where water wheels were used to grind grain into flour!")
-        Card.objects.create(card_name="Crudespawn", image="/images/card_images/Crudespawn.jpg", card_desc="Oil drilling causes massive environmental damage, leading to oil spills, habitat destruction, and water contamination. It also releases methane and carbon dioxide, major contributors to climate change and air pollution, harming both ecosystems and human health.")
+    vor, created0 = Card.objects.get_or_create(card_name="Vortex-9")
+    hyd, created1 = Card.objects.get_or_create(card_name="Hydronis")
+    cru, created2 = Card.objects.get_or_create(card_name="Crudespawn")
 
-    return ({
-        "vor": Card.objects.get(card_name="Vortex-9"),
-        "hyd": Card.objects.get(card_name="Hydronis"),
-        "cru": Card.objects.get(card_name="Crudespawn")
-    })
+    if created0:
+        vor.image="/images/card_images/Vortex-9.jpg"
+        vor.card_desc="Wind energy is one of the cheapest and fastest-growing renewable energy sources, with modern turbines converting up to 50% of wind’s kinetic energy into electricity."
+        vor.save(update_fields=["image", "card_desc"])
 
-def get_pack_instance()->Pack:
+    if created1:
+        hyd.image="/images/card_images/Hydronis.webp"
+        hyd.image="Hydropower is the oldest form of mechanical renewable energy! People have been using water to generate power for over 2,000 years, dating back to ancient Greece, where water wheels were used to grind grain into flour!"
+        hyd.save(update_fields=["image", "card_desc"])
+
+    if created2:
+        cru.image="/images/card_images/Crudespawn.jpg"
+        cru.card_desc="Oil drilling causes massive environmental damage, leading to oil spills, habitat destruction, and water contamination. It also releases methane and carbon dioxide, major contributors to climate change and air pollution, harming both ecosystems and human health."
+        cru.save(update_fields=["image", "card_desc"])
+
+
+def init_pack_instance()->Pack:
     """
     Returns a pack object. If the pack doesn't exist, it creates it.
     """
-    first_cards = get_cards_instance()
 
     # Creates the rest of the card objects
-    coa = Card.objects.get_or_create(card_name="Coal Imp", image="/images/card_images/Coal-Imp.jpg", card_desc="WIP")[0]
-    fun = Card.objects.get_or_create(card_name="Funisprout", image="/images/card_images/Funisprout.jpg", card_desc="WIP")[0]
-    hel = Card.objects.get_or_create(card_name="Helio-6", image="/images/card_images/HELIO-6.jpg", card_desc="WIP")[0]
-    liv = Card.objects.get_or_create(card_name="Livewire", image="/images/card_images/Livewire.jpg", card_desc="WIP")[0]
-    met = Card.objects.get_or_create(card_name="Methanoth", image="/images/card_images/Methanoth.jpg", card_desc="WIP")[0]
-    rea = Card.objects.get_or_create(card_name="REACT-O-TRON", image="/images/card_images/REACT-O-TRON.jpg", card_desc="WIP")[0]
-    the = Card.objects.get_or_create(card_name="Thermagon", image="/images/card_images/Thermagon.jpg", card_desc="WIP")[0]
+    coa, created0 = Card.objects.get_or_create(card_name="Coal Imp")
+    fun, created1 = Card.objects.get_or_create(card_name="Funisprout")
+    hel, created2 = Card.objects.get_or_create(card_name="Helio-6")
+    liv, created3 = Card.objects.get_or_create(card_name="Livewire")
+    met, created4 = Card.objects.get_or_create(card_name="Methanoth")
+    rea, created5 = Card.objects.get_or_create(card_name="REACT-O-TRON")
+    the, created6 = Card.objects.get_or_create(card_name="Thermagon")
+
+    place_holder_text = "WIP"
+
+    if created0:
+        coa.image="/images/card_images/Coal-Imp.jpg"
+        coa.card_desc=place_holder_text
+        coa.save(update_fields=["image", "card_desc"])
+    if created1:
+        fun.image="/images/card_images/Funisprout.jpg"
+        fun.card_desc=place_holder_text
+        fun.save(update_fields=["image", "card_desc"])
+    if created2:
+        hel.image="/images/card_images/HELIO-6.jpg"
+        hel.card_desc=place_holder_text
+        hel.save(update_fields=["image", "card_desc"])
+    if created3:
+        liv.image="/images/card_images/Livewire.jpg"
+        liv.card_desc=place_holder_text
+        liv.save(update_fields=["image", "card_desc"])
+    if created4:
+        met.image="/images/card_images/Methanoth.jpg"
+        met.card_desc=place_holder_text
+        met.save(update_fields=["image", "card_desc"])
+    if created5:
+        rea.image="/images/card_images/REACT-O-TRON.jpg"
+        rea.card_desc=place_holder_text
+        rea.save(update_fields=["image", "card_desc"])
+    if created6:
+        the.image="/images/card_images/Thermagon.jpg"
+        the.card_desc=place_holder_text
+        rea.save(update_fields=["image", "card_desc"])
+
 
     pack = Pack.objects.get_or_create(pack_name="pakwan", cost=250, num_cards=10)[0]
     if pack.get_all_cards().count() == 0:
-        pack.add_to_pack(first_cards.get("vor"), 100)
-        pack.add_to_pack(first_cards.get("hyd"), 100)
-        pack.add_to_pack(first_cards.get("cru"), 100)
+        pack.add_to_pack(Card.objects.get(card_name="Vortex-9"), 100)
+        pack.add_to_pack(Card.objects.get(card_name="Hydronis"), 100)
+        pack.add_to_pack(Card.objects.get(card_name="Crudespawn"), 100)
         pack.add_to_pack(coa, 100)
         pack.add_to_pack(fun, 100)
         pack.add_to_pack(hel, 100)
@@ -54,7 +94,6 @@ def get_pack_instance()->Pack:
         if pack.validate_pack():
             pack.save_pack()
 
-    return pack
 
 card_scan_UUIDs = {
     "Vortex-9_UUIDs": ['4012cf77-7b46-4c2c-90f0-a1b821a123ea'],
@@ -213,7 +252,6 @@ def card_scan(request, url_UUID):
     Add specific card related to URL UUID into visitor's inventory
     """
     url_UUID = str(url_UUID)
-    cards_instance = get_cards_instance() # Just used to create cards
 
     current_user = request.user
     current_UD = UserData.objects.get(owner=current_user)
@@ -222,7 +260,7 @@ def card_scan(request, url_UUID):
     card = get_card_from_ID(url_UUID)
     if card == None:
         # return 404 invalid UUID was given
-        render(ERROR_404_TEMPLATE_NAME)
+        render(request, ERROR_404_TEMPLATE_NAME)
     
     card_name = card.card_name
     # Find prev_visitor_IDs list for this URL
@@ -275,7 +313,6 @@ def pack_scan(request, url_UUID):
     It then adds those 5 cards to user's inventory
     """
     url_UUID = str(url_UUID)
-    base_pack = get_pack_instance() # Just to create initial pack
 
     current_user = request.user
     current_UD = UserData.objects.get(owner=current_user)
@@ -283,7 +320,7 @@ def pack_scan(request, url_UUID):
     # Initialise card values for given URL
     pack = get_pack_from_ID(url_UUID)
     if not pack:
-        render(ERROR_404_TEMPLATE_NAME)
+        render(request, ERROR_404_TEMPLATE_NAME)
         
     pack_cards_rar = pack.get_all_cards_rar()
     pack_cards = []
