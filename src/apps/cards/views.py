@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
-from django.views.defaults import ERROR_404_TEMPLATE_NAME
+from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from apps.user.models import UserData
 from apps.cards.models import Card, Pack
@@ -257,10 +257,10 @@ def card_scan(request, url_UUID):
     current_UD = UserData.objects.get(owner=current_user)
 
     # Initialise card values for given URL
+    
     card = get_card_from_ID(url_UUID)
     if card == None:
-        # return 404 invalid UUID was given
-        render(request, ERROR_404_TEMPLATE_NAME)
+        raise Http404("ID not valid")
     
     card_name = card.card_name
     # Find prev_visitor_IDs list for this URL
@@ -319,8 +319,8 @@ def pack_scan(request, url_UUID):
 
     # Initialise card values for given URL
     pack = get_pack_from_ID(url_UUID)
-    if not pack:
-        render(request, ERROR_404_TEMPLATE_NAME)
+    if pack == None:
+        raise Http404("ID not valid")
         
     pack_cards_rar = pack.get_all_cards_rar()
     pack_cards = []
@@ -332,7 +332,7 @@ def pack_scan(request, url_UUID):
     # Randomly rolls for 5 cards. Every card in the pack has a chance to be chosen
     selected_cards = rand.choices(pack_cards, weights=pack_rarity, k=5)
 
-    
+
     pack_name = pack.pack_name
     # Find prev_visitor_IDs list for this URL
     visitors_index = pack_scan_UUIDs.get(f"{pack_name}_UUIDs").index(url_UUID)
