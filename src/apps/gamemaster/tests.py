@@ -17,8 +17,6 @@ class UserPermissionTest(TestCase):
 
     def test_user_passes_is_gamemaster_check(self):
         """Test if the is_gamemaster function returns True for the user."""
-        from apps.gamemaster.views import is_gamemaster  # Import function from your views
-
         self.assertTrue(is_gamemaster(self.user))
 
     def test_superuser_is_gamemaster(self):
