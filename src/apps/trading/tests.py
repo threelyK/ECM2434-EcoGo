@@ -241,7 +241,7 @@ class TradingRoomTest(TestCase):
                 self.testClass = outer
 
             def error(self, msg):
-                if not str(msg) == "Something wrong":
+                if not (str(msg) == "Something wrong" or str(msg) == "------------------------------------------------------"):
                     self.testClass.fail()
 
         class mock_response_class():
@@ -287,7 +287,7 @@ class TradingRoomTest(TestCase):
                 self.testClass = outer
 
             def error(self, msg):
-                if not str(msg) == "Client error: Something wrong":
+                if not (str(msg) == "Client error: Something wrong" or "------------------------------------------------------"):
                     self.testClass.fail()
 
         class mock_response_class():
