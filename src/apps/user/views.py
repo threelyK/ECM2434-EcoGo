@@ -13,6 +13,7 @@ from .models import User, UserData
 from apps.cards.models import Pack
 from apps.cards.models import Card
 from apps.cards.views import open_pack
+from django.contrib import messages
 
 def landing(request):
     # renders the landing page where users can choose to log in or register
@@ -33,7 +34,7 @@ def register(request):
             return redirect("login")
         
         else:
-            print(form.errors)
+            messages.error(request, {'registerform': form})  # passes the error messages to the form
 
     # passes the form to the template context to display it on the page
     context = {'registerform': form}
@@ -191,3 +192,15 @@ def shop(request):
     }
 
     return render(request, "user/shop.html", context=context)
+    
+def leaderboard(request):
+    """
+    This function will find and return the top 10 users based on their level. 
+    The usernames as well as the level are then returned within the context to be used by the front-end template.
+    """
+
+    top_10_users = UserData.objects.select_related('owner').order_by('-level')[:10] # Gets the users ordered by the number of points. Limits the query to 10 users.
+
+    con = {'top_10_users' : [{'username':user.owner.username, 'level':user.level} for user in top_10_users]}  # Includes username from the paernt table (User) and level from UserData table
+
+    return render(request, 'user/leaderboard.html', context=con)

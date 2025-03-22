@@ -1,0 +1,71 @@
+/* leaderboard.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.leaderboard-container {
+    width: 90%;
+    max-width: 800px;
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.leaderboard-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.leaderboard-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .leaderboard-container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}

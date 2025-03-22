@@ -12,4 +12,5 @@ urlpatterns = [
     path("user/inventory", views.inventory, name="user-inventory"), # Takes the user to their inventory, and buy cards
     path('logout', views.user_logout, name="logout"),  # Logs the user out
     path('user/shop', views.shop, name="shop"),  # Takes the user to the shop page, and allows them to buy a card
+    path('user/leaderboard', views.leaderboard, name="leaderboard"), # Creates the leaderboard 
 ]
