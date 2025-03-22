@@ -83,6 +83,7 @@
                             <div class="centered">
                                 <form method="POST">
                                     {% csrf_token %}
+                                    <input hidden="true" name="card_name" value="{{ card.card_name }}">
                                     <button class="sell-button" onclick="sell_button(this)"><img src="{% static '/photos/coin-xp.gif' %}"></button>
                                 </form>
                             </div>

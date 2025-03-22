@@ -8,9 +8,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404, HttpResponseBadRequest
 from django.contrib.auth import get_user_model # not being used rn
-from .forms import LoginForm, CreateUserForm
+from .forms import LoginForm, CreateUserForm, BuyForm, SellForm
 from .models import User, UserData
+from apps.cards.models import Pack
 from apps.cards.models import Card
+from apps.cards.views import open_pack
 from django.contrib import messages
 
 def landing(request):
@@ -95,55 +97,18 @@ def inventory(request):
     user has invalid internal state
     """
     if request.method == "GET":
-        user_data = request.user.user_data
-        cards_quant = user_data.get_all_cards_quant()
-        cards = []
-        for card in cards_quant:
-            cards.append({
-                "card_name": card[0].card_name,
-                "value": card[0].value,
-                "quant": card[1],
-                "card_desc": card[0].card_desc,
-                "image_path": card[0].image
-            })
+        data_form = SellForm()
+    elif request.method == "POST":
+        data_form = SellForm(request.POST)
 
-            print(card[0].image)
+        if not data_form.is_valid():
+            return HttpResponseBadRequest("INVALID FORM")
 
-        #data to send to template
-        con = {
-            "cards": cards,
-            "points": user_data.points,
-            "username": request.user.username,
-            "level": user_data.level,
-            "xp": user_data.xp
-        }
-
-        return render(request, "user/inventory.html", context=con)
-    
-    else:
-        return Http404()
-    
-@login_required(login_url="login")
-def sell_card(request):
-    """
-    Endpoint for "user/inventory/sellCard": removes a card from a users inventory, adds the cards value to
-    the users points and serves and updated template with the changes reflected.
-    """
-
-    if request.method == "POST":
-        #Checks request body is correct json
-        try:
-            data = loads(request.body.decode("utf-8"))
-        except:
-            return HttpResponseBadRequest("INVALID REQUEST BODY FORMAT")
-
-        #Checks request body includes a card name element
-        if not "card_name" in data.keys():
-            return HttpResponseBadRequest("INVALID REQUEST BODY FORMAT")
+        card_name = data_form.cleaned_data["card_name"]
 
         #Checks that the card requested exists
         try:
-            card = Card.objects.get(card_name=data["card_name"])
+            card = Card.objects.get(card_name=card_name)
         except:
             return HttpResponseBadRequest("REQUESTED CARD DOES NOT EXIST")
 
@@ -153,16 +118,80 @@ def sell_card(request):
             user_data.remove_card(card)
         except:
             return HttpResponseBadRequest("USER DOES NOT HAVE THE REQUIRED CARD")
-        
-        user_data.add_points(card.value)
 
-        #renders the template again using the inventory view
-        request.method = 'GET'
-        return inventory(request)
+        user_data.add_points(card.value)
 
     else:
         return Http404()
     
+    user_data = request.user.user_data
+    cards_quant = user_data.get_all_cards_quant()
+    cards = []
+    for card in cards_quant:
+        cards.append({
+            "card_name": card[0].card_name,
+            "value": card[0].value,
+            "quant": card[1],
+            "card_desc": card[0].card_desc,
+            "image_path": card[0].image
+        })
+
+    #data to send to template
+    con = {
+        "cards": cards,
+        "points": user_data.points,
+        "username": request.user.username,
+        "level": user_data.level,
+        "xp": user_data.xp,
+        "form" : data_form
+    }
+
+    return render(request, "user/inventory.html", context=con)
+
+@login_required(login_url="login")
+def shop(request):
+    """
+    Endpoint for "shop", serves the shop page
+    """
+
+    if request.method == "POST":
+        data_form = BuyForm(request.POST)
+
+        if data_form.is_valid():
+            item_name = data_form.cleaned_data["item_name"]
+            
+            try:
+                pack = Pack.objects.get(pack_name = item_name)
+            except:
+                return HttpResponseBadRequest("PACK REQUESTED DOES NOT EXIST")
+                
+            pack_cost = pack.cost
+            user_points = request.user.user_data.points
+
+            if user_points >= pack_cost:
+                response = open_pack(request, item_name)
+                request.user.user_data.remove_points(pack_cost)
+                return response
+            else:
+                return HttpResponseBadRequest("NOT ENOUGH POINTS FOR TRANSACTION")
+            
+        else:
+            return HttpResponseBadRequest("INVALID FORM")
+    elif request.method == "GET":
+        data_form = BuyForm()
+    else:
+        return Http404()
+    
+    user_data = request.user.user_data
+    packs = Pack.objects.all()
+    context = {
+        "packs": packs,
+        "points": user_data.points,
+        "level": user_data.level,
+        "form": data_form,
+    }
+
+    return render(request, "user/shop.html", context=context)
     
 def leaderboard(request):
     """

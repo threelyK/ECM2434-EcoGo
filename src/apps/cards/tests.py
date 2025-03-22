@@ -1,8 +1,12 @@
 from django.test import TestCase
+from django.test.client import RequestFactory
 from apps.cards.models import Card, Pack, PackCards
+from apps.cards.views import get_cards_instance, get_pack_instance, open_pack
 from apps.cards.views import get_pack_from_ID, get_card_from_ID, init_cards_instance, init_pack_instance, add_card_website, create_pack_visitors, add_pack_website, create_card_visitors, card_scan_UUIDs, card_scan_visitors, pack_scan_UUIDs, pack_scan_visitors
 from pathlib import PurePath
 from uuid import uuid4
+
+from apps.user.models import User
 
 class CardsViewsTest(TestCase):
 
@@ -288,3 +292,27 @@ class PackTest(TestCase):
         pack3.add_to_pack(Card2, 500)
 
         self.assertTrue(pack3.validate_pack())
+
+class PackOpeningTest(TestCase):
+    """
+    Tests the functionality of the views/functions reltated to opening packs
+    """
+
+    def setUp(self):
+        """
+        Run before each test, sets up packs
+        """
+
+        self.pack_zero = get_pack_instance()
+        self.user = User.objects.create_user(username="123", password="123")
+
+    def test_open_pack(self):
+        rf = RequestFactory()
+        request = rf.get("user/shop/buyItem")
+        request.user = self.user
+
+        try:
+            output = open_pack(request, "Electri-city group")
+            self.assertEqual(output.status_code, 200)
+        except:
+            self.fail()
