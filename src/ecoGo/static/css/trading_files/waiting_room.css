@@ -1,17 +1,32 @@
+body {
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: white;
+}
+
 .container {
     max-width: 600px;
     margin-top: 50px;
     padding: 20px;
-    background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
 }
 
 .btn-custom {
-    font-family: Gamefont, Arial, Helvetica, sans-serif;
+    font-family: 'Gamefont', Arial, Helvetica, sans-serif;
+    background-color: #28a745;
+    border-color: #28a745;
     margin-top: 20px;
     width: 100%;
+}
+
+.btn-custom:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
 }
 
 .form-control {
@@ -21,9 +36,11 @@
 .header {
     text-align: center;
     margin-bottom: 20px;
+    color: white;
 }
 
 .description {
     margin-top: 20px;
     font-size: 1.1em;
+    color: white;
 }
