@@ -116,13 +116,13 @@ class TradingRoom():
             "body": {
                 "username": self.room_member.username,
                 "level": self.room_member.user_data.level,
-                "member_cards": []
+                "cards": []
             }
         }
 
         member_cards = self.room_member.user_data.get_all_cards()
         for card in member_cards:
-            message_owner["body"]["member_cards"].append({
+            message_owner["body"]["cards"].append({
                 "card_name": card.card_name,
                 "value": card.value,
                 "card_desc": card.card_desc,
@@ -134,13 +134,13 @@ class TradingRoom():
             "body": {
                 "username": self.room_owner.username,
                 "level": self.room_owner.user_data.level,
-                "owner_cards": []
+                "cards": []
             }
         }
 
         owner_cards = self.room_owner.user_data.get_all_cards()
         for card in owner_cards:
-            message_owner["body"]["owner_cards"].append({
+            message_member["body"]["cards"].append({
                 "card_name": card.card_name,
                 "value": card.value,
                 "card_desc": card.card_desc,
