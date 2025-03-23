@@ -207,12 +207,12 @@ $(document).ready(function(){
 
     //Resets the page to the inital state for the room owner
     function reset_to_w_disconnect(){
-
+        window.location.href = "/"
     }
 
     //Kicks the member back to the room selection if room closes (with error?)
     function kick_back_to_room_select(){
-
+        window.location.href = "/"
     }
 
     //Called when the member joins the room, data_body contains their name/level
