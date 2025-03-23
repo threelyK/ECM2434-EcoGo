@@ -7,12 +7,19 @@ from apps.qrgenerator.models import Website
 from django.contrib.auth.decorators import user_passes_test
 
 def is_gamemaster(user):
+    """
+    Checks if passed user is a gamemaster.
+    """
     return user.groups.filter(name="Gamemaster").exists() or user.is_superuser
 
 
 
 @user_passes_test(is_gamemaster)
 def gamemaster_dashboard(request):
+    """
+    Displays the gamemaster (GM) dashboard. Contains form to create a card, pack, and website QR code.
+    Website form creates a new QR code location and website, for a given card.
+    """
     website_form = WebsiteForm()
     card_form = CardForm()
     pack_form = PackForm()

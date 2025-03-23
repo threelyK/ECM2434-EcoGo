@@ -433,6 +433,9 @@ class LeaderboardViewTests(TestCase):
         UserData.objects.all().delete()
 
     def test_leaderboard_only_5_users(self):
+        """
+        Tests that the leaderboard displays 5 users correctly.
+        """
         # Creating exactly 5 users
         for i in range(5):
             User.objects.create_user(username=f"user{i}", password="password123")
@@ -450,6 +453,9 @@ class LeaderboardViewTests(TestCase):
         self.assertEqual(len(response.context['top_10_users']), 5)    
     
     def test_leaderboard_returns_top_10_users(self):
+        """
+        Tests that the leaderboard displays 10 users correctly.
+        """
         # Creating 20 users
         for i in range(20):
             user = User.objects.create_user(username=f"user{i}", password="password123")
