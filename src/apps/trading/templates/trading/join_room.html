@@ -11,25 +11,38 @@
     <link rel="stylesheet" href="{% static '/css/centered.css' %}">
     <link rel="stylesheet" href="{% static '/css/footer.css' %}">
     <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
 <head>
     <title>Join Room</title>
 </head>
+<style>
+    .w3-button {width:150px;}
+</style>
 <body>
-    <h1>Available Rooms</h1>
-    {% for room in rooms %}
-        <ul id="roomList">
-            <button onclick="join_room('{{ room.0 }}')"> {{ room.0 }} </button>
-        </ul>
-    {% endfor %}
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'js/waiting_room.js' %}"></script>
-    <script>
-        function join_room(room_name){
-            window.location.href = '/trading/j_trading_room/' + room_name + '/';
-        }
-    </script>
+    <div class="centered">
+        <div class="header">
+            <h1 style="color:white; margin-top: 50px;">Available Rooms</h1>
+        </div>
+        <div style= "border: 15px solid #07470d;  background-color: #ffffff; margin-top: 20px; padding: 20px;">
+            {% for room in rooms %}
+                <div style= "border: 15px solid #204f2f; margin-top: 15px; margin-bottom: 15px; background-color: #a5edfc; width: 300px; height: 120px; box-shadow: 10px 5px 5px rgb(0, 0, 0);">
+                    <div id="roomList">
+                        <button type="button" class="btn btn-success btn-lg"" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="join_room('{{ room.0 }}')"> {{ room.0 }} </button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="{% static 'js/waiting_room.js' %}"></script>
+        <script>
+            function join_room(room_name){
+                window.location.href = '/trading/j_trading_room/' + room_name + '/';
+            }
+        </script>
+        
+        <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="history.back()">Go Back</button>
+    </div>
 </body>
 </html>
