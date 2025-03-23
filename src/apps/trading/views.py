@@ -21,8 +21,32 @@ def available_rooms(request):
     return JsonResponse({'rooms': available_rooms_list})
 
 def create_trading_room(request, room_name):
-    return render(request, 'trading/trading_room.html', {'room_name': room_name, 'user': 'owner'})
+    cards = []
+
+    user_cards = request.user.user_data.get_all_cards()
+
+    for card in user_cards:
+        cards.append({
+                "card_name": card.card_name,
+                "value": card.value,
+                "card_desc": card.card_desc,
+                "image_path": card.image
+            })
+
+    return render(request, 'trading/trading_room.html', {'room_name': room_name, 'user': 'owner', 'cards':cards})
 
 def join_trading_room(request, room_name):
-    return render(request, 'trading/trading_room.html', {'room_name': room_name, 'user': 'member'})
 
+    cards = []
+
+    user_cards = request.user.user_data.get_all_cards()
+
+    for card in user_cards:
+        cards.append({
+                "card_name": card.card_name,
+                "value": card.value,
+                "card_desc": card.card_desc,
+                "image_path": card.image
+            })
+        
+    return render(request, 'trading/trading_room.html', {'room_name': room_name, 'user': 'member', 'cards':cards})
