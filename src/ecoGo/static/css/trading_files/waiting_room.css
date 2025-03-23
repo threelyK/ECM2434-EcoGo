@@ -1,17 +1,20 @@
 body {
     background-color: #fff;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
+    padding: 20px;
     color: white;
 }
 
 .container {
-    max-width: 600px;
-    margin-top: 50px;
-    padding: 20px;
+    max-width: 90%;
+    width: 400px;
+    margin-top: 30px;
+    padding: 15px;
     border-radius: 10px;
 
 }
@@ -22,6 +25,9 @@ body {
     border-color: #28a745;
     margin-top: 20px;
     width: 100%;
+    padding: 12px;
+    font-size: 1em;
+    border-radius: 8px;
 }
 
 .btn-custom:hover {
@@ -30,7 +36,9 @@ body {
 }
 
 .form-control {
-    margin-top: 20px;
+    margin-top: 15px;
+    font-size : 1.1em;
+    font-family: 'Gamefont', Arial, Helvetica, sans-serif;
 }
 
 .header {
@@ -41,9 +49,32 @@ body {
 }
 
 .description {
-    margin-top: 20px;
-    font-size: 1.1em;
+    margin-top: 15px;
+    font-size: 1em;
     font-family: 'Gamefont', Arial, Helvetica, sans-serif;
     color: white;
+    text-align:center; 
 }
+
+/* Responsive Styles for Smaller Screens */
+@media (max-width: 600px) {
+    .container {
+        width: 100%; /* Use full width on smaller screens */
+        padding: 10px;
+    }
+
+    .btn-custom {
+        font-size: 1em;
+        padding: 14px;
+    }
+
+    .header {
+        font-size: 1.3em;
+    }
+
+    .description {
+        font-size: 1em;
+    }
+}
+
 
