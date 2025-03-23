@@ -274,11 +274,39 @@ class TradingRoom():
 
         #Either accept the transition or reject it
         if valid:
+            
+            proposed_owner_cards = message_data["body"]["member_cards"]
+            message = {
+                "state_flag": 'D',
+                "body": {
+                    "owner_cards": [],
+                    "member_cards": []
+                }
+            }
+
+            for card in proposed_member_cards:
+                card_data = Card.objects.get(card_name = card)
+                message["body"]["member_cards"] = {
+                    "card_name": card_data.card_name,
+                    "value": card_data.value,
+                    "card_desc": card_data.card_desc,
+                    "image_path": card_data.image
+                }
+
+            for card in proposed_owner_cards:
+                card_data = Card.objects.get(card_name = card)
+                message["body"]["member_cards"] = {
+                    "card_name": card_data.card_name,
+                    "value": card_data.value,
+                    "card_desc": card_data.card_desc,
+                    "image_path": card_data.image
+                }
+
             self.__update_state("D")
             #Save the hash for later validation
             self.trade_hash = hash(str(message_data["body"]))
-            self.__send_message(message_data, self.room_owner)
-            self.__send_message(message_data, self.room_member)
+            self.__send_message(message, self.room_owner)
+            self.__send_message(message, self.room_member)
         else:
             message = {
                 "state_flag" : 'N',
