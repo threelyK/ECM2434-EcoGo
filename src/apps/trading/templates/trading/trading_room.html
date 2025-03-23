@@ -21,6 +21,28 @@
         const user_type = "{{ user }}"
         var state = "W"
         let socket = new WebSocket("//127.0.0.1:8000/ws/trading/")
+
+        socket.onopen = () => {
+        let message;
+
+        if(user_type == "owner"){
+            message = {
+                "state_flag": 'S',
+                "body":{},
+                "room_name": room_name
+            }
+        } else{
+            message = {
+                "state_flag": 'J',
+                "body":{},
+                "room_name": room_name
+            }
+        }
+
+        console.log("connected")
+
+        socket.send(JSON.stringify(message))
+    }
     </script>
 </head>
 <body>
