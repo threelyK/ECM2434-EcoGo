@@ -138,7 +138,7 @@ class TradingRoom():
             }
         }
 
-        owner_cards = self.room_owner.user_dataget_all_cards()
+        owner_cards = self.room_owner.user_data.get_all_cards()
         for card in owner_cards:
             message_owner["body"]["owner_cards"].append({
                 "card_name": card.card_name,
