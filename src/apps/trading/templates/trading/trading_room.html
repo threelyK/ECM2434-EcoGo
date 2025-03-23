@@ -33,40 +33,61 @@
                 </div>
             </h1>
             <ul class="card-grid">
-                {% for card in cards %}
-                <li>
-                    <div class="card-container">
-                    <div class="card">
-                        <div class="bar bar-top">
-                            <div class="card-title">{{ card.card_name }}</div>
-                            <div class="casting-cost">{{ card.value }} {{ card.quant }}</div>
+                {% if user == 'owner' %}
+                    <div id="owner-container">  
+                        {% for card in cards %}
+                            <li>
+                                <div class="card-container owner">
+                                    <div class="card ">
+                                        <div class="bar bar-top">
+                                            <div class="card-title">
+                                                {{ card.card_name }}
+                                            </div>
+                                            <div class="casting-cost">
+                                                <div class="card-value">
+                                                    {{ card.value }}
+                                                </div> 
+                                                <div class="card-quantity">
+                                                    {{ card.quant }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-image">
+                                            <img src= "{% static card.image_path %}" alt="card image">
+                                        </div>
+                                        <div class="bar bar-mid">
+                                            <div class="card-title">Instant</div>
+                                        </div>
+                                        <div class="card-text">
+                                            <div class="card-ability">
+                                                {{card.card_desc}}
+                                            </div>
+                                        </div>
+                                        <div class="footer">
+                                            <div class="author">Created by Breadscrums.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </div>
+                    <div id="member-container">
+                    </div>
+                {% else %}
+                    <div id="member-offer">
+                        <div id="giving-container">
                         </div>
-                        <div class="card-image">
-                            <img src= "{% static card.image_path %}" alt="card image">
-                        </div>
-                        <div class="bar bar-mid">
-                            <div class="card-title">Instant</div>
-                        </div>
-                        <div class="card-text">
-                                <div class="card-ability">
-                                {{card.card_desc}}
-                            </div>
-                        </div>
-                        <div class="footer">
-                            <div class="author">Created by Breadscrums.</div>
+                        <div id="receive-container">
                         </div>
                     </div>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
+                {% endif %}
         {% else %}
-        <h1 class="trading_header">
-            <div class="centered">
-                Trading Room: {{ room_name }} <br> 
-                User role: {{ user }} <br>
-            </div>
-        </h1>
+            <h1 class="trading_header">
+                <div class="centered">
+                    Trading Room: {{ room_name }} <br> 
+                    User role: {{ user }} <br>
+                </div>
+            </h1>
         {% endif %}
     </div>
     <script src="{% static 'js/trading.js' %}"></script>
