@@ -1,6 +1,8 @@
 
 $(document).ready(function(){
     var trade_offer
+    let member_card_array = []
+    let owner_card_array = []
 
     socket.onopen = () => {
         let message;
@@ -155,12 +157,8 @@ $(document).ready(function(){
             return;
         }
 
-        let owner_cards = null
-        let member_cards = null
-
-        /*
-            POPULATE OWNER_CARDS AND MEMBER_CARDS HERE
-        */
+        let owner_cards = owner_card_array
+        let member_cards = member_card_array
 
         propose_trade(owner_cards, member_cards)
     }
@@ -207,22 +205,65 @@ $(document).ready(function(){
 
     //Resets the page to the inital state for the room owner
     function reset_to_w_disconnect(){
-
+        window.location.href = "/"
     }
 
     //Kicks the member back to the room selection if room closes (with error?)
     function kick_back_to_room_select(){
-
+        window.location.href = "/"
     }
 
     //Called when the member joins the room, data_body contains their name/level
     function owner_joined_room(data_body){
-
+        display_cards(data_body["cards"], "#member-container")
     }
 
     //Called when the member joins the room, data_body contains the owners name/level
     function member_joined_room(data_body){
+        
+    }
 
+    function display_cards(cardsList, container){
+        cardsList.forEach((card) =>{
+            var cardHTML = `
+            <li>
+                <div class="card-container owner">
+                    <div class="card">
+                        <div class="bar bar-top">
+                            <div class="card-title">
+                                ${ card.card_name }
+                            </div>
+                            <div class="casting-cost">
+                                <div class="card-value">
+                                    ${ card.value }
+                                </div> 
+                                <div class="card-quantity">
+                                    ${ card.quant }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-image">
+                            <img src="{% static card.image_path %}" alt="card image">
+                        </div>
+                        <div class="bar bar-mid">
+                            <div class="card-title">Instant</div>
+                        </div>
+                        <div class="card-text">
+                            <div class="card-ability">
+                                ${ card.card_desc }
+                            </div>
+                        </div>
+                        <div class="footer">
+                            <div class="author">Created by Breadscrums.</div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            `;
+
+            $(container).append(cardHTML);
+
+        })
     }
 
     //Called when a trade is proposed (on owners client)
@@ -232,7 +273,10 @@ $(document).ready(function(){
 
     //Called when a trade is proposed and gets passed cards for trading
     function member_proposed_trade(data_body){
-
+        display_cards(data_body["owner-cards"], "#receive-container")
+        display_cards(data_body["member_cards"], "#giving-container")
+        $("#member-offer").append("<button type='button' id='reject' class='btn btn-success btn-lg' style='font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;'>Reject Trade</button>")
+        $("#member-offer").append("<button type='button' id='accept' class='btn btn-success btn-lg' style='font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;'>Accept Trade</button>")
     }
 
     //Called when the member rejects a trade, resets back to N state (on owners client)
@@ -254,5 +298,33 @@ $(document).ready(function(){
     function member_trade_complete(){
 
     }
+
+    $(document).ready(function(){
+        $('.card-container member').on('click', function(){
+            var cardName = $(this).find('.card-title').first().text();
+            
+            member_card_array.append(cardName);
+        })
+    })
+
+    $(document).ready(function(){
+        $('.card-container owner').on('click', function(){
+            var cardName = $(this).find('.card-title').first().text();
+            
+            owner_card_array.append(cardName);
+        })
+    })
+
+    $(document).ready(function(){
+        $('#accept').on('click', function(){
+            acceptTrade();
+        })
+    })
+
+    $(document).ready(function(){
+        $('#reject').on('click', function(){
+            rejectTrade();
+        })
+    })
 
 })

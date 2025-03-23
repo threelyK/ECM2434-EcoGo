@@ -120,7 +120,7 @@ class TradingRoom():
             }
         }
 
-        member_cards = self.room_member.get_all_cards()
+        member_cards = self.room_member.user_data.get_all_cards()
         for card in member_cards:
             message_owner["body"]["member_cards"].append({
                 "card_name": card.card_name,
@@ -138,7 +138,7 @@ class TradingRoom():
             }
         }
 
-        owner_cards = self.room_owner.get_all_cards()
+        owner_cards = self.room_owner.user_data.get_all_cards()
         for card in owner_cards:
             message_owner["body"]["owner_cards"].append({
                 "card_name": card.card_name,
