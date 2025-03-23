@@ -14,9 +14,9 @@ def init_cards_instance():
     Returns a dict of 3 starting cards. key: (Card, frameNo)
     Creates cards if they don't exist.
     """
-    vor, created0 = Card.objects.get_or_create(card_name="Vortex-9")
-    hyd, created1 = Card.objects.get_or_create(card_name="Hydronis")
-    cru, created2 = Card.objects.get_or_create(card_name="Crudespawn")
+    vor, created0 = Card.objects.get_or_create(card_name="Vortex-9", value=50)
+    hyd, created1 = Card.objects.get_or_create(card_name="Hydronis", value=50)
+    cru, created2 = Card.objects.get_or_create(card_name="Crudespawn", value=50)
 
     if created0:
         vor.image="/images/card_images/Vortex-9.jpg"
@@ -40,13 +40,13 @@ def init_pack_instance():
     """
 
     # Creates the rest of the card objects
-    coa, created0 = Card.objects.get_or_create(card_name="Coal Imp")
-    fun, created1 = Card.objects.get_or_create(card_name="Funisprout")
-    hel, created2 = Card.objects.get_or_create(card_name="Helio-6")
-    liv, created3 = Card.objects.get_or_create(card_name="Livewire")
-    met, created4 = Card.objects.get_or_create(card_name="Methanoth")
-    rea, created5 = Card.objects.get_or_create(card_name="REACT-O-TRON")
-    the, created6 = Card.objects.get_or_create(card_name="Thermagon")
+    coa, created0 = Card.objects.get_or_create(card_name="Coal Imp", value=50)
+    fun, created1 = Card.objects.get_or_create(card_name="Funisprout", value=50)
+    hel, created2 = Card.objects.get_or_create(card_name="Helio-6", value=50)
+    liv, created3 = Card.objects.get_or_create(card_name="Livewire", value=50)
+    met, created4 = Card.objects.get_or_create(card_name="Methanoth", value=50)
+    rea, created5 = Card.objects.get_or_create(card_name="REACT-O-TRON", value=50)
+    the, created6 = Card.objects.get_or_create(card_name="Thermagon", value=50)
 
     if created0:
         coa.image="/images/card_images/Coal-Imp.jpg"
@@ -140,16 +140,16 @@ def init_pack_instance():
             pack.save_pack()
 
     # For the Biobots
-    bio, created7 = Card.objects.get_or_create(card_name="Bio-Titan")
-    cor, created8 = Card.objects.get_or_create(card_name="Coral-Shield")
-    lum, created9 = Card.objects.get_or_create(card_name="Lumi-Pollinator")
-    ark, created10 = Card.objects.get_or_create(card_name="Ark-202X")
-    gai, created11 = Card.objects.get_or_create(card_name="Gaia-Filter")
-    ter, created12 = Card.objects.get_or_create(card_name="Terraform-X")
-    aer, created13 = Card.objects.get_or_create(card_name="Aero-Flock")
-    myc, created14 = Card.objects.get_or_create(card_name="Myco-Renew")
-    oce, created15 = Card.objects.get_or_create(card_name="Ocean-Sentinel")
-    gre, created16 = Card.objects.get_or_create(card_name="Green-Web")
+    bio, created7 = Card.objects.get_or_create(card_name="Bio-Titan", value=50)
+    cor, created8 = Card.objects.get_or_create(card_name="Coral-Shield", value=50)
+    lum, created9 = Card.objects.get_or_create(card_name="Lumi-Pollinator", value=50)
+    ark, created10 = Card.objects.get_or_create(card_name="Ark-202X", value=50)
+    gai, created11 = Card.objects.get_or_create(card_name="Gaia-Filter", value=50)
+    ter, created12 = Card.objects.get_or_create(card_name="Terraform-X", value=50)
+    aer, created13 = Card.objects.get_or_create(card_name="Aero-Flock", value=50)
+    myc, created14 = Card.objects.get_or_create(card_name="Myco-Renew", value=50)
+    oce, created15 = Card.objects.get_or_create(card_name="Ocean-Sentinel", value=50)
+    gre, created16 = Card.objects.get_or_create(card_name="Green-Web", value=50)
 
     if created7:
         bio.image="/images/card_images/BIO-TITAN.jpeg"
@@ -258,16 +258,16 @@ def init_pack_instance():
             pack2.save_pack()
 
     # For the Waste warriors
-    pla, created17 = Card.objects.get_or_create(card_name="Plastic Pat")
-    rec, created18 = Card.objects.get_or_create(card_name="Recyc-Larry")
-    pap, created19 = Card.objects.get_or_create(card_name="Paper Pam")
-    ren, created20 = Card.objects.get_or_create(card_name="Renewox")
-    fer, created21 = Card.objects.get_or_create(card_name="Fertilis")
-    lan, created22 = Card.objects.get_or_create(card_name="Landfill Lewis")
-    rub, created23 = Card.objects.get_or_create(card_name="Rubbix")
-    pol, created24 = Card.objects.get_or_create(card_name="Pollutide")
-    haz, created25 = Card.objects.get_or_create(card_name="Hazmord")
-    lit, created26 = Card.objects.get_or_create(card_name="Litterimp")
+    pla, created17 = Card.objects.get_or_create(card_name="Plastic Pat", value=50)
+    rec, created18 = Card.objects.get_or_create(card_name="Recyc-Larry", value=50)
+    pap, created19 = Card.objects.get_or_create(card_name="Paper Pam", value=50)
+    ren, created20 = Card.objects.get_or_create(card_name="Renewox", value=50)
+    fer, created21 = Card.objects.get_or_create(card_name="Fertilis", value=50)
+    lan, created22 = Card.objects.get_or_create(card_name="Landfill Lewis", value=50)
+    rub, created23 = Card.objects.get_or_create(card_name="Rubbix", value=50)
+    pol, created24 = Card.objects.get_or_create(card_name="Pollutide", value=50)
+    haz, created25 = Card.objects.get_or_create(card_name="Hazmord", value=50)
+    lit, created26 = Card.objects.get_or_create(card_name="Litterimp", value=50)
 
     if created17:
         pla.image="/images/card_images/PlasticPat.jpg"
