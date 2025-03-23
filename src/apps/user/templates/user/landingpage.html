@@ -74,8 +74,14 @@
                 </div>
             </div>
             
-            {% if request.user.is_authenticated and request.user.groups.all.0.name == "Gamemaster" %}
-                <a href="{% url 'gamemaster_dashboard' %}">Gamemaster Dashboard</a>
+            {% if is_gamemaster %}
+                <div class="centered">
+
+                    <button type="button" class="btn btn-danger btn-lg" 
+                            onclick="window.location.href='{% url "gamemaster_dashboard" %}';">
+                        Gamemaster Dashboard
+                    </button>
+                </div>
             {% endif %}
 
             <div class="w3-container w3-center w3-animate-bottom">

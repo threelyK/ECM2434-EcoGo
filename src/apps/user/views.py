@@ -204,3 +204,4 @@ def leaderboard(request):
     con = {'top_10_users' : [{'username':user.owner.username, 'level':user.level} for user in top_10_users]}  # Includes username from the paernt table (User) and level from UserData table
 
     return render(request, 'user/leaderboard.html', context=con)
+

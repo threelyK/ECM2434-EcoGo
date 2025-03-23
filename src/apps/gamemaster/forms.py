@@ -3,7 +3,7 @@ from apps.qrgenerator.models import Website
 from apps.cards.models import Card, OwnedCard, Pack, PackCards 
 
 class WebsiteForm(forms.ModelForm):
-    """Form to create Website"""
+    """Form to create a Website"""
     card = forms.ModelChoiceField(queryset=Card.objects.all(), required=False, empty_label="Select a Card")
     class Meta:
         model = Website
