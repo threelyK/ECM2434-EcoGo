@@ -33,7 +33,7 @@ class CardsViewsTest(TestCase):
         for the pack. Adds cards to the pack and then returns a pack object
         """
         init_pack_instance()
-        pack = Pack.objects.get(pack_name="pakwan")
+        pack = Pack.objects.get(pack_name="citygroup")
         self.assertIs(type(pack), Pack)
 
     def test_create_card_visitors(self):
@@ -114,7 +114,7 @@ class CardsViewsTest(TestCase):
         newID3 = uuid4()
         newID4 = uuid4()
 
-        pack = Pack.objects.get(pack_name="pakwan")
+        pack = Pack.objects.get(pack_name="citygroup")
 
         # Tests adding a website to existing pack
         add_pack_website(pack, newID1)
