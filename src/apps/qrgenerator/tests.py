@@ -13,6 +13,9 @@ class QRCodeTesting(TestCase):
         )
 
     def testingQRCodes(self):
+        """
+        Tests that the qrcode attribute of the website is updated.
+        """
         self.website.save()
         self.assertIsNotNone(self.website.qr_code, "QRCode should not be empty")
 
@@ -22,6 +25,9 @@ class QRCodeTesting(TestCase):
 
 
     def DelTestQRCode(self):
+        """
+        Tests that qr code images are being deleted correctly.
+        """
         qr_code_path = self.website.qr_code.path
         
         if os.path.exists(qr_code_path):

@@ -3,6 +3,9 @@ from apps.qrgenerator.models import Website
 from random import uniform
 
 def announcement_list(request):
+    """
+    Displays all the announcements on a page sorted by most recent to least recent. Displaying a small map view of where the QR code is located.
+    """
     websites = Website.objects.all().order_by("-date")
 
     announcements = []
@@ -23,6 +26,9 @@ def announcement_list(request):
     return render(request, "location/announcement_list.html", context=view_context)
 
 def announcement(request, slug):
+    """
+    Displays detailed view of an announcement with a larger view of the map location. Displays a circle around the QR's general location.
+    """
     specific_announcement = get_object_or_404(Website, slug=slug)
 
     exact_lat = specific_announcement.latitude
