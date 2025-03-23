@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static '/css/avatar.css' %}">
     <link rel="stylesheet" href="{% static '/css/centered.css' %}">
     <link rel="stylesheet" href="{% static '/css/footer.css' %}">
+    <link rel="stylesheet" href="{% static '/css/waiting_room.css' %}">
     <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
     <!-- Bootstrap -->
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
@@ -22,16 +23,23 @@
                 return;
             }
         
-    window.location.href = '/trading/trading_room/' + roomName + '/';
+            window.location.href = '/trading/trading_room/' + roomName + '/';
         }
     </script>
 </head>
 <body>
-    <div>
-        <input type="text" id="roomName" placeholder="Room Name">
-        <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick=redirectToTradingRoom()>Create Room</button>
-        <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="window.location.href='{% url 'join_room' %}';">Join Room</button>
-    </div>
+    <div class="container">
+        <div class="header">
+            <h1>Waiting Room</h1>
+        </div>
+        <div class="description">
+            <p>Enter a room name to create a new trading room or join an existing room.</p>
+        </div>
+        <input type="text" id="roomName" class="form-control" placeholder="Enter Room Name">
+        <button type="button" class="btn btn-primary btn-lg btn-custom" onclick="redirectToTradingRoom()">Create Room</button>
+        <p class="description">Click "Create Room" to start a new trading room with entered name</p>
+        <button type="button" class="btn btn-primary btn-lg btn-custom" onclick="window.location.href='{%url 'join_room' %}';">Join Room</button>
+    
     <div id="messages"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
