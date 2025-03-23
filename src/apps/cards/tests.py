@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
 from apps.cards.models import Card, Pack, PackCards
-from apps.cards.views import get_cards_instance, get_pack_instance, open_pack
+from apps.cards.views import init_cards_instance, init_pack_instance, open_pack
 from apps.cards.views import get_pack_from_ID, get_card_from_ID, init_cards_instance, init_pack_instance, add_card_website, create_pack_visitors, add_pack_website, create_card_visitors, card_scan_UUIDs, card_scan_visitors, pack_scan_UUIDs, pack_scan_visitors
 from pathlib import PurePath
 from uuid import uuid4
@@ -33,7 +33,7 @@ class CardsViewsTest(TestCase):
         for the pack. Adds cards to the pack and then returns a pack object
         """
         init_pack_instance()
-        pack = Pack.objects.get(pack_name="pakwan")
+        pack = Pack.objects.get(pack_name="Citygroup")
         self.assertIs(type(pack), Pack)
 
     def test_create_card_visitors(self):
@@ -114,7 +114,7 @@ class CardsViewsTest(TestCase):
         newID3 = uuid4()
         newID4 = uuid4()
 
-        pack = Pack.objects.get(pack_name="pakwan")
+        pack = Pack.objects.get(pack_name="Citygroup")
 
         # Tests adding a website to existing pack
         add_pack_website(pack, newID1)
@@ -303,7 +303,7 @@ class PackOpeningTest(TestCase):
         Run before each test, sets up packs
         """
 
-        self.pack_zero = get_pack_instance()
+        init_pack_instance()
         self.user = User.objects.create_user(username="123", password="123")
 
     def test_open_pack(self):
@@ -312,7 +312,7 @@ class PackOpeningTest(TestCase):
         request.user = self.user
 
         try:
-            output = open_pack(request, "Electri-city group")
+            output = open_pack(request, "Citygroup")
             self.assertEqual(output.status_code, 200)
         except:
             self.fail()

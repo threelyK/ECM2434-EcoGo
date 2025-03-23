@@ -34,9 +34,9 @@ def init_cards_instance():
         cru.save(update_fields=["image", "card_desc"])
 
 
-def init_pack_instance()->Pack:
+def init_pack_instance():
     """
-    Returns a pack object. If the pack doesn't exist, it creates it.
+    Initializes 'citygroup' pack object. If the pack doesn't exist, it creates it.
     """
 
     # Creates the rest of the card objects
@@ -80,7 +80,7 @@ def init_pack_instance()->Pack:
         rea.save(update_fields=["image", "card_desc"])
 
 
-    pack = Pack.objects.get_or_create(pack_name="pakwan", cost=250, num_cards=10)[0]
+    pack = Pack.objects.get_or_create(pack_name="Citygroup", cost=250, num_cards=10)[0]
     if pack.get_all_cards().count() == 0:
         pack.add_to_pack(Card.objects.get(card_name="Vortex-9"), 100)
         pack.add_to_pack(Card.objects.get(card_name="Hydronis"), 100)
@@ -103,7 +103,7 @@ card_scan_UUIDs = {
 }
 
 pack_scan_UUIDs = {
-    "pakwan_UUIDs": ['8408d587-9b62-4d34-8dd7-4bfec213f443'],
+    "Citygroup_UUIDs": ['8408d587-9b62-4d34-8dd7-4bfec213f443'],
 }
 
 # A new entry will be created for new QR code with the repective index number
@@ -115,7 +115,7 @@ card_scan_visitors = {
 
 pack_scan_visitors = {
     # Dict cotaining userID and epoch time
-    "pakwan0_visitors": dict(),
+    "citygroup0_visitors": dict(),
 }
 
 # .===========.
