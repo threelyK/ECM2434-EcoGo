@@ -18,6 +18,15 @@ body {
     min-height: 100vh;
 }
 
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 16px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
 .trading_header {
     color: white;
     font-family: GameFont, Verdana, Geneva, Tahoma, sans-serif;
