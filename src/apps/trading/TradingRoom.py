@@ -115,17 +115,37 @@ class TradingRoom():
             "state_flag": 'N',
             "body": {
                 "username": self.room_member.username,
-                "level": self.room_member.user_data.level
+                "level": self.room_member.user_data.level,
+                "member_cards": []
             }
         }
+
+        member_cards = self.room_member.get_all_cards()
+        for card in member_cards:
+            message_owner["body"]["member_cards"].append({
+                "card_name": card.card_name,
+                "value": card.value,
+                "card_desc": card.card_desc,
+                "image_path": card.image
+            })
 
         message_member = {
             "state_flag": 'N',
             "body": {
                 "username": self.room_owner.username,
-                "level": self.room_owner.user_data.level
+                "level": self.room_owner.user_data.level,
+                "owner_cards": []
             }
         }
+
+        owner_cards = self.room_owner.get_all_cards()
+        for card in owner_cards:
+            message_owner["body"]["owner_cards"].append({
+                "card_name": card.card_name,
+                "value": card.value,
+                "card_desc": card.card_desc,
+                "image_path": card.image
+            })
 
         #Send a message to the users informing them of the change in state
         self.__send_message(message_owner, self.room_owner)
@@ -274,11 +294,39 @@ class TradingRoom():
 
         #Either accept the transition or reject it
         if valid:
+            
+            proposed_owner_cards = message_data["body"]["member_cards"]
+            message = {
+                "state_flag": 'D',
+                "body": {
+                    "owner_cards": [],
+                    "member_cards": []
+                }
+            }
+
+            for card in proposed_member_cards:
+                card_data = Card.objects.get(card_name = card)
+                message["body"]["member_cards"].append({
+                    "card_name": card_data.card_name,
+                    "value": card_data.value,
+                    "card_desc": card_data.card_desc,
+                    "image_path": card_data.image
+                })
+
+            for card in proposed_owner_cards:
+                card_data = Card.objects.get(card_name = card)
+                message["body"]["owner_cards"].append({
+                    "card_name": card_data.card_name,
+                    "value": card_data.value,
+                    "card_desc": card_data.card_desc,
+                    "image_path": card_data.image
+                })
+
             self.__update_state("D")
             #Save the hash for later validation
             self.trade_hash = hash(str(message_data["body"]))
-            self.__send_message(message_data, self.room_owner)
-            self.__send_message(message_data, self.room_member)
+            self.__send_message(message, self.room_owner)
+            self.__send_message(message, self.room_member)
         else:
             message = {
                 "state_flag" : 'N',
