@@ -25,7 +25,7 @@ def init_cards_instance():
 
     if created1:
         hyd.image="/images/card_images/Hydronis.webp"
-        hyd.image="Hydropower is the oldest form of mechanical renewable energy! People have been using water to generate power for over 2,000 years, dating back to ancient Greece, where water wheels were used to grind grain into flour!"
+        hyd.card_desc="Hydropower is the oldest form of mechanical renewable energy! People have been using water to generate power for over 2,000 years, dating back to ancient Greece, where water wheels were used to grind grain into flour!"
         hyd.save(update_fields=["image", "card_desc"])
 
     if created2:
