@@ -121,7 +121,7 @@ class Pack(models.Model):
         through="cards.PackCards",
     )
     image = models.TextField(_("Pack Image"), 
-                            default="/images/card_images/Missing_Texture.png")
+                            default=PurePath("images/card_images/Missing_Texture.png").as_posix())
     
     #This exists to allow for an instance attribute not related to the database
     def __init__(self, *args, **kwargs):
