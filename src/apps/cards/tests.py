@@ -33,7 +33,7 @@ class CardsViewsTest(TestCase):
         for the pack. Adds cards to the pack and then returns a pack object
         """
         init_pack_instance()
-        pack = Pack.objects.get(pack_name="citygroup")
+        pack = Pack.objects.get(pack_name="Citygroup")
         self.assertIs(type(pack), Pack)
 
     def test_create_card_visitors(self):
@@ -114,7 +114,7 @@ class CardsViewsTest(TestCase):
         newID3 = uuid4()
         newID4 = uuid4()
 
-        pack = Pack.objects.get(pack_name="citygroup")
+        pack = Pack.objects.get(pack_name="Citygroup")
 
         # Tests adding a website to existing pack
         add_pack_website(pack, newID1)
@@ -312,7 +312,7 @@ class PackOpeningTest(TestCase):
         request.user = self.user
 
         try:
-            output = open_pack(request, "citygroup")
+            output = open_pack(request, "Citygroup")
             self.assertEqual(output.status_code, 200)
         except:
             self.fail()

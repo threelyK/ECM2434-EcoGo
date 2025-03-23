@@ -80,7 +80,7 @@ def init_pack_instance():
         rea.save(update_fields=["image", "card_desc"])
 
 
-    pack = Pack.objects.get_or_create(pack_name="citygroup", cost=250, num_cards=10)[0]
+    pack = Pack.objects.get_or_create(pack_name="Citygroup", cost=250, num_cards=10)[0]
     if pack.get_all_cards().count() == 0:
         pack.add_to_pack(Card.objects.get(card_name="Vortex-9"), 100)
         pack.add_to_pack(Card.objects.get(card_name="Hydronis"), 100)
@@ -103,7 +103,7 @@ card_scan_UUIDs = {
 }
 
 pack_scan_UUIDs = {
-    "citygroup_UUIDs": ['8408d587-9b62-4d34-8dd7-4bfec213f443'],
+    "Citygroup_UUIDs": ['8408d587-9b62-4d34-8dd7-4bfec213f443'],
 }
 
 # A new entry will be created for new QR code with the repective index number

@@ -5,7 +5,7 @@ from apps.cards.models import Card, OwnedCard, Pack
 from django.urls import reverse
 from django.contrib.auth import SESSION_KEY
 from json import dumps
-from apps.cards.views import get_pack_instance
+from apps.cards.views import init_pack_instance
 # run tests using `py manage.py test apps/user`
 
 User = get_user_model()
@@ -349,10 +349,10 @@ class UserShopTest(TestCase):
 
         self.user = get_user_model().objects.create_user(username='123', password='123456789')
 
-        #Initalises a pack, specifically the "Electri-city group" pack and its value
-        get_pack_instance()
+        #Initalises a pack, specifically the "citygroup" pack and its value
+        init_pack_instance()
 
-        pack = Pack.objects.get(pack_name = "Electri-city group")
+        pack = Pack.objects.get(pack_name = "Citygroup")
         pack.cost = 20
         pack.save()
 
@@ -399,7 +399,7 @@ class UserShopTest(TestCase):
 
         #Checks for user does not have enough points
         self.user.user_data.remove_points(2000)
-        response = self.client.post("/user/shop", {'item_name': 'Electri-city group'},)
+        response = self.client.post("/user/shop", {'item_name': 'Citygroup'},)
         self.assertEqual(response.status_code, 400)
 
 
@@ -412,7 +412,7 @@ class UserShopTest(TestCase):
         self.client.post('/login', {'username': '123', 'password': '123456789'})
         self.user.user_data.add_points(2000)
 
-        response = self.client.post("/user/shop", {'item_name': 'Electri-city group'})
+        response = self.client.post("/user/shop", {'item_name': 'Citygroup'})
         self.assertEqual(response.status_code, 200)
         
         #Checks that 5 cards have been awarded to the user, including duplicates
