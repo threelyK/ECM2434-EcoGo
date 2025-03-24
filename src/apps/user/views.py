@@ -173,7 +173,7 @@ def shop(request):
                 request.user.user_data.remove_points(pack_cost)
                 return response
             else:
-                return HttpResponseBadRequest("NOT ENOUGH POINTS FOR TRANSACTION")
+                return redirect("/homepage")
             
         else:
             return HttpResponseBadRequest("INVALID FORM")
