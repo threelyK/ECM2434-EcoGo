@@ -204,7 +204,7 @@ $(document).ready(function(){
 
     function reciveError(){
         // Exit out to landing page on error (for now)
-    //  window.location.href = "/"
+    //  window.location.href = "/homepage"
     }
 
     //Resets the page to the inital state for the room owner
@@ -342,7 +342,9 @@ $(document).ready(function(){
 
     //Called when the member rejects a trade, resets back to N state (on members client)
     function member_trade_offer_rejected(){
-
+        $("#receive-container").empty()
+        $("#giving-container").empty()
+        $("#member-offer").empty()
     }
 
     //Called by the owner when the trade has been accepted and processed
