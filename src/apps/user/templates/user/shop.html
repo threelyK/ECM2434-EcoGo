@@ -82,8 +82,18 @@
                                     <script src="{% static 'js/navbar.js' %}"></script>
                                 </div>
                             </div>
-                            <div class="centered">
-                                <button type="button" class="buy_button" onclick="buyPack('{{ pack.pack_name }}', '{{ pack.pack_type }}')">Buy</button>
+                            <div class="pack_image">
+                                <img src= "{% static pack.image %}" alt="pack image">
+                            </div>
+                            <div class="footer">
+                                <div class="pack_price">
+                                    <p>Cost: {{ pack.cost }}</p> 
+                                </div>
+                                <form action="/user/shop" method="post">
+                                    {% csrf_token %}
+                                    <input hidden="true" value="{{ pack.pack_name }}" name="item_name">
+                                    <input type="submit" class="buy_button" value="BUY">
+                                </form>
                             </div>
                         </div>
                     </li>

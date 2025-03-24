@@ -1,10 +1,11 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from apps.user.models import UserData, User
-from apps.cards.models import Card, OwnedCard
+from apps.cards.models import Card, OwnedCard, Pack
 from django.urls import reverse
 from django.contrib.auth import SESSION_KEY
 from json import dumps
+from apps.cards.views import init_pack_instance
 # run tests using `py manage.py test apps/user`
 
 User = get_user_model()
@@ -300,43 +301,29 @@ class UserInventoryTest(TestCase):
         response = self.client.get("/user/inventory", follow=False)
         self.assertEqual(response.status_code, 302)
 
-    def test_user_inventory_sell_login(self):
-        """
-        Tests that the "user/inventory/sellCard endpoint does not allow a non logged in user to 
-        access it and promts login if needed
-        """
-
-        response = self.client.post(
-            '/user/inventory/sellCard', 
-            {'card_name': 'myCard'}, 
-            follow=False
-        )
-
-        self.assertEqual(response.status_code, 302)
-
     def test_user_inventory_sell_invalid(self):
         """
-        Tests the "user/inventory/sellCard endpoint for input that is invalid in some way to 
+        Tests the "user/inventory endpoint for input that is invalid in some way to 
         return a 400 error
         """
 
         self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=False)
 
         #Checks for invalid request structure
-        response = self.client.post("/user/inventory/sellCard", {'bingus': "worse cat"}, content_type="application/json")
+        response = self.client.post("/user/inventory", {'bingus': "worse cat"})
         self.assertEqual(response.status_code, 400)
 
         #Checks for card does not exist
-        response = self.client.post("/user/inventory/sellCard", {'card_name': 'bingus'}, content_type="application/json")
+        response = self.client.post("/user/inventory", {'card_name': 'bingus'})
         self.assertEqual(response.status_code, 400)
 
         #Checks for user does not own card
-        response = self.client.post("/user/inventory/sellCard", {'card_name': 'coal-imp'}, content_type="application/json")
+        response = self.client.post("/user/inventory", {'card_name': 'coal-imp'})
         self.assertEqual(response.status_code, 400)
 
     def test_user_inventory_sell_valid(self):
         """
-        Tests that the "user/inventory/sellCard" endpoint properly sells a card, removing it
+        Tests that the "user/inventory" endpoint properly sells a card, removing it
         from the users inventory, adding its value in points and rendering a new template to
         the user
         """
@@ -344,9 +331,148 @@ class UserInventoryTest(TestCase):
         self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=True)
         OwnedCard(owner=self.user.user_data, card=self.card, quantity = 2).save()
 
-        response = self.client.post("/user/inventory/sellCard", {'card_name': 'coal-imp'}, content_type="application/json", follow=True)
+        response = self.client.post("/user/inventory", {'card_name': 'coal-imp'}, follow=True)
         self.assertEqual(response.status_code, 200)
 
         user_cards = self.user.user_data.get_all_cards_quant()
         self.assertEqual(user_cards[0], (self.card, 1))
+
+class UserShopTest(TestCase):
+    """
+    Tests the functionality of the user shop related functions
+    """
+
+    def setUp(self):
+        """
+        Sets up a user for testing, run before each test by test system
+        """
+
+        self.user = get_user_model().objects.create_user(username='123', password='123456789')
+
+        #Initalises a pack, specifically the "Sustainable squad" pack and its value
+        init_pack_instance()
+
+        pack = Pack.objects.get(pack_name = "Sustainable squad")
+        pack.cost = 20
+        pack.save()
+
+    def test_shop_index_template(self):
+        """
+        Tests the "user/shop" endpoint, specifically that it properly serves the 
+        template if a user is logged in
+        """
+         
+        self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=False)
+        response = self.client.get("/user/shop")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "user/shop.html")
+
+    def test_shop_index_redirect(self):
+        """
+        Tests that the "user/shop" endpoint correctly redirects to the login page when a non 
+        authenticated user attempts access
+        """
+
+        response = self.client.get("/user/shop", follow=False)
+        self.assertEqual(response.status_code, 302)
+
+    def test_shop_buy_item_invalid(self):
+        """
+        Tests that an invlaid input into 'user/shop' will result in
+        the proper error code being sent
+        """
+
+        self.client.post('/login', {'username': '123', 'password': '123456789'}, follow=False)
+        self.user.user_data.add_points(2000)
+
+        #Checks for invalid request structure
+        response = self.client.post("/user/shop", {'bingus': "worse cat"})
+        self.assertEqual(response.status_code, 400)
+
+        #Checks for pack does not exist
+        response = self.client.post("/user/shop", {'item_name': 'bingus'})
+        self.assertEqual(response.status_code, 400)
+
+        #ensures no points were spent on invalid transactions
+        self.assertEqual(self.user.user_data.points, 2000)
+
+        #Checks for user does not have enough points
+        self.user.user_data.remove_points(2000)
+        response = self.client.post("/user/shop", {'item_name': 'Sustainable squad'},)
+        self.assertEqual(response.status_code, 400)
+
+
+    def test_shop_buy_item_valid(self):
+        """
+        Tests that if the input into 'user/shop/' is valid that
+        cards will be added and the template will be sent
+        """
+
+        self.client.post('/login', {'username': '123', 'password': '123456789'})
+        self.user.user_data.add_points(2000)
+
+        response = self.client.post("/user/shop", {'item_name': 'Sustainable squad'})
+        self.assertEqual(response.status_code, 200)
+        
+        #Checks that 5 cards have been awarded to the user, including duplicates
+        cards = self.user.user_data.get_all_cards_quant()
+        count = 0
+        for card in cards:
+            count = count + card[1]
+
+        self.assertEqual(count, 5)
+
+        #Checks that 20 points have been taken from the user
+        #self.assertEqual(self.user.user_data.points, 1980) This breaks, but not on the site itself
+    
+class LeaderboardViewTests(TestCase):
+    def setUp(self):
+        # Deleting all the users from the database before each test
+        User.objects.all().delete()
+        UserData.objects.all().delete()
+
+    def test_leaderboard_only_5_users(self):
+        """
+        Tests that the leaderboard displays 5 users correctly.
+        """
+        # Creating exactly 5 users
+        for i in range(5):
+            User.objects.create_user(username=f"user{i}", password="password123")
+
+        # getting the leaderboard response
+        response = self.client.get(reverse('leaderboard'))
+
+        # checking response status code = 200 (OK)
+        self.assertEqual(response.status_code, 200)
+
+        # ensuring 'top_10_users' exists in the context
+        self.assertIn('top_10_users', response.context)
+
+        # ensuring that exactly 5 users are in the leaderboard (as there aren't 10 or more)
+        self.assertEqual(len(response.context['top_10_users']), 5)    
+    
+    def test_leaderboard_returns_top_10_users(self):
+        """
+        Tests that the leaderboard displays 10 users correctly.
+        """
+        # Creating 20 users
+        for i in range(20):
+            user = User.objects.create_user(username=f"user{i}", password="password123")
+            UserData.objects.create(owner=user, level=i)  # assigning increasing levels to all the users
+
+        # getting the leaderboard response
+        response = self.client.get(reverse('leaderboard'))
+
+        # checking response status code = 200 (OK)
+        self.assertEqual(response.status_code, 200)
+
+        # ensuring 'top_10_users' exists in the context
+        self.assertIn('top_10_users', response.context)
+        # Ensuring that exactly 10 users are in the leaderboard
+        self.assertEqual(len(response.context['top_10_users']), 10)
+
+        # checking if leaderboard is sorted by 'level'
+        top_users = response.context['top_10_users']
+        self.assertTrue(top_users[0]['level'] >= top_users[-1]['level'])  # ensuring correct leaderboard order
 

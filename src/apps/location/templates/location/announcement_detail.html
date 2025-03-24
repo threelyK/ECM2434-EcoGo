@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<head>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="map" style="width: 100%; height: 100%" tabindex="0"></div>
+</body>
+<script>
+    // Creates the map to be displayed
+    var map = L.map('map').setView([{{ circle_point.0 }}, {{ circle_point.1 }}], 18);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Creates the circle on the map
+    var circle = L.circleMarker([{{ circle_point.0 }}, {{ circle_point.1 }}], {
+        color: '#6dcae2',
+        fillColor: '#aff2ea',
+        fillOpacity: 0.5,
+        radius: {{ radius }} // By default is 25
+    }).addTo(map);
+</script>
+{% endblock %}
