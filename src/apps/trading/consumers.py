@@ -37,6 +37,7 @@ class TradeConsumer(WebsocketConsumer):
             self.room.handle(data, self.user)
 
     def disconnect(self, code):
+        print("socket disconnected")
         if (not self.room is None) and not code == 1000 and not self.room.state == "W": #Room exists and code is non-standard
             self.room.disconnect(self.user)
 
