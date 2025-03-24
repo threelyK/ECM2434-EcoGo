@@ -295,7 +295,7 @@ class TradingRoom():
         #Either accept the transition or reject it
         if valid:
             
-            proposed_owner_cards = message_data["body"]["member_cards"]
+            proposed_owner_cards = message_data["body"]["owner_cards"]
             message = {
                 "state_flag": 'D',
                 "body": {
