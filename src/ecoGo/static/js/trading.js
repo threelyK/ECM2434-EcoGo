@@ -204,7 +204,7 @@ $(document).ready(function(){
 
     function reciveError(){
         // Exit out to landing page on error (for now)
-    //  window.location.href = "/homepage"
+        window.location.href = "/homepage"
     }
 
     //Resets the page to the inital state for the room owner
