@@ -258,6 +258,7 @@ $(document).ready(function(){
         else{
             o_or_m = "member"
         }
+
         cardsList.forEach((card) =>{
             var cardHTML = `
             <li>
