@@ -19,22 +19,20 @@
 </head>
 <body>
     <div class="centered">
-        <div class="-header">
-            <h1>Available Rooms</h1>
+        <h1 style="font-family: GameFont, Arial, Helvetica, sans-serif; font-size: 8vh; color: white;">Available Rooms</h1>
+        <div class="room-container">
+            <div class="room-content">
+                {% for room in rooms %}
+                    <button type="button" class="btn btn-success btn-lg btn-custom" onclick="join_room('{{ room.0 }}')">{{ room.0 }}</button>
+                {% endfor %}
+            </div>
         </div>
-        <div class="description">
-            <p>Select a room to join another user on</p>
-        <div class="room-list">
-            {% for room in rooms %}
-                <div class="room-item">
-                    <div id="roomList">
-                        <button type="button" class="btn btn-success btn-lg btn-custom" onclick="join_room('{{ room.0 }}')">{{ room.0 }}</button>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        <button type="button" class="btn btn-success btn-lg btn-custom" onclick="history.back()">Go Back</button>
+        <button type="button" style="margin-top: 20px;" class="btn btn-success btn-lg btn-custom" onclick="history.back()">Go Back</button>
     </div>
+    <!-- <button type="button" class="btn btn-success btn-lg btn-custom" onclick="history.back()">Go Back</button> -->
+    <!-- {% for room in rooms %} -->
+    <!-- <button type="button" class="btn btn-success btn-lg btn-custom" onclick="join_room('{{ room.0 }}')">{{ room.0 }}</button> -->
+    <!-- {% endfor %} -->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'js/waiting_room.js' %}"></script>
