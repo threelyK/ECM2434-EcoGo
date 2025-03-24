@@ -19,17 +19,46 @@ body {
 }
 
 .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-    gap: 16px;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    padding: 20px;
+    position: relative;
+    flex-wrap: wrap;
+}
+
+#owner-container,
+#member-container {
+    width: 48%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.card-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.divider {
+    width: 4px;
+    background-color: black;
+    height: auto;
+    align-self: stretch;
 }
 
 .trading_header {
     color: white;
     font-family: GameFont, Verdana, Geneva, Tahoma, sans-serif;
+    width: 100%;
+    text-align: center;
+    padding-bottom: 10px;
 }
 
 .trading_header h1 {
@@ -39,15 +68,15 @@ body {
 
 .card-container {
     position: relative;
-    width: 300px;
+    flex: 1 1 calc(33.33% - 20px);
+    max-width: 300px; 
+    min-width: 200px; 
 }
   
 .card {
-    position: absolute;
-    flex: 1 1 calc(25% - 16px);
-    width: 300px;
-    height: 418px;
-    margin-left: 30px;
+    width: 100%;
+    height: auto;
+    margin: 10px;
     box-shadow: inset 0 0 0 var(--card-border-thickness) var(--card-border-color);
     border-radius: var(--card-border-radius);
     padding: var(--card-border-thickness);
@@ -92,10 +121,8 @@ body {
 }
 
 .card-image img {
-    min-width: 100%;
-    min-height: 100%;
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: auto;
     object-fit: cover;
 }
 
@@ -138,4 +165,24 @@ body {
 .selected {
     opacity: 0.5;
     transition: opacity .5s ease-in-out;
+}
+
+@media screen and (max-width: 1024px) {
+    .card-container {
+        flex: 1 1 calc(50% - 20px); /* Two cards per row */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .card-container {
+        flex: 1 1 100%; /* One card per row */
+    }
+
+    #owner-container, #member-container {
+        width: 100%; /* Full width containers */
+    }
+
+    .divider {
+        display: none; /* Hide divider on small screens */
+    }
 }

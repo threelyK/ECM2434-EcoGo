@@ -219,7 +219,7 @@ $(document).ready(function(){
 
     //Called when the member joins the room, data_body contains their name/level
     function owner_joined_room(data_body){
-        display_cards(data_body["cards"], "#member-container", false)
+        display_cards(data_body["cards"], "#member-container .card-wrapper", false)
         //Adding submit button for the cards
         $("#member-container").append("<button type='button' id='propose' class='btn btn-success btn-lg propose' style='font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;'>Propose Trade</button>")
         $('.card-container.member').on('click', function(){

@@ -56,42 +56,60 @@
             </h1>
             <ul class="card-grid">
                 {% if user == 'owner' %}
-                    <div id="owner-container">  
-                        {% for card in cards %}
-                            <li>
-                                <div class="card-container owner">
-                                    <div class="card ">
-                                        <div class="bar bar-top">
-                                            <div class="card-title">{{ card.card_name }}</div>
-                                            <div class="casting-cost">
-                                                <div class="card-value">
-                                                    {{ card.value }}
-                                                </div> 
-                                                <div class="card-quantity">
-                                                    {{ card.quant }}
+                    <div id="owner-container">
+                        <div class="centered">
+                            <div class="trading_header">
+                                Owner
+                            </div>  
+                        </div>
+                        <div class="card-wrapper">
+                            {% for card in cards %}
+                                <li>
+                                    <div class="card-container owner">
+                                        <div class="card ">
+                                            <div class="bar bar-top">
+                                                <div class="card-title">{{ card.card_name }}</div>
+                                                <div class="casting-cost">
+                                                    <div class="card-value">
+                                                        {{ card.value }}
+                                                    </div> 
+                                                    <div class="card-quantity">
+                                                        {{ card.quant }}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="card-image">
-                                            <img src= "{% static card.image_path %}" alt="card image">
-                                        </div>
-                                        <div class="bar bar-mid">
-                                            <div class="card-title">Instant</div>
-                                        </div>
-                                        <div class="card-text">
-                                            <div class="card-ability">
-                                                {{card.card_desc}}
+                                            <div class="card-image">
+                                                <img src= "{% static card.image_path %}" alt="card image">
+                                            </div>
+                                            <div class="bar bar-mid">
+                                                <div class="card-title">Instant</div>
+                                            </div>
+                                            <div class="card-text">
+                                                <div class="card-ability">
+                                                    {{card.card_desc}}
+                                                </div>
+                                            </div>
+                                            <div class="footer">
+                                                <div class="author">Created by Breadscrums.</div>
                                             </div>
                                         </div>
-                                        <div class="footer">
-                                            <div class="author">Created by Breadscrums.</div>
-                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                        {% endfor %}
+                                </li>
+                            {% endfor %}
+                        </div>
                     </div>
+
+                    <div class="divider"></div>
+                    
+                    
                     <div id="member-container">
+                        <div class="centered">
+                            <div class="trading_header">
+                                Member
+                            </div>
+                        </div>
+                        <div class="card-wrapper">
+                        </div>  
                     </div>
                 {% else %}
                     <div id="member-offer">
