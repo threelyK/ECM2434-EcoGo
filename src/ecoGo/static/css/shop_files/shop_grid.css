@@ -1,14 +1,17 @@
 /* Pack grid styling */
+
 .pack_grid {
     max-width: 80%;
     margin: 0 auto;
+    padding-left: 0px;
     display: grid; /* Change to grid layout */
     grid-template-columns: repeat(3, 1fr); /* Three equal-width columns */
     gap: 5rem; /* Space between items */
     justify-items: center;
+    align-items: center;
 }
 
-.pack {
+.pack { 
     background-color: #ffffff00;
     border: 6px solid #4a280f;
     border-radius: 8px;
@@ -74,4 +77,23 @@
 
 .buy_button:active {
     transform: scale(0.95); /* Slight press-in effect */
+}
+
+@media (max-width: 500px) {
+    .pack_grid {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pack {
+        width: 200px;
+    }
+
+    .pack-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
 }
