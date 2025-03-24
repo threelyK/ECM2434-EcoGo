@@ -12,41 +12,25 @@
     <link rel="stylesheet" href="{% static 'css/footer.css' %}">
     <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css">
     <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
-    
-    <link rel="stylesheet" href="{% static '/css/inventory_files/inventory_grid.css' %}">
-    {% block extra_styles %}
-    {% endblock %}
     <title>{% block title %}EcoGo{% endblock %}</title>
 </head>
 <body>
     <div class="wrapper">
         <!-- Sidebar (Now inside base.html) -->
         <aside id="sidebar">
-            <div class="d-flex">
-                <button class="toggle-btn" type="button">
-                    <i class="lni lni-menu-hamburger-1"></i>
-                </button>
-                <div class="sidebar-logo">
-                    <a href="#">EcoGo</a>
-                </div>
-            </div>
             <ul class="sidebar-nav">
+                <div class="d-flex">
+                    <button class="toggle-btn" type="button">
+                        <i class="lni lni-menu-hamburger-1"></i>
+                    </button>
+                    <div class="sidebar-logo">
+                        <a href="/homepage">EcoGo</a>
+                    </div>
+                </div>
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
+                    <a href="/homepage" class="sidebar-link">
                         <i class="lni lni-user-4"></i>
-                        <span>Profile</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="lni lni-agenda"></i>
-                        <span>Task</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="lni lni-hand-shake"></i>
-                        <span>Friends</span>
+                        <span>Home</span>
                     </a>
                 </li>
             </ul>
