@@ -20,7 +20,7 @@
         const room_name = "{{ room_name }}"
         const user_type = "{{ user }}"
         var state = "W"
-        let socket = new WebSocket("//127.0.0.1:8000/ws/trading/")
+        let socket = new WebSocket("/ws/trading/")
 
         socket.onopen = () => {
         let message;
