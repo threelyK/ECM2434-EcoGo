@@ -54,3 +54,12 @@ form div {
     height: auto;
 }
 
+@media (max-width: 500px) {
+    .register-container {
+        width: 80%;
+    }
+
+    .register-container h1 {
+        font-size: 15pt;
+    }
+}
