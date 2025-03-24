@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-=rsq7zc7d+f2jppq9pvux67oe0fhy2u_00#lt91z&n_c@!ov#v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
 
 
 # Application definition
@@ -57,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CSRF_TRUSTED_ORIGINS = ['https://ecogo.deltaserver.uk', 'http://ecogo.deltaserver.uk']
 
 ROOT_URLCONF = 'ecoGo.urls'
 

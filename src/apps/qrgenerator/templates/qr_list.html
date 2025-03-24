@@ -67,7 +67,7 @@
         <p>Automatic pages</p>
         {% for website in websites %}
             <li>
-                <a href="{{ website.url }}">{{ website.name }}</a>
+                <p>{{ website.name }}</p>
                 <br>
                 {% if website.qr_code %}
                     <img src="{{ website.qr_code.url }}" alt="QR Code for {{ website.name }}">
