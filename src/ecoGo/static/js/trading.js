@@ -209,12 +209,12 @@ $(document).ready(function(){
 
     //Resets the page to the inital state for the room owner
     function reset_to_w_disconnect(){
-        window.location.href = "/"
+        window.location.href = "/homepage"
     }
 
     //Kicks the member back to the room selection if room closes (with error?)
     function kick_back_to_room_select(){
-        window.location.href = "/"
+        window.location.href = "/homepage"
     }
 
     //Called when the member joins the room, data_body contains their name/level
@@ -347,12 +347,12 @@ $(document).ready(function(){
 
     //Called by the owner when the trade has been accepted and processed
     function owner_trade_complete(){
-        window.location.href = "/"
+        window.location.href = "/homepage"
     }
 
     //Called by the member when the trade has be accepted and processed
     function member_trade_complete(){
-        window.location.href = "/"
+        window.location.href = "/homepage"
     }
 
     $(document).ready(function(){
