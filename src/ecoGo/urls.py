@@ -25,7 +25,7 @@ urlpatterns = [
     path('cards/', include('apps.cards.urls')),
     path('qrgenerator/', include('apps.qrgenerator.urls')),
     path('gamemaster/', include('apps.gamemaster.urls')),
-    path('location/', include('apps.location.urls'))
+    path('location/', include('apps.location.urls')),
     path('trading/', include('apps.trading.urls')),
 ] 
 
