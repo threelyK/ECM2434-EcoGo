@@ -1,8 +1,9 @@
 # ECM2434
 Breadscrums
 
-This project seeks to promote socially and enviromentaly substanable practices using a trading card game as a base to attract and engage users in substanable activites and to properly keep them informed of what they could be doing and what institutions such as the university of exeter have done to create a more substanable atmosphere 
 ---
+
+This project seeks to promote socially and enviromentaly substanable practices using a trading card game as a base to attract and engage users in substanable activites and to properly keep them informed of what they could be doing and what institutions such as the university of exeter have done to create a more substanable atmosphere 
 
 # Dependencies
 All dependencies needed are a part of the settings.py file which is located in src/ecoGo. These can be installed by running requirements.txt through pip with the command `pip install -r requirements.txt` from the root of the project
