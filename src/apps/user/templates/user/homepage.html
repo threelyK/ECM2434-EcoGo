@@ -67,18 +67,10 @@
                 <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="window.location.href='user/inventory';" >Inventory</button>
                 <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="window.location.href='user/shop';" >Shop</button>
                 <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="window.location.href='user/leaderboard';" >Leaderboard</button> 
-
-                {% if is_gamemaster %}
-                    <div class="centered">
-                        <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;"  
-                        onclick="window.location.href='{% url 'gamemaster_dashboard' %}';">
-                            Gamemaster Dashboard
-                        </button>
-                    </div>
-                {% endif %}
-
                 <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="window.location.href='location/announcements';" >Announcements</button> 
-
+                {% if is_gamemaster %}
+                <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="window.location.href='gamemaster';" >Gamemaster Dashboard</button> 
+                {% endif %}
             </div>
         </div>
     </div>
