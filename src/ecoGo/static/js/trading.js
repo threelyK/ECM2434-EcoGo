@@ -191,6 +191,13 @@ $(document).ready(function(){
         socket.send(JSON.stringify(message))
     }
 
+    function clearSelection(){
+        member_card_array = []
+        owner_card_array = []
+
+        //Undo all selection effects
+    }
+
     /*
     ------------------- EVENT HANDLERS -------------------
     */
@@ -213,6 +220,8 @@ $(document).ready(function(){
     //Called when the member joins the room, data_body contains their name/level
     function owner_joined_room(data_body){
         display_cards(data_body["cards"], "#member-container")
+        //Adding submit button for the cards
+        $("#member-container").append("<button type='button' id='propose' class='btn btn-success btn-lg' style='font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;'>Propose Trade</button>")
     }
 
     //Called when the member joins the room, data_body contains the owners name/level
