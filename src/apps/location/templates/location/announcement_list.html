@@ -28,30 +28,30 @@
   <body>
     <div class="wrapper">
       <aside id="sidebar">
-        <div class="d-flex">
-          <button class="toggle-btn" type="button">
-            <i class="lni lni-menu-hamburger-1"></i>
-          </button>
-        </div>
         <ul class="sidebar-nav">
-          <li class="sidebar-item">
-            <a href="{% url 'homepage' %}" class="sidebar-link">
-              <i class="lni lni-user-4"></i>
-              <span>Homepage</span>
-            </a>
-          </li>
+            <div class="d-flex">
+                <div class="sidebar-logo">
+                    <a href="/homepage">EcoGo</a>
+                </div>
+            </div>
+            <li class="sidebar-item">
+                <a href="/homepage" class="sidebar-link">
+                    <i class="lni lni-user-4"></i>
+                    <span>Home</span>
+                </a>
+            </li>
         </ul>
         <div class="sidebar-footer">
-          <a href="#" class="sidebar-link">
-            <i class="lni lni-gear-1"></i>
-            <span>Settings</span>
-          </a>
-          <a href="{% url 'landing' %}" class="sidebar-link">
-            <i class="lni lni-exit"></i>
-            <span>Logout</span>
-          </a>
+            <a href="#" class="sidebar-link">
+                <i class="lni lni-gear-1"></i>
+                <span>Settings</span>
+            </a>
+            <a href="{% url 'landing' %}" class="sidebar-link">
+                <i class="lni lni-exit"></i>
+                <span>Logout</span>
+            </a>
         </div>
-      </aside>
+    </aside>
       <div class="main p-3">
         <ul class="list-group h-100 container row-gap-3">
           {% for announcement in announcements %}
