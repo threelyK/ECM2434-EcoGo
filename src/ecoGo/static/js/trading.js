@@ -219,9 +219,30 @@ $(document).ready(function(){
 
     //Called when the member joins the room, data_body contains their name/level
     function owner_joined_room(data_body){
-        display_cards(data_body["cards"], "#member-container")
+        display_cards(data_body["cards"], "#member-container", false)
         //Adding submit button for the cards
-        $("#member-container").append("<button type='button' id='propose' class='btn btn-success btn-lg' style='font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;'>Propose Trade</button>")
+        $("#member-container").append("<button type='button' id='propose' class='btn btn-success btn-lg propose' style='font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;'>Propose Trade</button>")
+        $('.card-container.member').on('click', function(){
+            var cardName = $(this).find('.card-title').first().text();
+            if(!$(this).hasClass("selected")){
+                member_card_array.push(cardName);
+                $(this).addClass("selected")
+            }
+            else{
+                //remove the card from the list
+                let index = member_card_array.indexOf(cardName)
+                member_card_array.splice(index, 1)
+
+                $(this).removeClass("selected")
+            }
+
+        })
+
+        $(document).ready(function(){
+            $('#propose').on('click', function(){
+                propse_trade_handler();
+            })
+        })
     }
 
     //Called when the member joins the room, data_body contains the owners name/level
@@ -229,16 +250,21 @@ $(document).ready(function(){
         
     }
 
-    function display_cards(cardsList, container){
+    function display_cards(cardsList, container, isOwner){
+        let o_or_m;
+        if(isOwner){
+            o_or_m = "owner";
+        }
+        else{
+            o_or_m = "member"
+        }
         cardsList.forEach((card) =>{
             var cardHTML = `
             <li>
-                <div class="card-container owner">
+                <div class="card-container ${o_or_m}">
                     <div class="card">
                         <div class="bar bar-top">
-                            <div class="card-title">
-                                ${ card.card_name }
-                            </div>
+                            <div class="card-title">${ card.card_name }</div>
                             <div class="casting-cost">
                                 <div class="card-value">
                                     ${ card.value }
@@ -279,15 +305,39 @@ $(document).ready(function(){
 
     //Called when a trade is proposed and gets passed cards for trading
     function member_proposed_trade(data_body){
-        display_cards(data_body["owner_cards"], "#receive-container")
-        display_cards(data_body["member_cards"], "#giving-container")
+        display_cards(data_body["owner_cards"], "#receive-container", true)
+        display_cards(data_body["member_cards"], "#giving-container", false)
         $("#member-offer").append("<button type='button' id='reject' class='btn btn-success btn-lg' style='font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;'>Reject Trade</button>")
         $("#member-offer").append("<button type='button' id='accept' class='btn btn-success btn-lg' style='font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;'>Accept Trade</button>")
+        $(document).ready(function(){
+            $('#accept').on('click', function(){
+                acceptTrade();
+            })
+        })
+    
+        $(document).ready(function(){
+            $('#reject').on('click', function(){
+                rejectTrade();
+            })
+        })
+
+        trade_offer = {
+            "member_cards":[],
+            "owner_cards":[]
+        }
+
+        for(let i = 0; i < data_body["owner_cards"].length; i++){
+            trade_offer["owner_cards"].push(data_body["owner_cards"][i].card_name)
+        }
+
+        for(let i = 0; i < data_body["member_cards"].length; i++){
+            trade_offer["member_cards"].push(data_body["member_cards"][i].card_name)
+        }
     }
 
     //Called when the member rejects a trade, resets back to N state (on owners client)
     function owner_trade_offer_rejected(){
-
+        clearSelection()
     }
 
     //Called when the member rejects a trade, resets back to N state (on members client)
@@ -297,40 +347,46 @@ $(document).ready(function(){
 
     //Called by the owner when the trade has been accepted and processed
     function owner_trade_complete(){
-
+        window.location.href = "/"
     }
 
     //Called by the member when the trade has be accepted and processed
     function member_trade_complete(){
-
+        window.location.href = "/"
     }
 
     $(document).ready(function(){
-        $('.card-container member').on('click', function(){
+        $('.card-container.member').on('click', function(){
             var cardName = $(this).find('.card-title').first().text();
-            
-            member_card_array.append(cardName);
+            if(!$(this).hasClass("selected")){
+                member_card_array.push(cardName);
+                $(this).addClass("selected")
+            }
+            else{
+                //remove the card from the list
+                let index = member_card_array.indexOf(cardName)
+                member_card_array.splice(index, 1)
+
+                $(this).removeClass("selected")
+            }
+
         })
     })
 
     $(document).ready(function(){
-        $('.card-container owner').on('click', function(){
+        $('.card-container.owner').on('click', function(){
             var cardName = $(this).find('.card-title').first().text();
-            
-            owner_card_array.append(cardName);
+            if(!$(this).hasClass("selected")){
+                owner_card_array.push(cardName);
+                $(this).addClass("selected")
+            }
+            else{
+                //remove the card from the list
+                let index = owner_card_array.indexOf(cardName)
+                owner_card_array.splice(index, 1)
+
+                $(this).removeClass("selected")
+            }
         })
     })
-
-    $(document).ready(function(){
-        $('#accept').on('click', function(){
-            acceptTrade();
-        })
-    })
-
-    $(document).ready(function(){
-        $('#reject').on('click', function(){
-            rejectTrade();
-        })
-    })
-
 })

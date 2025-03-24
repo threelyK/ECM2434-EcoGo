@@ -278,6 +278,7 @@ class TradingRoom():
         self.__validate_state("N")
 
         #Checking that the other user has the cards that are needed to trade
+
         proposed_member_cards = message_data["body"]["member_cards"]
         owned_member_cards = self.room_member.user_data.get_all_cards()
         owned_member_card_names = []
@@ -325,6 +326,7 @@ class TradingRoom():
             self.__update_state("D")
             #Save the hash for later validation
             self.trade_hash = hash(str(message_data["body"]))
+            print(message_data["body"])
             self.__send_message(message, self.room_owner)
             self.__send_message(message, self.room_member)
         else:
