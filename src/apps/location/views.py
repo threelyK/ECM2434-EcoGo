@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from apps.qrgenerator.models import Website
+from django.conf import settings
 from random import uniform
 
 def announcement_list(request):
