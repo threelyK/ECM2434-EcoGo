@@ -14,6 +14,7 @@ def announcement_list(request):
         announcements.append({
             "id": announcement.id,
             "name": announcement.name,
+            "slug": announcement.slug,
             "url": announcement.url,
             "date": announcement.date,
             "lat": announcement.latitude,
