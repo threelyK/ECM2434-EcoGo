@@ -125,7 +125,8 @@
                     </div>
                 </div>
         </div>
-        <!-- Pack -->
+        
+        <!-- Pack creation -->
         <div class="col-md-6">
             <div class="mt-3">
                 <div class="card shadow-sm">
@@ -135,14 +136,13 @@
                     <div class="card-body">
                         <form method="post">
                             {% csrf_token %}
-                            {{ pack_form.as_p }}
-                            <button type="submit" class="btn btn-success w-100" name="create_pack">Create Pack</button>
+                            {{ packgen_form.as_p }}
+                            <button type="submit" class="btn btn-success w-100" name="populate_pack">Create Pack</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
         <!-- Card Ownership -->
         <div class="col-md-6 mt-3">
             <div class="card shadow-sm">

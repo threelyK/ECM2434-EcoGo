@@ -5,6 +5,7 @@ from django.contrib import messages
 from .forms import *
 from apps.qrgenerator.models import Website
 from django.contrib.auth.decorators import user_passes_test
+from apps.cards.models import Pack
 
 def is_gamemaster(user):
     """
@@ -24,6 +25,7 @@ def gamemaster_dashboard(request):
     card_form = CardForm()
     pack_form = PackForm()
     owned_form = OwnedCardForm()
+    packgen_form = PackCreationForm()
     if request.method == 'POST':
         if 'create_website' in request.POST:  # If the website form is submitted
             website_form = WebsiteForm(request.POST)
@@ -81,6 +83,47 @@ def gamemaster_dashboard(request):
                 owned = owned_form.save()
                 messages.success(request, f"Assigned '{owned.card.card_name}' to '{owned.owner}'.") 
                 return redirect('gamemaster_dashboard')
+            
+        elif 'populate_pack' in request.POST:
+            packgen_form = PackCreationForm(request.POST)
+            if packgen_form.is_valid():
+                pack_name = packgen_form.cleaned_data["pack_name"]
+                cost = packgen_form.cleaned_data["pack_cost"]
+                image = packgen_form.cleaned_data["pack_image"]
+                
+                cards = []
+                for i in range(1 ,11):
+                    card = packgen_form.cleaned_data[f"card{i}"]
+                    cards.append(card)
+
+                cards_set = set(cards)
+                if len(cards_set) != 10:
+                    messages.warning(request, "No duplicate cards allowed")
+                    return redirect('gamemaster_dashboard')
+                
+                rarities = []
+                for i in range(1 ,11):
+                    rarity = packgen_form.cleaned_data[f"rarity{i}"]
+                    rarities.append(rarity)
+                
+
+                if sum(rarities) != 1000:
+                    messages.warning(request, "Rarities should add up to 1000")
+                    return redirect('gamemaster_dashboard')
+                
+                if len(Pack.objects.filter(pack_name=pack_name)) == 1:
+                    messages.warning(request, "Pack name already exists")
+                    return redirect('gamemaster_dashboard')
+                else:
+                    newPack = Pack.objects.create(pack_name=pack_name, cost=cost, num_cards=10, image=image)
+                
+                for i in range(1, len(cards)):
+                    newPack.add_to_pack(cards[i], rarities[i])
+
+                newPack.save_pack()
+
+                messages.success(request, f"Pack: '{pack_name}' has been created.")
+                return redirect('gamemaster_dashboard')
 
                 
 
@@ -88,5 +131,6 @@ def gamemaster_dashboard(request):
             'website_form': website_form,
             'card_form': card_form,
             'pack_form': pack_form,
+            'packgen_form': packgen_form,
             'owned_form': owned_form,
             })
