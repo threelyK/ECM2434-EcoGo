@@ -195,7 +195,7 @@ $(document).ready(function(){
         member_card_array = []
         owner_card_array = []
 
-        //Undo all selection effects
+        $(".selected").removeClass("selected")
     }
 
     /*

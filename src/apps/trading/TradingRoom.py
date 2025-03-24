@@ -327,6 +327,7 @@ class TradingRoom():
             #Save the hash for later validation
             self.trade_hash = hash(str(message_data["body"]))
             print(message_data["body"])
+
             self.__send_message(message, self.room_owner)
             self.__send_message(message, self.room_member)
         else:
