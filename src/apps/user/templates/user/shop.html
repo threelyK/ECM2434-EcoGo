@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '/css/page.css' %}">
+    <link rel="stylesheet" href="{% static '/css/centered.css' %}">
+    <link rel="stylesheet" href="{% static '/css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static '/css/shop_files/shop_container.css' %}">
+    <link rel="stylesheet" href="{% static '/css/shop_files/shop_grid.css' %}">
+    <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="{% static '/css/normalise.css' %}">
+    <link rel="icon" href="data:,">
+    <title>Shop</title>
+</head>
+<body>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <div class="d-flex">
+                <button class="toggle-btn" type="button">
+                    <i class="lni lni-menu-hamburger-1"></i>
+                </button>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="{% url 'homepage' %}" class="sidebar-link">
+                        <i class="lni lni-user-4"></i>
+                        <span>Homepage</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" class="sidebar-link">
+                    <i class="lni lni-gear-1"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="{% url 'landing' %}" class="sidebar-link">
+                    <i class="lni lni-exit"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+        <div class="main p-3">
+            <div class="shop_header">
+                <div class="centered">
+                    <h1> Pack Shop </h1>
+                    <div class="w3-container w3-center w3-animate-center">
+                        <div class="text-box">
+                            <p>Purchase packs using points obtained from selling cards</p>
+                        </div>
+                    </div>
+                    <p>
+                        You currently have <strong>{{ points }}</strong> points.
+                    </p>
+                </div>
+            </div>
+            {% if packs %}
+                <ul class="pack_grid">
+                    {% for pack in packs %}
+                    <li>
+                        <!-- Implement for packs in some way-->
+                        <div class="pack-container">
+                            <div class="pack">
+                                <div class="bar bar-top">
+                                    <div class="pack_title">
+                                        <p>{{ pack.pack_name }}</p>
+                                    </div>
+                                </div>
+                                <div class="pack_image">
+                                    <img src= "{% static pack.image %}" alt="pack image">
+                                </div>
+                            </div>
+                            
+                            <div class="footer">
+                                <div class="pack_price">
+                                    <p>Cost: {{ pack.cost }}</p> 
+                                </div>
+                                <form action="/user/shop" method="post">
+                                    {% csrf_token %}
+                                    <input hidden="true" value="{{ pack.pack_name }}" name="item_name">
+                                    <input type="submit" class="buy_button" value="BUY">
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="shop_header">
+                    <p>
+                        No packs available for purchase...
+                    </p>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+    <script src="{% static 'js/shop.js' %}"></script>
+</body>
+</html>

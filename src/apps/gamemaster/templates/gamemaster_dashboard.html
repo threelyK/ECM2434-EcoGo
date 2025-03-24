@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    h1 {
+      margin: auto;
+      width: 50%;
+      padding: 10px;
+      color: white;
+    }
+</style>
+<div class="container mt-4">
+    <h1>Gamemaster Dashboard</h1>
+    <head> 
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
+
+    </head>
+    <div class="row">
+        {% if messages %}
+            <div class="alert alert-success">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- Website Form -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5>Create a Website</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="website-form">
+                        {% csrf_token %}
+                        {{ website_form.as_p }}
+                        
+
+       
+                <div id="map" style="height: 400px;"></div>
+                
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        var map = L.map('map').setView([50.73737953275868, -3.5315806025553944], 13);
+                        map.setZoom(17);
+                    
+                        // Leflet credit
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap contributors'
+                        }).addTo(map);
+                    
+                        
+                        const latField = document.querySelector("#id_latitude");
+                        const lonField = document.querySelector("#id_longitude");
+                        const addressField = document.querySelector("#id_address");
+                    
+                        // Updates when click on map
+                        function updateLatLng(lat, lon) {
+                            latField.value = lat;
+                            lonField.value = lon;
+                            reverseGeocode(lat, lon);  
+                        }
+                    
+                        // Grabs Address from Lat/Lon
+                        function reverseGeocode(lat, lon) {
+                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data && data.display_name) {
+                                        addressField.value = data.display_name;
+                                    } else {
+                                        addressField.value = "Address not found";
+                                    }
+                                })
+                                .catch(() => {
+                                    addressField.value = "Failed to fetch address";
+                                });
+                        }
+                    
+                        // Marker on map
+                        var marker = L.marker([50.73737953275868, -3.5315806025553944], {
+                            draggable: true
+                        }).addTo(map);
+                    
+                       
+                        map.on("click", function (e) {
+                            marker.setLatLng(e.latlng);
+                            updateLatLng(e.latlng.lat, e.latlng.lng);
+                        });
+                    
+                        
+                        marker.on("dragend", function () {
+                            var position = marker.getLatLng();
+                            updateLatLng(position.lat, position.lng);
+                        });
+                    
+                        // Initial place
+                        updateLatLng(50.73737953275868, -3.5315806025553944);
+                    });
+                    </script>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-2" name="create_website">Create Website</button>
+                        {% if qr_code_url %}
+                            <p>QR Code URL with the URL = <a href="{{ qr_code_url }}" target="_blank">{{ qr_code_url }}</a></p>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Card -->
+        <div class="col-md-6">
+       
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5>Create a Card</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ card_form.as_p }}
+                            <button type="submit" class="btn btn-success w-100" name="create_card">Create Card</button>
+                        </form>
+                    </div>
+                </div>
+        </div>
+        <!-- Pack -->
+        <div class="col-md-6">
+            <div class="mt-3">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5>Create a Pack</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ pack_form.as_p }}
+                            <button type="submit" class="btn btn-success w-100" name="create_pack">Create Pack</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Ownership -->
+        <div class="col-md-6 mt-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-white">
+                    <h5>Assign Owned Cards</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ owned_form.as_p }}
+                        <button type="submit" class="btn btn-warning w-100" name="assign_card">Assign Card</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+</div>
+
+
+
+{% endblock %}

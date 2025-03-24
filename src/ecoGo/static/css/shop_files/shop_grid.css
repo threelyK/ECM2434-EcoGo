@@ -1,0 +1,99 @@
+/* Pack grid styling */
+
+.pack_grid {
+    max-width: 80%;
+    margin: 0 auto;
+    padding-left: 0px;
+    display: grid; /* Change to grid layout */
+    grid-template-columns: repeat(3, 1fr); /* Three equal-width columns */
+    gap: 5rem; /* Space between items */
+    justify-items: center;
+    align-items: center;
+}
+
+.pack { 
+    background-color: #ffffff00;
+    border: 6px solid #4a280f;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.pack:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.pack_title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 10px;
+    background-color: #8B4513;
+    color: #fff;
+    text-align: center;
+}
+
+.pack_image img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.pack_description {
+    padding: 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.pack_price {
+    padding: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+}
+
+.buy_button {
+    font-family: 'GameFont', Arial, Helvetica, sans-serif;
+    margin-top: 10px;
+    height: 50px;
+    width: 120px; /* Slightly wider for better UX */
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #28a745; /* Bootstrap success green */
+    color: #fff !important;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.buy_button:hover {
+    background-color: #218838; /* Darker green for hover effect */
+    transform: scale(1.05); /* Slight zoom-in effect */
+}
+
+.buy_button:active {
+    transform: scale(0.95); /* Slight press-in effect */
+}
+
+@media (max-width: 500px) {
+    .pack_grid {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pack {
+        width: 200px;
+    }
+
+    .pack-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+}

@@ -1,14 +1,58 @@
-{% load static %}
+{% extends 'base.html' %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ website.name }}</title>
-</head>
-<body>
-    <h1>{{ website.name }}</h1>
-    <p>URL: <a href="{{ website.url }}">{{ website.url }}</a></p>
-    <img src="{{ website.qr_code.url }}" alt="QR Code for {{ website.name }}">
-</body>
-</html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        {% load static %}
+    
+        <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
+    </head>
+    {% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'css/pack_opening/pack_opening.css' %}">
+    {% endblock %}
+    {% block content %}
+    <div class="centered">
+        {% if first_visit %}
+            <div class="inventory_header">
+                <div class="centered">
+                    <h1>{{ card.card_name }}</h1>
+                </div>
+            </div>
+            <div class="card-grid">
+                <div class="card-container">
+                    <div class="card">
+                        <div class="bar bar-top">
+                            <div class="card-title">{{ card.card_name }}</div>
+                        </div>
+                        <div class="card-image">
+                            {% if card.image_path %}
+                                <img src="{{ card.image_path }}" alt="{{ card.card_name }}">
+                            {% else %}
+                                <p>No image available</p>
+                            {% endif %}
+                        </div>
+                        <div class="card-text">
+                            <div class="card-ability">
+                                {{ card.card_desc }}
+                            </div>
+                        </div>
+                        <div class="footer">
+                            <div class="author">Created by Breadscrums.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="inventory_header">
+                <div class="centered">
+                    <h1>You've already claimed this pack for today.</h1>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <script src="{% static 'js/card-animation.js' %}"></script>
+    <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+    {% endblock %}
+    </html>
