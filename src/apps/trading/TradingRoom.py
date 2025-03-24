@@ -155,7 +155,7 @@ class TradingRoom():
         """
         Method to be called when a user unexpectedly disconnects
         """
-        if not self.state == "E":
+        if not self.state == "E" and not self.state == 'A':
             self.__update_state("X")
 
             if disconnected_user == self.room_member:
