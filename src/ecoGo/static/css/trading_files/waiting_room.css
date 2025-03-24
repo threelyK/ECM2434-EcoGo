@@ -1,0 +1,80 @@
+body {
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    color: white;
+}
+
+.container {
+    max-width: 90%;
+    width: 400px;
+    margin-top: 30px;
+    padding: 15px;
+    border-radius: 10px;
+
+}
+
+.btn-custom {
+    font-family: 'Gamefont', Arial, Helvetica, sans-serif;
+    background-color: #28a745;
+    border-color: #28a745;
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    font-size: 1em;
+    border-radius: 8px;
+}
+
+.btn-custom:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.form-control {
+    margin-top: 15px;
+    font-size : 1.1em;
+    font-family: 'Gamefont', Arial, Helvetica, sans-serif;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+    color: white;
+    font-family: 'Gamefont', Arial, Helvetica, sans-serif;
+}
+
+.description {
+    margin-top: 15px;
+    font-size: 1em;
+    font-family: 'Gamefont', Arial, Helvetica, sans-serif;
+    color: white;
+    text-align:center; 
+}
+
+/* Responsive Styles for Smaller Screens */
+@media (max-width: 600px) {
+    .container {
+        width: 100%; /* Use full width on smaller screens */
+        padding: 10px;
+    }
+
+    .btn-custom {
+        font-size: 1em;
+        padding: 14px;
+    }
+
+    .header {
+        font-size: 1.3em;
+    }
+
+    .description {
+        font-size: 1em;
+    }
+}
+
+

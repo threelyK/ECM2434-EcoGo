@@ -1,0 +1,23 @@
+.room-container {
+    background-color: #598381;
+    min-width: 70%;
+    min-height: 500px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 20px;
+}
+
+.room-content h2 {
+    color: #fff;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.room-content p {
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+

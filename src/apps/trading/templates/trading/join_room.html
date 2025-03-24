@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static '/css/page.css' %}">
+    <link rel="stylesheet" href="{% static '/css/avatar.css' %}">
+    <link rel="stylesheet" href="{% static '/css/centered.css' %}">
+    <link rel="stylesheet" href="{% static '/css/footer.css' %}">
+    <link rel="stylesheet" href="{% static '/css/trading_files/join_room.css' %}">
+    <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
+    <title>Join Room</title>
+</head>
+<body>
+    <div class="centered">
+        <h1 style="font-family: GameFont, Arial, Helvetica, sans-serif; font-size: 8vh; color: white;">Available Rooms</h1>
+        <div class="room-container">
+            <div class="room-content">
+                {% for room in rooms %}
+                    <button type="button" class="btn btn-success btn-lg btn-custom" onclick="join_room('{{ room.0 }}')">{{ room.0 }}</button>
+                {% endfor %}
+            </div>
+        </div>
+        <button type="button" style="margin-top: 20px;" class="btn btn-success btn-lg btn-custom" onclick="history.back()">Go Back</button>
+    </div>
+    <!-- <button type="button" class="btn btn-success btn-lg btn-custom" onclick="history.back()">Go Back</button> -->
+    <!-- {% for room in rooms %} -->
+    <!-- <button type="button" class="btn btn-success btn-lg btn-custom" onclick="join_room('{{ room.0 }}')">{{ room.0 }}</button> -->
+    <!-- {% endfor %} -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/waiting_room.js' %}"></script>
+    <script>
+        function join_room(room_name){
+            window.location.href = '/trading/j_trading_room/' + room_name + '/';
+        }
+    </script>
+</body>
+</html>

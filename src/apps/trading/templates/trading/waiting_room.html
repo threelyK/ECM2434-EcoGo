@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {% load static %}
+    <link rel="stylesheet" href="{% static '/css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static '/css/page.css' %}">
+    <link rel="stylesheet" href="{% static '/css/avatar.css' %}">
+    <link rel="stylesheet" href="{% static '/css/centered.css' %}">
+    <link rel="stylesheet" href="{% static '/css/footer.css' %}">
+    <link rel="stylesheet" href="{% static '/css/trading_files/waiting_room.css' %}">
+    <link rel="stylesheet" href="https://cdn.lineicons.com/5.0/lineicons.css" />
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
+    <title>Waiting Room</title>
+    <script>
+        function redirectToTradingRoom() {
+            const roomName = $('#roomName').val();
+            if (!roomName) {
+                alert("Please enter a room name.");
+                return;
+            }
+        
+            window.location.href = '/trading/trading_room/' + roomName + '/';
+        }
+    </script>
+</head>
+<body>
+    <div class="container text-center">
+        <div class="header">
+            <h1>Waiting Room</h1>
+        </div>
+        <div class="description">
+            <p>Welcome to the trading room, here you may create or join a room with other users.</p>
+        </div>
+        <input type="text" id="roomName" class="form-control" placeholder="Enter Room Name">
+        <p class="description">Click "Create Room" to start a new trading room with entered name</p>
+        <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="redirectToTradingRoom()">Create Room</button>
+        <p class="description">Click "Join Room" to see a list of available rooms and join one.</p>
+        <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="window.location.href='{%url 'join_room' %}';">Join Room</button>
+        <div id="messages" class="mt-3"></div>
+        <p class="description">Click to return to the landing page</p>
+        <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="history.back()">Go Back</button>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/waiting_room.js' %}"></script>
+</body>
+
+</html>

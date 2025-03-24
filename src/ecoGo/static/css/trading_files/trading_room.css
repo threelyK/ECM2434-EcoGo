@@ -7,11 +7,6 @@
     --inner-borders-thickness: 3px;
 }
 
-@font-face {
-    font-family: 'GameFont';
-    src: url('../../atarian_font/Atarian/SF_Atarian_System_Extended.ttf');
-}
-
 * {
     box-sizing: border-box;
 }
@@ -23,36 +18,68 @@ body {
     min-height: 100vh;
 }
 
-.inventory_header {
+.card-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    padding: 20px;
+    position: relative;
+    flex-wrap: wrap;
+}
+
+#owner-container,
+#member-container {
+    width: 48%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.card-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.divider {
+    width: 4px;
+    background-color: black;
+    height: auto;
+    align-self: stretch;
+}
+
+.trading_header {
+    color: white;
+    font-family: GameFont, Verdana, Geneva, Tahoma, sans-serif;
+    width: 100%;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.trading_header h1 {
     color: white;
     font-family: GameFont, Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.inventory_header h1 {
-    color: white;
-    font-family: GameFont, Verdana, Geneva, Tahoma, sans-serif;
+.card-container {
+    position: relative;
+    flex: 1 1 calc(33.33% - 20px);
+    max-width: 300px; 
+    min-width: 200px; 
 }
   
 .card {
-    position: absolute;
-    flex: 1 1 calc(25% - 16px);
-    width: 300px;
-    height: 418px;
-    margin-left: 30px;
+    width: 100%;
+    height: auto;
+    margin: 10px;
     box-shadow: inset 0 0 0 var(--card-border-thickness) var(--card-border-color);
     border-radius: var(--card-border-radius);
     padding: var(--card-border-thickness);
-}
-
-
-ul:hover .card {
-    opacity: 0.5;
-    transition: opacity .5s ease-in-out;
-}
-
-ul:hover .card:hover {
-    opacity: 1;
-    transition: opacity .5s ease-in-out;
 }
 
 .bar {
@@ -94,12 +121,9 @@ ul:hover .card:hover {
 }
 
 .card-image img {
-    min-width: 100%;
-    min-height: 100%;
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: auto;
     object-fit: cover;
-    
 }
 
 .bar-mid {
@@ -136,4 +160,23 @@ ul:hover .card:hover {
 .author {
     font-weight: bold;
     font-size: 10px;
+}
+
+.selected {
+    opacity: 0.5;
+    transition: opacity .5s ease-in-out;
+}
+
+@media screen and (max-width: 1200px) {
+    .card-container {
+        flex: 1 1 100%;
+    }
+
+    #owner-container, #member-container {
+        width: 100%;
+    }
+
+    .divider {
+        display: none; 
+    }
 }

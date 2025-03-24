@@ -63,7 +63,7 @@
                     <img src="{% static '/photos/default.png' %}" alt="avatar">
                     <p>{{ user.username }}</p>
                 </div>
-                <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" disabled>Trading</button>
+                <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="window.location.href='{% url 'waiting_room' %}';">Trading</button>
                 <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="window.location.href='user/inventory';" >Inventory</button>
                 <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="window.location.href='user/shop';" >Shop</button>
                 <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;" onclick="window.location.href='user/leaderboard';" >Leaderboard</button> 
