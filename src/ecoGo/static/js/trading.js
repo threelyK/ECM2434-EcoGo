@@ -301,7 +301,8 @@ $(document).ready(function(){
 
     //Called when a trade is proposed (on owners client)
     function owner_trade_proposed(){
-
+        //Remove the submit button when its not needed
+        $("#propose").remove()
     }
 
     //Called when a trade is proposed and gets passed cards for trading
@@ -339,6 +340,14 @@ $(document).ready(function(){
     //Called when the member rejects a trade, resets back to N state (on owners client)
     function owner_trade_offer_rejected(){
         clearSelection()
+
+        $("#member-container").append("<button type='button' id='propose' class='btn btn-success btn-lg propose' style='font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;'>Propose Trade</button>")
+
+        $(document).ready(function(){
+            $('#propose').on('click', function(){
+                propse_trade_handler();
+            })
+        })
     }
 
     //Called when the member rejects a trade, resets back to N state (on members client)
