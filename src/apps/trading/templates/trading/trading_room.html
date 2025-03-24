@@ -56,7 +56,7 @@
             </h1>
             <ul class="card-grid">
                 {% if user == 'owner' %}
-                    <div id="owner-container">
+                    <div id="owner-container" class="container">
                         <div class="centered">
                             <div class="trading_header">
                                 Owner
@@ -102,7 +102,7 @@
                     <div class="divider"></div>
                     
                     
-                    <div id="member-container">
+                    <div id="member-container" class="container">
                         <div class="centered">
                             <div class="trading_header">
                                 Member
@@ -111,15 +111,39 @@
                         <div class="card-wrapper">
                         </div>  
                     </div>
-                {% else %}
-                    <div>
-                        <div id="giving-container">
+                {% else %}    
+                    <ul class="card-grid">
+                        <div id="member-container" class="container">
+                            <div class="centered">
+                                <div class="trading_header">
+                                    Member
+                                </div>
+                            </div>
+                            <div class="card-wrapper">
+                                <div id="giving-container">
+                                </div>
+                            </div>
                         </div>
-                        <div id="receive-container">
+                                    
+                        <div class="divider"></div>
+                        
+                        <div id="owner-container" class="container">
+                            <div class="centered">
+                                <div class="trading_header">
+                                    Owner
+                                </div>
+                            </div>
+                            <div class="card-wrapper">
+                                <div id="receive-container">
+                                </div>
+                            </div>
                         </div>
+                    </ul>
+                    <div class="centered">
                         <div id="member-offer">
                         </div>
                     </div>
+                    
                 {% endif %}
         {% else %}
             <h1 class="trading_header">

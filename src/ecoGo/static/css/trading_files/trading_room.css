@@ -167,22 +167,16 @@ body {
     transition: opacity .5s ease-in-out;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1200px) {
     .card-container {
-        flex: 1 1 calc(50% - 20px); /* Two cards per row */
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .card-container {
-        flex: 1 1 100%; /* One card per row */
+        flex: 1 1 100%;
     }
 
     #owner-container, #member-container {
-        width: 100%; /* Full width containers */
+        width: 100%;
     }
 
     .divider {
-        display: none; /* Hide divider on small screens */
+        display: none; 
     }
 }
