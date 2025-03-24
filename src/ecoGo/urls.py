@@ -27,7 +27,7 @@ urlpatterns = [
     path('gamemaster/', include('apps.gamemaster.urls')),
     path('location/', include('apps.location.urls')),
     path('trading/', include('apps.trading.urls')),
-] 
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

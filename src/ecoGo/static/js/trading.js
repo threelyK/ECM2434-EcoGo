@@ -276,7 +276,7 @@ $(document).ready(function(){
                             </div>
                         </div>
                         <div class="card-image">
-                            <img src="/static/${card.image_path}" alt="card image">
+                            <img src="/static${card.image_path}" alt="card image">
                         </div>
                         <div class="bar bar-mid">
                             <div class="card-title">Instant</div>
