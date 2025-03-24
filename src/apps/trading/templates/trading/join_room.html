@@ -25,9 +25,9 @@
         <div class="header">
             <h1 style="color:white; margin-top: 50px;">Available Rooms</h1>
         </div>
-        <div style= "border: 15px solid #07470d;  background-color: #ffffff; margin-top: 20px; padding: 20px;">
+        <div style= "border: 15px solid #1E3A5F;  background-color: #E8B923; margin-top: 20px; padding: 20px; box-shadow: 10px 5px 5px rgb(0, 0, 0);">
             {% for room in rooms %}
-                <div style= "border: 15px solid #204f2f; margin-top: 15px; margin-bottom: 15px; background-color: #a5edfc; width: 300px; height: 120px; box-shadow: 10px 5px 5px rgb(0, 0, 0);">
+                <div style= "border: 15px solid rgba(0, 0, 0, 0.81); margin-top: 15px; margin-bottom: 15px; background-color: #a5edfc; width: 300px; height: 120px; ">
                     <div id="roomList">
                         <button type="button" class="btn btn-success btn-lg" style="font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px; onclick="join_room('{{ room.0 }}')> {{ room.0 }} </button>
                     </div>
