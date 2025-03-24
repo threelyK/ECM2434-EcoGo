@@ -71,20 +71,10 @@
                                     </div>
                                 </div>
                                 <div class="pack_image">
-                                    <img src= "{% static pack.image_path %}" alt="pack image">
-                                </div>
-                                <div class="footer">
-                                    <div class="pack_price">
-                                        <p>Cost: {{ pack.cost }}</p> 
-                                    </div>
-                                    <script src="{% static 'js/shop.js' %}"></script>
-                                    <script src="{% static 'bootstrap-5.3.3-dist/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
-                                    <script src="{% static 'js/navbar.js' %}"></script>
+                                    <img src= "{% static pack.image %}" alt="pack image">
                                 </div>
                             </div>
-                            <div class="pack_image">
-                                <img src= "{% static pack.image %}" alt="pack image">
-                            </div>
+                            
                             <div class="footer">
                                 <div class="pack_price">
                                     <p>Cost: {{ pack.cost }}</p> 
