@@ -1,3 +1,22 @@
+function propose_trade_test(){
+    let owner_cards = ["Hydronis"]
+    let member_cards = ["Vortex-9"]
+
+    propose_trade(owner_cards, member_cards)
+}
+
+function propose_trade(owner_cards, member_cards){
+    let message = {
+        "state_flag": "D",
+        "body":{
+            "member_cards": member_cards,
+            "owner_cards":owner_cards
+        }
+    }
+
+    socket.send(JSON.stringify(message))
+}
+
 
 $(document).ready(function(){
     var trade_offer
@@ -251,7 +270,7 @@ $(document).ready(function(){
 
     //Called when a trade is proposed and gets passed cards for trading
     function member_proposed_trade(data_body){
-        display_cards(data_body["owner-cards"], "#receive-container")
+        display_cards(data_body["owner_cards"], "#receive-container")
         display_cards(data_body["member_cards"], "#giving-container")
         $("#member-offer").append("<button type='button' id='reject' class='btn btn-success btn-lg' style='font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;'>Reject Trade</button>")
         $("#member-offer").append("<button type='button' id='accept' class='btn btn-success btn-lg' style='font-family: GameFont, Arial, Helvetica, sans-serif; margin-top: 20px;'>Accept Trade</button>")
